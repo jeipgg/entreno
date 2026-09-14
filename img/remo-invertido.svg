@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Remo invertido: cuerpo en tabla frente a cadera caída">
+<style>
+ .bg{fill:none}
+ .fig{fill:none;stroke:currentColor;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+ .head{fill:currentColor;stroke:none}
+ .ground{stroke:currentColor;stroke-width:3;opacity:.35}
+ .ok{stroke:#1F6B4A}
+ .bad{stroke:#9C3327}
+ .okf{fill:#1F6B4A}
+ .badf{fill:#9C3327}
+ .guide{stroke-width:3;stroke-dasharray:7 5;fill:none}
+ .lbl{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .cap{font:500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:.75}
+ .tag{font:700 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+</style>
+<rect class="bg" width="640" height="400"/>
+<text class="lbl" x="0" y="22">REMO INVERTIDO</text><text class="cap" x="0" y="44">El cuerpo es una plancha invertida. La cadera va con el resto.</text><text class="tag okf" x="0" y="90">✓ Cuerpo en tabla</text><line class="ground" x1="14" y1="96" x2="14" y2="212"/><line class="ground" x1="14" y1="120" x2="150" y2="120"/><circle class="head" cx="66" cy="148" r="11"/><path class="fig " d="M80 152 L170 176 L266 196"/><path class="fig " d="M80 150 L58 122"/><path class="guide ok" d="M80 146 L266 190"/><text class="cap" x="0" y="290">Retroversión pélvica todo el tiempo.</text><text class="tag badf" x="340" y="90">✗ Cadera caída</text><line class="ground" x1="354" y1="96" x2="354" y2="212"/><line class="ground" x1="354" y1="120" x2="490" y2="120"/><circle class="head" cx="406" cy="148" r="11"/><path class="fig " d="M420 152 Q500 200 606 194"/><path class="fig " d="M420 150 L398 122"/><path class="guide bad" d="M420 146 L606 188"/><text class="tag badf" x="474" y="224">se hunde</text><text class="cap" x="340" y="290">Cuando se hunde, tira la lumbar.</text><text class="cap" x="0" y="340">Progresión: rodillas dobladas → piernas estiradas → pies en la silla.</text><text class="cap" x="0" y="362">Junta las escápulas antes de doblar los codos.</text><text class="cap" x="0" y="384">Exhala al tirar. Nunca aguantes el aire.</text></svg>

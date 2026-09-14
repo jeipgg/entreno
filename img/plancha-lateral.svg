@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Plancha lateral: cadera alineada frente a cadera hundida">
+<style>
+ .bg{fill:none}
+ .fig{fill:none;stroke:currentColor;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+ .head{fill:currentColor;stroke:none}
+ .ground{stroke:currentColor;stroke-width:3;opacity:.35}
+ .ok{stroke:#1F6B4A}
+ .bad{stroke:#9C3327}
+ .okf{fill:#1F6B4A}
+ .badf{fill:#9C3327}
+ .guide{stroke-width:3;stroke-dasharray:7 5;fill:none}
+ .lbl{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .cap{font:500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:.75}
+ .tag{font:700 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+</style>
+<rect class="bg" width="640" height="400"/>
+<text class="lbl" x="0" y="22">PLANCHA LATERAL</text><text class="cap" x="0" y="44">Una línea recta del tobillo al hombro. La cadera no se cae.</text><text class="tag okf" x="0" y="90">✓ Cadera arriba</text><line class="ground" x1="0" y1="210" x2="300" y2="210"/><circle class="head" cx="60" cy="118" r="11"/><path class="fig " d="M74 128 L150 168 L262 206"/><path class="fig " d="M74 128 L62 206"/><path class="guide ok" d="M74 124 L262 202"/><text class="cap" x="0" y="290">Línea recta tobillo–cadera–hombro.</text><text class="tag badf" x="340" y="90">✗ Cadera hundida</text><line class="ground" x1="340" y1="210" x2="640" y2="210"/><circle class="head" cx="400" cy="128" r="11"/><path class="fig " d="M414 138 L484 198 L602 206"/><path class="fig " d="M414 138 L402 206"/><path class="guide bad" d="M414 134 L602 202"/><text class="tag badf" x="452" y="228">se cae</text><text class="cap" x="340" y="290">Aquí trabaja la espalda baja, no el oblicuo.</text><text class="cap" x="0" y="340">Empieza con la rodilla apoyada si la cadera se cae.</text><text class="cap" x="0" y="362">Empieza siempre por el lado débil; el fuerte iguala ese número.</text><text class="cap" x="0" y="384">Exhala durante el sostén.</text></svg>

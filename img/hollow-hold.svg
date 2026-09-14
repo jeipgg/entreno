@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Hollow hold: lumbar pegada al piso frente a lumbar despegada">
+<style>
+ .bg{fill:none}
+ .fig{fill:none;stroke:currentColor;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+ .head{fill:currentColor;stroke:none}
+ .ground{stroke:currentColor;stroke-width:3;opacity:.35}
+ .ok{stroke:#1F6B4A}
+ .bad{stroke:#9C3327}
+ .okf{fill:#1F6B4A}
+ .badf{fill:#9C3327}
+ .guide{stroke-width:3;stroke-dasharray:7 5;fill:none}
+ .lbl{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .cap{font:500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:.75}
+ .tag{font:700 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+</style>
+<rect class="bg" width="640" height="400"/>
+<text class="lbl" x="0" y="22">HOLLOW HOLD</text><text class="cap" x="0" y="44">Lo único que decide si está bien: la lumbar contra el piso.</text><text class="tag okf" x="0" y="90">✓ Lumbar pegada</text><line class="ground" x1="0" y1="200" x2="300" y2="200"/><circle class="head" cx="48" cy="150" r="11"/><path class="fig " d="M60 154 L120 162 L200 158 L262 130"/><path class="fig " d="M60 150 L34 118"/><path class="guide ok" d="M64 168 L200 168"/><text class="cap" x="0" y="290">Sin hueco entre la espalda y el suelo.</text><text class="tag badf" x="340" y="90">✗ Lumbar despegada</text><line class="ground" x1="340" y1="200" x2="640" y2="200"/><circle class="head" cx="388" cy="158" r="11"/><path class="fig " d="M400 160 Q470 138 540 156 L602 124"/><path class="fig " d="M400 156 L374 124"/><path class="guide bad" d="M440 150 Q470 128 505 146"/><text class="tag badf" x="452" y="120">hueco</text><text class="cap" x="340" y="290">Si aparece el hueco, vuelves a tuck.</text><text class="cap" x="0" y="340">Rodillas al pecho (tuck) es la versión correcta.</text><text class="cap" x="0" y="362">Bajar las piernas solo cuando la lumbar aguante pegada.</text><text class="cap" x="0" y="384">Exhala durante el sostén. Nunca aguantes el aire.</text></svg>

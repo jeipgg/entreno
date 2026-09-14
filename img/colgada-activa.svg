@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Colgada activa: hombros abajo frente a colgada muerta">
+<style>
+ .bg{fill:none}
+ .fig{fill:none;stroke:currentColor;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+ .head{fill:currentColor;stroke:none}
+ .ground{stroke:currentColor;stroke-width:3;opacity:.35}
+ .ok{stroke:#1F6B4A}
+ .bad{stroke:#9C3327}
+ .okf{fill:#1F6B4A}
+ .badf{fill:#9C3327}
+ .guide{stroke-width:3;stroke-dasharray:7 5;fill:none}
+ .lbl{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .cap{font:500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:.75}
+ .tag{font:700 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+</style>
+<rect class="bg" width="640" height="400"/>
+<text class="lbl" x="0" y="22">COLGADA ACTIVA</text><text class="cap" x="0" y="44">Activa quiere decir hombros abajo, lejos de las orejas.</text><text class="tag okf" x="0" y="90">✓ Hombros abajo</text><line class="ground" x1="20" y1="100" x2="280" y2="100"/><path class="fig " d="M104 102 L104 138"/><path class="fig " d="M196 102 L196 138"/><circle class="head" cx="150" cy="158" r="11"/><path class="fig " d="M104 138 L134 166 L166 166 L196 138"/><path class="fig " d="M150 166 L150 256"/><path class="guide ok" d="M112 150 L188 150"/><text class="tag okf" x="206" y="154">espacio</text><text class="cap" x="0" y="290">Escápulas hacia abajo y juntas.</text><text class="tag badf" x="340" y="90">✗ Colgada muerta</text><line class="ground" x1="360" y1="100" x2="620" y2="100"/><path class="fig " d="M444 102 L444 128"/><path class="fig " d="M536 102 L536 128"/><circle class="head" cx="490" cy="130" r="11"/><path class="fig " d="M444 128 L470 140 L510 140 L536 128"/><path class="fig " d="M490 140 L490 248"/><path class="guide bad" d="M452 124 L528 124"/><text class="tag badf" x="546" y="128">en las orejas</text><text class="cap" x="340" y="290">Sin activar, el peso cuelga del hombro.</text><text class="cap" x="0" y="340">Empieza con los pies apoyados ayudando lo que haga falta.</text><text class="cap" x="0" y="362">Es el único ejercicio del plan que descomprime la espalda baja mientras entrenas.</text><text class="cap" x="0" y="384">Respira normal durante toda la colgada.</text></svg>

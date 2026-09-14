@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Bird dog: columna neutra frente a lumbar arqueada">
+<style>
+ .bg{fill:none}
+ .fig{fill:none;stroke:currentColor;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+ .head{fill:currentColor;stroke:none}
+ .ground{stroke:currentColor;stroke-width:3;opacity:.35}
+ .ok{stroke:#1F6B4A}
+ .bad{stroke:#9C3327}
+ .okf{fill:#1F6B4A}
+ .badf{fill:#9C3327}
+ .guide{stroke-width:3;stroke-dasharray:7 5;fill:none}
+ .lbl{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .cap{font:500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:.75}
+ .tag{font:700 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+</style>
+<rect class="bg" width="640" height="400"/>
+<text class="lbl" x="0" y="22">BIRD DOG</text><text class="cap" x="0" y="44">Brazo y pierna largos, no altos. La cadera queda paralela al suelo.</text><text class="tag okf" x="0" y="90">✓ Largo y neutro</text><line class="ground" x1="0" y1="214" x2="300" y2="214"/><circle class="head" cx="58" cy="128" r="11"/><path class="fig " d="M72 132 L168 130 L252 132"/><path class="fig " d="M96 136 L92 212"/><path class="fig " d="M232 138 L238 212"/><path class="fig " d="M72 130 L18 116"/><path class="fig " d="M252 132 L296 124"/><path class="guide ok" d="M18 122 L296 122"/><text class="cap" x="0" y="290">Mano, espalda y talón en una línea.</text><text class="tag badf" x="340" y="90">✗ Lumbar arqueada</text><line class="ground" x1="340" y1="214" x2="640" y2="214"/><circle class="head" cx="398" cy="134" r="11"/><path class="fig " d="M412 138 Q500 158 592 128"/><path class="fig " d="M436 142 L432 212"/><path class="fig " d="M572 142 L578 212"/><path class="fig " d="M412 136 L358 108"/><path class="fig " d="M592 128 L636 88"/><path class="guide bad" d="M470 152 Q510 166 552 146"/><text class="tag badf" x="474" y="186">se hunde</text><text class="cap" x="340" y="290">Subir alto arquea la lumbar.</text><text class="cap" x="0" y="340">Antes de mover: ombligo hacia adentro, costillas abajo.</text><text class="cap" x="0" y="362">Mirada al suelo, unos centímetros delante de las manos.</text><text class="cap" x="0" y="384">Vuelve lento, sin que la rodilla golpee el piso.</text></svg>

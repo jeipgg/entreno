@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Flexión: cuerpo en tabla frente a cadera hundida">
+<style>
+ .bg{fill:none}
+ .fig{fill:none;stroke:currentColor;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+ .head{fill:currentColor;stroke:none}
+ .ground{stroke:currentColor;stroke-width:3;opacity:.35}
+ .ok{stroke:#1F6B4A}
+ .bad{stroke:#9C3327}
+ .okf{fill:#1F6B4A}
+ .badf{fill:#9C3327}
+ .guide{stroke-width:3;stroke-dasharray:7 5;fill:none}
+ .lbl{font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ .cap{font:500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:.75}
+ .tag{font:700 13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+</style>
+<rect class="bg" width="640" height="400"/>
+<text class="lbl" x="0" y="22">FLEXIÓN</text><text class="cap" x="0" y="44">Glúteo apretado: es lo que impide que la lumbar se arquee.</text><text class="tag okf" x="0" y="90">✓ Cuerpo en tabla</text><line class="ground" x1="0" y1="212" x2="300" y2="212"/><circle class="head" cx="44" cy="140" r="11"/><path class="fig " d="M58 146 L160 162 L266 178"/><path class="fig " d="M76 150 L72 210"/><path class="fig " d="M250 178 L262 210"/><path class="guide ok" d="M58 142 L266 172"/><text class="cap" x="0" y="290">Bajada de 3 segundos siempre.</text><text class="tag badf" x="340" y="90">✗ Cadera hundida</text><line class="ground" x1="340" y1="212" x2="640" y2="212"/><circle class="head" cx="384" cy="140" r="11"/><path class="fig " d="M398 146 Q490 200 606 178"/><path class="fig " d="M416 152 L412 210"/><path class="fig " d="M590 178 L602 210"/><path class="guide bad" d="M398 142 L606 172"/><text class="tag badf" x="456" y="222">se hunde</text><text class="cap" x="340" y="290">Sube un escalón: pared o mesa.</text><text class="cap" x="0" y="340">Progresión: pared → mesa inclinada → suelo con rodillas → completa.</text><text class="cap" x="0" y="362">Mejor una flexión en la pared bien hecha que una en el suelo hundida.</text><text class="cap" x="0" y="384">Exhala al empujar.</text></svg>
