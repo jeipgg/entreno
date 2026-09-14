@@ -347,6 +347,8 @@ function estadoOffline(sw) {
  <div class="off-head"><span class="off-dot"></span><b>${ok ? 'Funciona sin conexión' : 'Todavía no guardado'}</b></div>
  <p class="off-det">${ok ? `${sw.archivos} archivos en el teléfono. Puedes entrenar sin red.`
  : (sw && sw.error) || 'Ábrela una vez con conexión para que se guarde.'}</p>
+ <p class="off-det off-ver">Versión: <code>${attr(sw && sw.version || '—')}</code></p>
+ <button type="button" class="btn-ghost" id="sw-actualizar">Buscar actualización</button>
  </div>`;
 }
 

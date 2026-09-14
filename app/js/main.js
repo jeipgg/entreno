@@ -83,6 +83,7 @@ async function registrarSW() {
  SW.registrado = true;
  } catch (e) { SW.error = e.message || 'No se pudo activar.'; }
  SW.archivos = await contarCache();
+ SW.version = await versionCache();
  document.addEventListener('visibilitychange', async () => {
  if (document.visibilityState !== 'visible') return;
  C.revalidarPantalla();
@@ -93,6 +94,28 @@ async function registrarSW() {
  SW.archivos = await contarCache();
  } catch {}
  });
+}
+
+async function versionCache() {
+ try { const k = await caches.keys(); return k.find(x => x.startsWith('pole-')) || '—'; }
+ catch { return '—'; }
+}
+
+/* Forzar la actualización sin desinstalar: desinstalar borra el registro.
+ Se borran las cachés y se vuelve a pedir todo de la red. */
+async function forzarActualizacion(boton) {
+ boton.disabled = true;
+ boton.textContent = 'Buscando…';
+ try {
+ const reg = await navigator.serviceWorker.getRegistration('../');
+ if (reg) { await reg.update(); await reg.unregister(); }
+ for (const k of await caches.keys()) await caches.delete(k);
+ boton.textContent = 'Recargando con la versión nueva…';
+ setTimeout(() => location.reload(true), 600);
+ } catch (e) {
+ boton.textContent = 'No se pudo. Prueba con red y vuelve a intentarlo.';
+ boton.disabled = false;
+ }
 }
 
 async function contarCache() {
@@ -409,6 +432,9 @@ function wirePanel() {
  E.borrarCheckin(HOY); location.reload();
  });
  const ce = $('#calendario-editar'); if (ce) ce.addEventListener('click', abrirCalendario);
+
+ const sa = $('#sw-actualizar');
+ if (sa) sa.addEventListener('click', () => forzarActualizacion(sa));
 
  const nc = $('#nube-config'); if (nc) nc.addEventListener('click', abrirToken);
  const na = $('#nube-ahora'); if (na) na.addEventListener('click', async () => {
