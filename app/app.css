@@ -680,3 +680,9 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
 
 .offline.warn{background:var(--chalk-soft);border-color:var(--chalk)}
 .offline.warn .off-dot{background:var(--chalk)}
+
+.cr-respaldo{
+  margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)
+}
+.cr-respaldo p{margin:0 0 .6rem;font-size:.844rem;color:var(--ink-2);line-height:1.45}
+.cr-respaldo .btn-primary{margin-top:0}

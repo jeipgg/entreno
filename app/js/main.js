@@ -270,8 +270,14 @@ function wireDia() {
  E.cerrarSesion(HOY, tbcReal(reg), PLAN.tut_barra_seg || 0);
  marcarNodosDominados();
  calcular(); pintar();
- $('#panel-body').innerHTML = V.resumenCierre(PLAN, CONTENIDO.textos);
+ $('#panel-body').innerHTML = V.resumenCierre(PLAN, CONTENIDO.textos, E.diasSinRespaldar());
  $('#panel').hidden = false;
+ const cr = $('#cr-respaldo');
+ if (cr) cr.addEventListener('click', () => {
+ descargar(`pole-respaldo-${HOY}.json`, E.respaldoJSON(), 'application/json');
+ E.marcarRespaldado();
+ cr.textContent = 'Guardado ✓';
+ });
  });
 
  const br = $('#reabrir');

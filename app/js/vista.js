@@ -328,8 +328,9 @@ export function editorCalendario(cal, tipos) {
 /* ============================================================
  RESUMEN AL CERRAR
  ============================================================ */
-export function resumenCierre(plan, textos) {
+export function resumenCierre(plan, textos, diasSinRespaldar) {
  const con = (plan.ejercicios || []).filter(e => e.escalon != null && e.notaTexto);
+ const pideRespaldo = diasSinRespaldar == null || diasSinRespaldar >= 7;
  return `<div class="cierre-res">
  <p class="cr-tit">Listo por hoy.</p>
  ${con.length ? `<ul class="rc">${con.map(e => {
@@ -339,5 +340,9 @@ export function resumenCierre(plan, textos) {
  }).join('')}</ul>`
  : '<p class="ci-det">No anotaste números hoy. Sin ellos la app no puede ajustar la próxima sesión.</p>'}
  <p class="ci-pie">Queda guardado con la fecha de hoy.</p>
+ ${pideRespaldo ? `<div class="cr-respaldo">
+ <p>Tu registro vive solo en este teléfono. Guarda una copia antes de que se pierda.</p>
+ <button type="button" class="btn-primary" id="cr-respaldo">Guardar copia en Archivos</button>
+ </div>` : ''}
  </div>`;
 }
