@@ -686,3 +686,35 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
 }
 .cr-respaldo p{margin:0 0 .6rem;font-size:.844rem;color:var(--ink-2);line-height:1.45}
 .cr-respaldo .btn-primary{margin-top:0}
+
+/* ---------- copia fuera del teléfono ---------- */
+.nube-acts{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem;align-items:center}
+.nube-acts .btn-ghost{margin-top:0;width:auto;flex:1 1 auto;background:var(--surface)}
+.off-det code{
+  font-family:var(--f-mono);font-size:.78em;background:var(--surface-2);
+  padding:.05rem .3rem;border-radius:4px
+}
+
+.tok h3{font-family:var(--f-display);font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.tok > p{margin:0 0 .8rem;font-size:.875rem;color:var(--ink-2);line-height:1.5}
+.tok-aviso{
+  background:var(--chalk-soft);border:1px solid var(--chalk);
+  border-radius:9px;padding:.8rem .9rem;margin-bottom:.9rem
+}
+.tok-aviso p{margin:0 0 .4rem;font-size:.844rem}
+.tok-aviso ul{margin:0;padding-left:1.05rem;display:flex;flex-direction:column;gap:.35rem}
+.tok-aviso li{font-size:.813rem;color:var(--ink-2);line-height:1.45}
+.tok-pasos{
+  font-size:.813rem;color:var(--muted);line-height:1.6;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;padding:.7rem .8rem;margin-bottom:.9rem
+}
+.tok-campo{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.6rem}
+.tok-campo span{font-size:.813rem;font-weight:600;color:var(--ink-2)}
+.tok-campo input{
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:.7rem .8rem;font-family:var(--f-mono);font-size:.875rem;color:var(--ink)
+}
+.tok-estado{margin:0 0 .6rem;font-size:.844rem;color:var(--muted);min-height:1.3em;line-height:1.4}
+.tok-estado.mal{color:var(--alarm)}
+.tok-estado.bien{color:var(--go)}

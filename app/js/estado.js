@@ -21,6 +21,7 @@ export const K = {
  prefs: 'pole.prefs',
  respaldo: 'pole.respaldo.v0',
  exportado: 'pole.ultimo_respaldo',
+ nube: 'pole.nube', // {token, repo, ultimo, ultimo_error}
 };
 
 export const ESQUEMA_ACTUAL = 1;
@@ -288,6 +289,50 @@ export function diasSinRespaldar() {
 }
 
 export function marcarRespaldado() { return write(K.exportado, hoyISO()); }
+
+/* ---------- copia fuera del teléfono ----------
+ El token vive aquí y en ningún otro sitio. Se borra con la app. */
+export function nube() { return read(K.nube, null); }
+
+export function guardarNube(cfg) {
+ return write(K.nube, { token: cfg.token, repo: cfg.repo,
+ ultimo: cfg.ultimo || null, ultimo_error: null });
+}
+
+export function olvidarNube() {
+ try { localStorage.removeItem(K.nube); return true; } catch { return false; }
+}
+
+export function marcarSubida(fecha, error) {
+ const n = read(K.nube, null); if (!n) return false;
+ if (error) n.ultimo_error = error; else { n.ultimo = fecha; n.ultimo_error = null; }
+ return write(K.nube, n);
+}
+
+/** Días desde la última copia fuera del teléfono. Infinity si nunca. */
+export function diasSinSubir() {
+ const n = read(K.nube, null);
+ if (!n || !n.ultimo) return Infinity;
+ const [Y, M, D] = n.ultimo.split('-').map(Number);
+ return Math.round((Date.now() - new Date(Y, M - 1, D).getTime()) / 864e5);
+}
+
+/** Restaura desde un volcado. Solo si el esquema coincide. */
+export function restaurar(json) {
+ let d;
+ try { d = JSON.parse(json); } catch { return { ok: false, error: 'El archivo no se pudo leer.' }; }
+ if (!d['pole.log']) return { ok: false, error: 'Ese archivo no parece un respaldo de la app.' };
+
+ // respaldo de lo que hay AHORA, antes de pisarlo
+ write('pole.respaldo.antes_de_restaurar', respaldoJSON());
+
+ let n = 0;
+ for (const [k, v] of Object.entries(d)) {
+ if (!k.startsWith('pole.') || k === K.nube) continue; // el token no se restaura nunca
+ if (write(k, v)) n++;
+ }
+ return { ok: true, claves: n, sesiones: Object.keys(d['pole.log'] || {}).length };
+}
 
 /* ---------- respaldo ---------- */
 export function respaldoJSON() {

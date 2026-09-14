@@ -24,6 +24,14 @@ jobs:
           fi
           echo "Contenido limpio."
 
+      - name: Buscar credenciales
+        run: |
+          if grep -rIniE "github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{30,}|gho_[A-Za-z0-9]{30,}" . --exclude-dir=.git --exclude-dir=.github; then
+            echo "::error::Hay un token de GitHub en el repositorio. Revócalo YA en GitHub → Settings → Developer settings, y quítalo de aquí."
+            exit 1
+          fi
+          echo "Sin credenciales."
+
       - name: Revisar el correo de los commits
         run: |
           if git log --format='%ae %ce' | grep -viE 'users\.noreply\.github\.com|^\s*$'; then

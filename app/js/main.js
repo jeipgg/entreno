@@ -11,6 +11,7 @@ import * as E from './estado.js';
 import * as V from './vista.js';
 import * as C from './cronometro.js';
 import { construirPlan, valores } from './motor.js';
+import * as NUBE from './respaldo.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -272,6 +273,12 @@ function wireDia() {
  calcular(); pintar();
  $('#panel-body').innerHTML = V.resumenCierre(PLAN, CONTENIDO.textos, E.diasSinRespaldar());
  $('#panel').hidden = false;
+ // la copia sale sola al cerrar; si falla no rompe nada
+ if (E.nube()) copiarAhora().then(r => {
+ const av = $('#aviso');
+ if (av && r.ok) { av.textContent = 'Copia guardada'; av.classList.add('visible');
+ setTimeout(() => av.classList.remove('visible'), 2000); }
+ });
  const cr = $('#cr-respaldo');
  if (cr) cr.addEventListener('click', () => {
  descargar(`pole-respaldo-${HOY}.json`, E.respaldoJSON(), 'application/json');
@@ -380,6 +387,7 @@ function abrirPanel() {
  sw: SW, log, checkins: leerCheckins(), catalogo: CONTENIDO.ejercicios.ejercicios,
  puerta: E.puertaMedica(), kb: E.tamanoUsadoKB(),
  diasSinRespaldar: E.diasSinRespaldar(),
+ nube: E.nube(), diasSinSubir: E.diasSinSubir(),
  sesiones: Object.values(log).filter(e => e && e.hecho).length,
  recordColgada: rec('colgada-activa'), recordHollow: rec('hollow-hold'),
  }, CONTENIDO.arbol);
@@ -401,10 +409,71 @@ function wirePanel() {
  E.borrarCheckin(HOY); location.reload();
  });
  const ce = $('#calendario-editar'); if (ce) ce.addEventListener('click', abrirCalendario);
+
+ const nc = $('#nube-config'); if (nc) nc.addEventListener('click', abrirToken);
+ const na = $('#nube-ahora'); if (na) na.addEventListener('click', async () => {
+ na.textContent = 'Copiando…'; na.disabled = true;
+ const r = await copiarAhora();
+ na.textContent = r.ok ? 'Copiado ✓' : 'No se pudo';
+ setTimeout(abrirPanel, 1500);
+ });
+ const nr = $('#nube-restaurar'); if (nr) nr.addEventListener('click', restaurarDesdeNube);
+ const no = $('#nube-olvidar'); if (no) no.addEventListener('click', () => {
+ if (!confirm('Se borra el token de este teléfono y se deja de copiar. El registro no se toca. ¿Seguir?')) return;
+ E.olvidarNube(); abrirPanel();
+ });
  ['pm1','pm2'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
  E.guardarPuertaMedica({ control_1: $('#pm1').value, control_2: $('#pm2').value });
  calcular(); pintar(); abrirPanel();
  }); });
+}
+
+const REPO_DATOS = 'jeipgg/reg-e';
+
+function abrirToken() {
+ $('#panel-body').innerHTML = V.pantallaToken(REPO_DATOS);
+ $('#tok-cancelar').addEventListener('click', abrirPanel);
+ $('#tok-guardar').addEventListener('click', async () => {
+ const campo = $('#tok-valor'), estado = $('#tok-estado'), boton = $('#tok-guardar');
+ const token = campo.value.trim();
+ if (!NUBE.pareceToken(token)) {
+ estado.textContent = 'Eso no parece un token de GitHub. Empieza por github_pat_ o ghp_.';
+ estado.className = 'tok-estado mal'; return;
+ }
+ boton.disabled = true; estado.className = 'tok-estado';
+ estado.textContent = 'Comprobando que llega al repositorio y que es privado…';
+
+ const v = await NUBE.verificar({ token, repo: REPO_DATOS });
+ if (!v.ok) {
+ estado.textContent = v.error; estado.className = 'tok-estado mal';
+ boton.disabled = false; return;
+ }
+ E.guardarNube({ token, repo: REPO_DATOS });
+ estado.textContent = 'Guardado. Haciendo la primera copia…';
+ const r = await copiarAhora();
+ estado.textContent = r.ok ? 'Listo: la copia ya está guardada.' : 'Guardado, pero la copia falló. Se reintenta al cerrar la próxima sesión.';
+ estado.className = 'tok-estado ' + (r.ok ? 'bien' : 'mal');
+ setTimeout(abrirPanel, 1800);
+ });
+}
+
+async function copiarAhora() {
+ const cfg = E.nube();
+ if (!cfg) return { ok: false, error: 'sin_configurar' };
+ const r = await NUBE.subir(cfg, E.respaldoJSON(), HOY);
+ E.marcarSubida(HOY, r.ok ? null : r.error);
+ return r;
+}
+
+async function restaurarDesdeNube() {
+ const cfg = E.nube(); if (!cfg) return;
+ if (!confirm('Esto reemplaza el registro de este teléfono por la última copia guardada. ' +
+ 'Lo que hay ahora queda respaldado aparte. ¿Seguir?')) return;
+ const r = await NUBE.bajar(cfg);
+ if (!r.ok) { alert(r.error); return; }
+ const res = E.restaurar(r.datos);
+ alert(res.ok ? `Restaurado: ${res.sesiones} sesiones.` : res.error);
+ if (res.ok) location.reload();
 }
 
 function abrirCalendario() {

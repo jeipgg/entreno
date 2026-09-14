@@ -196,6 +196,7 @@ function cierre(plan) {
  ============================================================ */
 export function panel(plan, datos, textos) {
  return `
+ ${estadoNube(datos.nube, datos.diasSinSubir)}
  ${avisoRespaldo(datos.diasSinRespaldar)}
  ${estadoOffline(datos.sw)}
  ${arbolHTML(plan.arbol, textos)}
@@ -256,6 +257,76 @@ function puertaHTML(p) {
  <label>Laboratorios<input type="date" id="pm1" value="${attr(p && p.control_1 || '')}"></label>
  <label>Control<input type="date" id="pm2" value="${attr(p && p.control_2 || '')}"></label>
  </div>
+ </div>`;
+}
+
+/* Estado de la copia fuera del teléfono. Es lo que sustituye a la caducidad
+ del token: un fallo silencioso se vuelve evidente. */
+export function estadoNube(n, dias) {
+ if (!n) return `<div class="offline warn">
+ <div class="off-head"><span class="off-dot"></span><b>Sin copia fuera del teléfono</b></div>
+ <p class="off-det">Tu registro vive solo aquí. Si desinstalas la app, se pierde.</p>
+ <button type="button" class="btn-ghost" id="nube-config">Guardar copia automática en GitHub</button>
+ </div>`;
+
+ const mal = n.ultimo_error || dias > 14;
+ return `<div class="offline ${mal ? 'bad' : 'ok'}">
+ <div class="off-head"><span class="off-dot"></span><b>${
+ n.ultimo_error ? 'La última copia falló' :
+ !n.ultimo ? 'Configurado, sin copiar todavía' :
+ dias === 0 ? 'Copia guardada hoy' : `Última copia hace ${dias} día${dias === 1 ? '' : 's'}`}</b></div>
+ <p class="off-det">${n.ultimo_error
+ ? explicaError(n.ultimo_error) + ' La app sigue funcionando; se reintenta al cerrar la próxima sesión.'
+ : `Se guarda sola en <code>${n.repo}</code> al cerrar cada sesión.`}</p>
+ <div class="nube-acts">
+ <button type="button" class="btn-ghost" id="nube-ahora">Copiar ahora</button>
+ <button type="button" class="btn-ghost" id="nube-restaurar">Restaurar desde la copia</button>
+ <button type="button" class="linkbtn" id="nube-olvidar">quitar la copia automática</button>
+ </div>
+ </div>`;
+}
+
+function explicaError(e) {
+ return {
+ token_invalido: 'El token ya no vale: lo revocaste o caducó.',
+ sin_red: 'No había conexión.',
+ sin_configurar: 'Falta configurarlo.',
+ }[e] || `GitHub respondió con un error (${e}).`;
+}
+
+/** Confirmación explícita antes de guardar el token (condición 3 de Bruja). */
+export function pantallaToken(repo) {
+ return `<div class="tok">
+ <h3>Copia automática en GitHub</h3>
+ <p>Al cerrar cada sesión, la app guarda una copia de tu registro en el repositorio
+ <b>privado</b> <code>${attr(repo)}</code>. Nadie más lo ve.</p>
+
+ <div class="tok-aviso">
+ <p><b>Lo que necesitas saber antes:</b></p>
+ <ul>
+ <li>El token se guarda <b>solo en este teléfono</b> y se borra si desinstalas la app.</li>
+ <li>Dale permiso <b>únicamente</b> a ese repositorio, y solo de <b>contenido: escritura</b>.
+ Nada de permisos de cuenta.</li>
+ <li>El respaldo <b>conserva el historial</b>: borrar algo en la app no lo borra de las copias
+ anteriores.</li>
+ <li>No publiques ninguna otra página en GitHub Pages con esta cuenta: compartiría dirección
+ con la app y podría leer este token.</li>
+ </ul>
+ </div>
+
+ <p class="tok-pasos"><b>Cómo sacarlo:</b> en GitHub → Settings → Developer settings →
+ Personal access tokens → <b>Fine-grained tokens</b> → Generate new token →
+ Repository access: <b>Only select repositories</b> → <code>${attr(repo)}</code> →
+ Permissions → Repository permissions → <b>Contents: Read and write</b>. Sin caducidad.</p>
+
+ <label class="tok-campo">
+ <span>Pega el token</span>
+ <input type="password" id="tok-valor" autocomplete="off" spellcheck="false"
+ placeholder="github_pat_…">
+ </label>
+ <p class="tok-estado" id="tok-estado"></p>
+ <button type="button" class="btn-primary" id="tok-guardar">Comprobar y guardar</button>
+ <button type="button" class="btn-ghost" id="tok-cancelar">Cancelar</button>
  </div>`;
 }
 
