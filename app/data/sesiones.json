@@ -481,5 +481,23 @@
         "drenaje"
       ]
     }
+  },
+  "agarre": {
+    "titulo": "Tus manos mandan en el día de tracción",
+    "texto": [
+      "Después de seis meses sin barra la piel perdió el callo, y la piel se adapta mucho más lento que el músculo. Si vas al fallo de agarre, se rasga — y una ampolla abierta te quita dos semanas de barra, no dos días.",
+      "**Regla:** sueltas la barra cuando el agarre empieza a arder, no cuando la espalda se cansa. Aunque te falten repeticiones.",
+      "**Tope de las primeras tres semanas:** máximo 3 minutos de barra en toda la sesión, sumando colgadas y retracciones. Después se sube de a 30 segundos por semana.",
+      "Si notas un punto caliente en la palma, ese ejercicio se acabó por hoy. No es debilidad: es el aviso justo antes de la ampolla."
+    ],
+    "cuidado": [
+      "Lima el callo cuando se levante: un callo grueso es el que se arranca.",
+      "Crema por la noche, nunca antes de entrenar — resbala y aumenta la fricción.",
+      "**Si usas magnesio, la crema de noche deja de ser opcional.** El magnesio reseca, y la piel seca no engruesa: se agrieta. Una grieta duele más que una ampolla y tarda más en cerrar.",
+      "El magnesio líquido reseca más que el polvo, porque lleva alcohol. Estas primeras semanas, mejor el polvo.",
+      "Sobre piel ya agrietada, ni magnesio ni tiza: arde y no da agarre. Ese día toca sesión sin barra.",
+      "Alterna el agarre: unas series con las manos más juntas, otras más separadas.",
+      "Guantes no: quitan sensibilidad y el callo igual tiene que salir."
+    ]
   }
 }

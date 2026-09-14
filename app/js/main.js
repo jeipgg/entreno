@@ -202,7 +202,7 @@ function calcular(forzarTipo) {
  e.notaTexto = (reg.notas || {})[e.id] || '';
  e.rpe = (reg.rpe || {})[e.id] || '';
  }
- PLAN.agarre = CONTENIDO.agarre;
+ PLAN.agarre = CONTENIDO.sesiones.agarre;
 }
 
 function pintar() {
