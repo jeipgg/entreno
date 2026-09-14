@@ -677,3 +677,6 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
   display:block;font-size:.688rem;color:var(--muted);
   margin-top:.15rem;line-height:1.35;font-style:italic
 }
+
+.offline.warn{background:var(--chalk-soft);border-color:var(--chalk)}
+.offline.warn .off-dot{background:var(--chalk)}

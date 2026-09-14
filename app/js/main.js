@@ -373,6 +373,7 @@ function abrirPanel() {
  $('#panel-body').innerHTML = V.panel(PLAN, {
  sw: SW, log, checkins: leerCheckins(), catalogo: CONTENIDO.ejercicios.ejercicios,
  puerta: E.puertaMedica(), kb: E.tamanoUsadoKB(),
+ diasSinRespaldar: E.diasSinRespaldar(),
  sesiones: Object.values(log).filter(e => e && e.hecho).length,
  recordColgada: rec('colgada-activa'), recordHollow: rec('hollow-hold'),
  }, CONTENIDO.arbol);
@@ -384,8 +385,12 @@ const leerCheckins = () => E.todosLosCheckins();
 
 function wirePanel() {
  const ex = $('#exportar'); if (ex) ex.addEventListener('click', exportarCSV);
- const rp = $('#respaldo'); if (rp) rp.addEventListener('click', () =>
- descargar(`pole-respaldo-${HOY}.json`, E.respaldoJSON(), 'application/json'));
+ const rp = $('#respaldo'); if (rp) rp.addEventListener('click', () => {
+ descargar(`pole-respaldo-${HOY}.json`, E.respaldoJSON(), 'application/json');
+ E.marcarRespaldado();
+ rp.textContent = 'Respaldo descargado ✓';
+ setTimeout(() => { rp.textContent = 'Descargar respaldo completo'; }, 2500);
+ });
  const rc = $('#rehacer-checkin'); if (rc) rc.addEventListener('click', () => {
  E.borrarCheckin(HOY); location.reload();
  });

@@ -20,6 +20,7 @@ export const K = {
  puerta: 'pole.puerta_medica',
  prefs: 'pole.prefs',
  respaldo: 'pole.respaldo.v0',
+ exportado: 'pole.ultimo_respaldo',
 };
 
 export const ESQUEMA_ACTUAL = 1;
@@ -274,6 +275,19 @@ export function prefs() { return read(K.prefs, { teatros_semana: 2 }); }
 export function guardarPrefs(p) {
  return write(K.prefs, { ...read(K.prefs, {}), ...p });
 }
+
+/* ---------- respaldo ----------
+ El registro vive SOLO en este teléfono. Si la app se desinstala, iOS borra
+ lo que tenía guardado. Por eso el aviso no es una sugerencia amable: es la
+ única red que hay. */
+export function diasSinRespaldar() {
+ const u = read(K.exportado, null);
+ if (!u) return Infinity;
+ const [Y, M, D] = u.split('-').map(Number);
+ return Math.round((Date.now() - new Date(Y, M - 1, D).getTime()) / 864e5);
+}
+
+export function marcarRespaldado() { return write(K.exportado, hoyISO()); }
 
 /* ---------- respaldo ---------- */
 export function respaldoJSON() {

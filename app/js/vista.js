@@ -196,6 +196,7 @@ function cierre(plan) {
  ============================================================ */
 export function panel(plan, datos, textos) {
  return `
+ ${avisoRespaldo(datos.diasSinRespaldar)}
  ${estadoOffline(datos.sw)}
  ${arbolHTML(plan.arbol, textos)}
  ${statsHTML(plan, datos)}
@@ -255,6 +256,17 @@ function puertaHTML(p) {
  <label>Laboratorios<input type="date" id="pm1" value="${attr(p && p.control_1 || '')}"></label>
  <label>Control<input type="date" id="pm2" value="${attr(p && p.control_2 || '')}"></label>
  </div>
+ </div>`;
+}
+
+function avisoRespaldo(dias) {
+ if (dias == null || dias < 7) return '';
+ const nunca = !isFinite(dias);
+ return `<div class="offline ${nunca || dias > 21 ? 'bad' : 'warn'}">
+ <div class="off-head"><span class="off-dot"></span><b>${nunca ? 'Nunca has respaldado' : `Van ${dias} días sin respaldar`}</b></div>
+ <p class="off-det">Tu registro vive solo en este teléfono. Si desinstalas la app o el navegador
+ limpia el almacenamiento, se pierde y no hay copia en ninguna parte.
+ Baja hasta <b>Descargar respaldo completo</b> y guárdalo en Archivos.</p>
  </div>`;
 }
 
