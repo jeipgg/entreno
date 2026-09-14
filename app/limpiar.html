@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Actualizar</title>
+<style>
+ :root{color-scheme:light dark}
+ body{margin:0;padding:2rem 1.2rem;font:16px -apple-system,BlinkMacSystemFont,sans-serif;
+ background:#EDF0F3;color:#161B21;line-height:1.5}
+ @media (prefers-color-scheme:dark){body{background:#12161A;color:#E5EAEF}}
+ .caja{max-width:26rem;margin:0 auto}
+ h1{font-size:1.4rem;margin:0 0 .6rem}
+ p{margin:0 0 .9rem;font-size:.95rem}
+ .estado{padding:.9rem 1rem;border-radius:9px;background:#DEE7F3;color:#2F5384;font-weight:600}
+ @media (prefers-color-scheme:dark){.estado{background:#1E2C40;color:#8FB4E6}}
+ .ok{background:#DCEDE4;color:#1F6B4A}
+ @media (prefers-color-scheme:dark){.ok{background:#152B21;color:#7CC9A0}}
+ .nota{font-size:.85rem;opacity:.75}
+ a.btn{display:block;margin-top:1rem;padding:.9rem;border-radius:10px;background:#2F5384;
+ color:#fff;text-align:center;text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<div class="caja">
+ <h1>Actualizar la app</h1>
+ <p>Esta página borra la copia guardada del programa para que el teléfono descargue
+ la versión nueva.</p>
+ <p class="nota"><b>Tu registro no se toca.</b> Lo que se borra son los archivos de la app,
+ no lo que has anotado ni la configuración del respaldo.</p>
+ <div class="estado" id="estado">Limpiando…</div>
+ <a class="btn" href="./" id="volver">Volver a la app</a>
+</div>
+
+<script>
+/* Esta página existe porque el service worker ignora el query string al servir
+ desde caché, así que ningún truco de URL fuerza la actualización. La ruta
+ /limpiar.html no está en el precache, así que el navegador la pide a la red. */
+(async () => {
+ const estado = document.getElementById('estado');
+ const pasos = [];
+ try {
+ if ('serviceWorker' in navigator) {
+ const regs = await navigator.serviceWorker.getRegistrations();
+ for (const r of regs) await r.unregister();
+ pasos.push(`${regs.length} registro(s) de la app`);
+ }
+ if ('caches' in window) {
+ const ks = await caches.keys();
+ for (const k of ks) await caches.delete(k);
+ pasos.push(`${ks.length} paquete(s) de archivos`);
+ }
+ estado.className = 'estado ok';
+ estado.textContent = pasos.length
+ ? `Listo: se borró ${pasos.join(' y ')}. Toca "Volver a la app".`
+ : 'No había nada guardado. Toca "Volver a la app".';
+ } catch (e) {
+ estado.textContent = 'No se pudo limpiar: ' + e.message;
+ }
+})();
+</script>
+</body>
+</html>
