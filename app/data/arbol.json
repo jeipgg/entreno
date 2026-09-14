@@ -1,0 +1,222 @@
+{
+  "version": 2,
+  "meta_visible": "Del punto de partida al invertido hay 16 pasos. Es un camino de meses, no de semanas — y esa es la verdad útil.",
+  "nodos": {
+    "GRIP-0": {
+      "rama": "GRIP",
+      "nombre": "Colgada asistida, pies en el suelo",
+      "prerequisitos": [],
+      "test": {
+        "ejercicio": "colgada-activa",
+        "umbral": 20,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "GRIP-1": {
+      "rama": "GRIP",
+      "nombre": "Colgada activa completa",
+      "prerequisitos": [
+        "GRIP-0"
+      ],
+      "test": {
+        "ejercicio": "colgada-activa",
+        "umbral": 20,
+        "series": 3
+      },
+      "nivel": 1
+    },
+    "GRIP-2": {
+      "rama": "GRIP",
+      "nombre": "Colgada activa 30 segundos",
+      "prerequisitos": [
+        "GRIP-1"
+      ],
+      "test": {
+        "ejercicio": "colgada-activa",
+        "umbral": 30,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "PULL-0": {
+      "rama": "PULL",
+      "nombre": "Retracción escapular asistida",
+      "prerequisitos": [
+        "GRIP-0"
+      ],
+      "test": {
+        "ejercicio": "retraccion-colgada",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "PULL-1": {
+      "rama": "PULL",
+      "nombre": "Retracción escapular libre con sostén",
+      "prerequisitos": [
+        "GRIP-1",
+        "PULL-0"
+      ],
+      "test": {
+        "ejercicio": "retraccion-colgada",
+        "umbral": 6,
+        "series": 3
+      },
+      "nivel": 1
+    },
+    "PULL-2": {
+      "rama": "PULL",
+      "nombre": "Remo invertido a 45°",
+      "prerequisitos": [
+        "PULL-1",
+        "CORE-1"
+      ],
+      "test": {
+        "ejercicio": "remo-invertido",
+        "umbral": 12,
+        "series": 3
+      },
+      "nivel": 1
+    },
+    "PULL-3": {
+      "rama": "PULL",
+      "nombre": "Remo invertido horizontal",
+      "prerequisitos": [
+        "PULL-2"
+      ],
+      "test": {
+        "ejercicio": "remo-invertido",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "PULL-4": {
+      "rama": "PULL",
+      "nombre": "Negativa de dominada, 3 segundos",
+      "prerequisitos": [
+        "PULL-2",
+        "GRIP-2"
+      ],
+      "test": {
+        "ejercicio": "dominada-negativa",
+        "umbral": 3,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "CORE-0": {
+      "rama": "CORE",
+      "nombre": "Dead bug con la lumbar pegada",
+      "prerequisitos": [],
+      "test": {
+        "ejercicio": "a-07",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "CORE-1": {
+      "rama": "CORE",
+      "nombre": "Hollow con rodillas dobladas",
+      "prerequisitos": [
+        "CORE-0"
+      ],
+      "test": {
+        "ejercicio": "hollow-hold",
+        "umbral": 25,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "CORE-2": {
+      "rama": "CORE",
+      "nombre": "Hollow con piernas extendidas",
+      "prerequisitos": [
+        "CORE-1"
+      ],
+      "test": {
+        "ejercicio": "hollow-hold",
+        "umbral": 25,
+        "series": 3
+      },
+      "nivel": 1
+    },
+    "CORE-5": {
+      "rama": "CORE",
+      "nombre": "Hollow colgado, rodillas a 90°",
+      "prerequisitos": [
+        "CORE-2",
+        "GRIP-2"
+      ],
+      "test": {
+        "ejercicio": "compresion-sentada",
+        "umbral": 15,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "CORE-6": {
+      "rama": "CORE",
+      "nombre": "Elevación de rodillas colgada",
+      "prerequisitos": [
+        "CORE-5"
+      ],
+      "test": {
+        "ejercicio": "compresion-sentada",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 2,
+      "requiere_puerta_medica": true,
+      "aviso": "Es el único ejercicio del plan con flexión activa de la espalda baja, y es prerrequisito ineludible del invertido. Se abre solo con seis semanas seguidas sin dolor lumbar de más de un día."
+    },
+    "HIP-7": {
+      "rama": "HIP",
+      "nombre": "Flexor de cadera activo",
+      "prerequisitos": [
+        "CORE-2"
+      ],
+      "test": {
+        "ejercicio": "puente-unilateral",
+        "umbral": 12,
+        "series": 3
+      },
+      "nivel": 1
+    },
+    "POLE-3": {
+      "rama": "POLE",
+      "nombre": "Invertido asistido",
+      "prerequisitos": [
+        "CORE-6",
+        "PULL-3",
+        "GRIP-2",
+        "HIP-7"
+      ],
+      "test": {
+        "ejercicio": "compresion-sentada",
+        "umbral": 10,
+        "series": 3
+      },
+      "nivel": 3,
+      "requiere_puerta_medica": true
+    },
+    "POLE-4": {
+      "rama": "POLE",
+      "nombre": "Invertido desde el piso, sin impulso",
+      "prerequisitos": [
+        "POLE-3",
+        "PULL-4"
+      ],
+      "test": {
+        "ejercicio": "compresion-sentada",
+        "umbral": 12,
+        "series": 3
+      },
+      "nivel": 3,
+      "requiere_puerta_medica": true
+    }
+  }
+}

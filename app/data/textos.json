@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "regresion": "Bajamos un escalón. El escalón anterior sigue dominado; esto es coger base, no retroceder.",
+  "progresion": {
+    "sube_escalon": "Subes de escalón: dos sesiones seguidas completando en el techo.",
+    "sube_objetivo": "Dos sesiones completas seguidas: hoy una más.",
+    "consolida": "Una sesión buena no basta. Repite el mismo objetivo y, si sale otra vez, subimos.",
+    "mantiene": "Mismo objetivo que la última vez: consolidar antes de subir.",
+    "primera": "Primera vez: empieza por aquí y anota lo que salga.",
+    "manual": "Escalón elegido por ti. Anota lo que salga y desde ahí sigo yo.",
+    "veto_rpe": "La última vez terminaste muy al límite. Hoy no subimos aunque los números den.",
+    "cupo": "Listo para subir — te toca en la próxima sesión.",
+    "corte_piel": "Cortaste por el agarre. Eso no cuenta como fallo: la piel manda."
+  },
+  "celebracion": {
+    "escalon": "Subiste de escalón.",
+    "nodo": "Dominaste {nodo}.",
+    "semana": "Semana cumplida.",
+    "descarga": "Semana de descarga completa. Cuenta igual que una de carga — de hecho, más.",
+    "sin_dolor": "Cuatro semanas sin dolor lumbar de más de un día.",
+    "callo": "Primer callo formado.",
+    "regreso": "Volviste. De todo lo que hay en esta app, esto es lo más difícil."
+  },
+  "bloqueo": {
+    "irradiado": "Hoy no se entrena. Hormigueo o corrientazo bajando por la pierna es una señal nerviosa, y entrenar encima la empeora. Consulta antes de la siguiente sesión.",
+    "puerta_medica": "Esta rama se abre cuando registres las dos fechas: laboratorios y control. No es burocracia — el ejercicio es parte de tu tratamiento, y la otra mitad lleva tiempo esperando.",
+    "cupo_carga": "Ya van {n} días de carga esta semana. El tope es {max}, y el teatro también cuenta como día de demanda.",
+    "48h": "La última sesión de carga fue hace menos de 48 horas. Hoy toca movilidad o caminata.",
+    "ventana_temprano": "Antes de las 7 de la mañana no hay barra ni carga: tu espalda lleva toda la noche rehidratándose y es el peor momento del día para cargarla.",
+    "ventana_tarde": "Pasadas las 20:30 solo queda el Piso 1. Lo que ganes entrenando ahora lo pierdes durmiendo peor.",
+    "descarga": "Semana de descarga: mitad de series, mismo escalón. No es opcional y no se salta.",
+    "sin_checkin": "Sin saber cómo llegas, la app no puede decidir si hoy toca la sesión completa."
+  },
+  "adherencia": {
+    "etiqueta": "sesiones en 14 días",
+    "nota": "Sin meta y sin reset: no baja por no entrenar hoy."
+  }
+}

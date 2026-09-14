@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Entrenamiento</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2F5384" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12161A" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Entreno">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ============ CHECK-IN — obligatorio y vinculante (Sakti 4) ============ -->
+<div id="checkin" class="screen" hidden>
+ <div class="ci-wrap">
+ <p class="ci-kicker" id="ci-fecha"></p>
+ <h1 class="ci-title" id="ci-title">¿Cómo llegas?</h1>
+
+ <div class="ci-q">
+ <label>Energía</label>
+ <div class="scale" data-field="energia" role="group" aria-label="Energía del 1 al 5">
+ <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+ </div>
+ <div class="scale-ends"><span>en el piso</span><span>bien</span></div>
+ </div>
+
+ <div class="ci-q">
+ <label>Pesadez de piernas</label>
+ <div class="scale" data-field="piernas" role="group" aria-label="Pesadez de piernas del 1 al 5">
+ <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+ </div>
+ <div class="scale-ends"><span>ligeras</span><span>muy pesadas</span></div>
+ </div>
+
+ <div class="ci-q">
+ <label>Cómo dormiste</label>
+ <div class="scale" data-field="sueno_calidad" role="group" aria-label="Calidad del sueño del 1 al 5">
+ <button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+ </div>
+ <div class="scale-ends"><span>fatal</span><span>bien</span></div>
+ <div class="ci-horas">
+ <label for="ci-horas">Horas</label>
+ <input type="number" id="ci-horas" min="0" max="14" step="0.5" placeholder="8">
+ </div>
+ </div>
+
+ <div class="ci-q">
+ <label>Espalda baja</label>
+ <div class="opcion" data-field="dolor_lumbar" role="group" aria-label="Dolor lumbar">
+ <button type="button" data-v="0" aria-pressed="true">Nada</button>
+ <button type="button" data-v="1">Molestia hoy</button>
+ <button type="button" data-v="2">Lleva más de un día</button>
+ <button type="button" data-v="3">Baja por la pierna</button>
+ </div>
+ </div>
+
+ <div class="ci-q">
+ <label>Manos</label>
+ <div class="opcion" data-field="manos" role="group" aria-label="Estado de las manos">
+ <button type="button" data-v="integra" aria-pressed="true">Bien</button>
+ <button type="button" data-v="punto_caliente">Punto caliente</button>
+ <button type="button" data-v="ampolla">Ampolla</button>
+ </div>
+ </div>
+
+ <p class="ci-falta" id="ci-falta" hidden>Falta la energía y la pesadez de piernas: son las dos que deciden lo de hoy.</p>
+ <button type="button" class="btn-primary" id="ci-go">Ver lo de hoy</button>
+ <p class="ci-pie">El check-in decide la sesión. Sin él la app no puede saber si hoy toca completa o corta.</p>
+ </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" hidden>
+ <nav class="days" aria-label="Día de la semana">
+ <div class="days-row" id="days-row"></div>
+ <button type="button" class="badbtn" id="btn-min">Día malo — la sesión de 15 minutos</button>
+ <div class="topbar">
+ <div class="bar"><i id="barfill"></i></div>
+ <b id="count">0 / 0</b>
+ <span id="aviso" aria-live="polite"></span>
+ <button type="button" class="linkbtn" id="btn-panel">progreso</button>
+ </div>
+ </nav>
+
+ <main class="wrap" id="main"></main>
+</div>
+
+<!-- ============ CRONÓMETRO ============ -->
+<div id="timer" class="timer" hidden>
+ <div class="t-inner">
+ <p class="t-label" id="t-label"></p>
+ <div class="t-num" id="t-num">0:00</div>
+ <p class="t-ex" id="t-ex"></p>
+ <div class="t-next" id="t-next" hidden></div>
+ <div class="t-actions">
+ <button type="button" class="btn-ghost" id="t-less">−15s</button>
+ <button type="button" class="btn-ghost" id="t-more">+15s</button>
+ </div>
+ <button type="button" class="btn-primary" id="t-close">Listo</button>
+ </div>
+</div>
+
+<!-- ============ PANEL ============ -->
+<div id="panel" class="sheet" hidden>
+ <div class="sheet-inner">
+ <div class="sheet-head">
+ <h2>Dónde vas</h2>
+ <button type="button" class="linkbtn" id="panel-close">cerrar</button>
+ </div>
+ <div id="panel-body"></div>
+ </div>
+</div>
+
+<!-- ============ DIAGRAMA ============ -->
+<div id="figbox" class="sheet" hidden>
+ <div class="sheet-inner">
+ <div class="sheet-head">
+ <h2 id="fig-title"></h2>
+ <button type="button" class="linkbtn" id="fig-close">cerrar</button>
+ </div>
+ <div id="fig-body" class="fig-body"></div>
+ </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
