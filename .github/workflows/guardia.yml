@@ -1,0 +1,33 @@
+# Guardia de privacidad — corre en GitHub, no en el Mac.
+# Si un dato clínico llega a este repositorio por cualquier vía (push manual,
+# edición desde la web, otro equipo), esto falla y llega un correo.
+# No depende de que nadie recuerde ejecutar nada.
+name: guardia
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 12 1 * *'   # y una vez al mes, por si acaso
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar datos personales en el contenido
+        run: |
+          if grep -rIniE "lipedema|L5-S1|discopat|olanzapina|escoli|hemorroid|fisura|hipotiro|levotiroxina|InBody|Jeimmy|jeimmy|Fede|Lucas|linfátic|prediabet|hígado graso|higado graso|colon irritable|BMR|cintura.cadera|ansios|depresiv|psiquiatr|[a-z0-9._%+-]+@[a-z0-9.-]+" . --exclude-dir=.git --exclude-dir=.github; then
+            echo "::error::Hay datos personales en el repositorio. No debe quedar así."
+            exit 1
+          fi
+          echo "Contenido limpio."
+
+      - name: Revisar el correo de los commits
+        run: |
+          if git log --format='%ae %ce' | grep -viE 'users\.noreply\.github\.com|^\s*$'; then
+            echo "::error::Hay un commit con correo personal. Usa el correo noreply de GitHub."
+            exit 1
+          fi
+          echo "Autoría limpia."

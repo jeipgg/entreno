@@ -339,14 +339,17 @@ function ejerciciosDe(dia) {
 }
 
 /* Items de calentamiento y enfriamiento, normalizados como ejercicios de 1 serie. */
+function bloquesDelDia(dia) {
+ const d = R.dias[dia] || {}, B = R.bloques_comunes, out = [];
+ if (d.apertura) out.push(B.apertura);
+ if (d.articular) out.push(B.articular);
+ if (d.salida_comun) out.push(B.salida_comun);
+ if (d.salida && B.salidas[d.salida]) out.push(B.salidas[d.salida]);
+ if (d.drenaje) out.push(B.drenaje);
+ return out;
+}
 function itemsDeBloques(dia) {
- const d = R.dias[dia] || {};
- const out = [];
- if (d.articular) out.push(...R.bloques_comunes.articular.items);
- if (d.estiramiento_previo) out.push(...R.bloques_comunes.estiramiento_previo.items);
- if (d.calentamiento) out.push(...R.bloques_comunes.calentamiento.items);
- if (d.enfriamiento) out.push(...R.bloques_comunes.enfriamiento.items);
- return out.map(i => ({ ...i, series: 1 }));
+ return bloquesDelDia(dia).flatMap(b => b.items).map(i => ({ ...i, series: 1 }));
 }
 
 /* Todo lo que cuenta para el progreso, EN EL ORDEN EN QUE SE HACE.
@@ -354,12 +357,14 @@ function itemsDeBloques(dia) {
 function unidadesDelDia(dia) {
  const d = R.dias[dia] || {};
  const uno = i => ({ ...i, series: 1 });
+ const B = R.bloques_comunes;
  return []
- .concat(d.articular ? R.bloques_comunes.articular.items.map(uno) : [])
- .concat(d.estiramiento_previo ? R.bloques_comunes.estiramiento_previo.items.map(uno) : [])
- .concat(d.calentamiento ? R.bloques_comunes.calentamiento.items.map(uno) : [])
+ .concat(d.apertura ? B.apertura.items.map(uno) : [])
+ .concat(d.articular ? B.articular.items.map(uno) : [])
  .concat(ejerciciosDe(dia))
- .concat(d.enfriamiento ? R.bloques_comunes.enfriamiento.items.map(uno) : []);
+ .concat(d.salida_comun ? B.salida_comun.items.map(uno) : [])
+ .concat(d.salida && B.salidas[d.salida] ? B.salidas[d.salida].items.map(uno) : [])
+ .concat(d.drenaje ? B.drenaje.items.map(uno) : []);
 }
 
 /* Qué toca después de marcar una serie: repetir el mismo ejercicio o pasar al siguiente. */
@@ -518,9 +523,8 @@ function pintarDia() {
  }
  }
 
- if (d.articular && R.bloques_comunes.articular) html += bloqueSimple(R.bloques_comunes.articular);
- if (d.estiramiento_previo && R.bloques_comunes.estiramiento_previo)
- html += bloqueSimple(R.bloques_comunes.estiramiento_previo);
+ if (d.apertura) html += bloqueSimple(R.bloques_comunes.apertura);
+ if (d.articular) html += bloqueSimple(R.bloques_comunes.articular);
 
  if (d.aviso_agarre && R.agarre) {
  html += `<div class="agarre">
@@ -533,12 +537,13 @@ function pintarDia() {
  </div>`;
  }
 
- if (d.calentamiento) html += bloqueSimple(R.bloques_comunes.calentamiento);
-
  const ejs = ejerciciosDe(diaActual);
  html += '<ol class="ex-list">' + ejs.map((e, i) => tarjetaEjercicio(e, i, sem)).join('') + '</ol>';
 
- if (d.enfriamiento) html += bloqueSimple(R.bloques_comunes.enfriamiento);
+ if (d.salida_comun) html += bloqueSimple(R.bloques_comunes.salida_comun);
+ if (d.salida && R.bloques_comunes.salidas[d.salida])
+ html += bloqueSimple(R.bloques_comunes.salidas[d.salida]);
+ if (d.drenaje) html += bloqueSimple(R.bloques_comunes.drenaje);
 
  if (!d.descanso_total) html += cierreHTML();
 
@@ -610,13 +615,13 @@ function bloqueSimple(b) {
  return `<div class="block">
  <div class="block-head">
  <h3>${b.nombre}</h3>
- <span class="block-mins">${b.mins} min · ${b.cuando}</span>
+ <span class="block-mins">${b.mins} min${b.cuando ? ' · ' + b.cuando : ''}</span>
  <span class="block-count ${hechos === b.items.length ? 'full' : ''}">${hechos}/${b.items.length}</span>
  </div>
  ${b.nota ? `<p class="block-note">${b.nota}</p>` : ''}
  <ul class="simple">${b.items.map(i => {
  const done = (log.series && log.series[i.id] || []).length > 0;
- const video = read(K.videos, {})[i.id] || i.video;
+ const video = urlSegura(read(K.videos, {})[i.id] || i.video);
  const nota = (log.notas && log.notas[i.id]) || '';
  const unidad = i.modo === 'tiempo' ? 'seg' : 'reps';
  const ayuda = /×|2 ×/.test(i.dosis) ? `${unidad} de cada vez` : `${unidad} que lograste`;
@@ -625,7 +630,7 @@ function bloqueSimple(b) {
  <div class="n">
  <span class="t">${i.nombre}</span>${i.para ? `<span class="para">${i.para}</span>` : ''}
  <span class="logro">
- <input type="text" inputmode="numeric" data-nota="${i.id}" value="${nota}"
+ <input type="text" inputmode="numeric" data-nota="${i.id}" value="${attr(nota)}"
  placeholder="—" aria-label="${ayuda} en ${i.nombre}">
  <label>${ayuda}</label>
  </span>
@@ -650,7 +655,7 @@ function tarjetaEjercicio(e, i, sem) {
  `<button type="button" class="serie" data-ex="${e.id}" data-serie="${s}" aria-pressed="${marcadas.includes(s)}" aria-label="Serie ${s + 1}">${s + 1}</button>`
  ).join('');
 
- const video = read(K.videos, {})[e.id] || e.video;
+ const video = urlSegura(read(K.videos, {})[e.id] || e.video);
  const tools = [];
  if (e.modo === 'tiempo' && e.segundos) {
  tools.push(`<button type="button" class="tool" data-timer="hold" data-ex="${e.id}">▶ ${fmt(e.segundos)}</button>`);
@@ -696,7 +701,7 @@ function tarjetaEjercicio(e, i, sem) {
  <div class="series">${series}${e.descanso ? `<button type="button" class="tool" data-timer="rest" data-ex="${e.id}">descanso ${e.descanso}s</button>` : ''}</div>
  <div class="ex-tools">${tools.join('')}</div>
  <div class="ex-log">
- <input type="text" inputmode="numeric" data-nota="${e.id}" value="${nota}"
+ <input type="text" inputmode="numeric" data-nota="${e.id}" value="${attr(nota)}"
  placeholder="${ejemplo}" aria-label="${ayuda} de ${e.nombre}">
  <label>${ayuda}</label>
  </div>`}
@@ -810,10 +815,9 @@ function todosLosEjercicios() {
  else out.push(...(d.ejercicios || []));
  });
  out.push(...R.cardio_corto.ejercicios);
- out.push(...R.bloques_comunes.articular.items.map(i => ({ ...i, series: 1 })));
- out.push(...R.bloques_comunes.estiramiento_previo.items.map(i => ({ ...i, series: 1 })));
- out.push(...R.bloques_comunes.calentamiento.items.map(i => ({ ...i, series: 1 })));
- out.push(...R.bloques_comunes.enfriamiento.items.map(i => ({ ...i, series: 1 })));
+ const BC = R.bloques_comunes;
+ [BC.apertura, BC.articular, BC.salida_comun, BC.drenaje, ...Object.values(BC.salidas)]
+ .forEach(b => out.push(...b.items.map(i => ({ ...i, series: 1 }))));
  return out;
 }
 
@@ -1088,6 +1092,7 @@ function abrirPanel() {
  ${historialHTML()}
 
  <button type="button" class="btn-ghost" id="exportar" style="margin-top:1rem">Exportar el registro (CSV)</button>
+ <p class="aviso-csv">El archivo sale sin cifrar. Si lo guardas en iCloud se sincroniza con tus otros dispositivos.</p>
  <button type="button" class="btn-ghost" id="rehacer-checkin">Rehacer el check-in de hoy</button>
  `;
 
@@ -1204,10 +1209,7 @@ function exportarCSV() {
  const d = R.dias[e.dia];
  if (!d) return;
  let ejs = d.variantes ? (d.variantes[e.variante] || d.variantes.bici).ejercicios : (d.ejercicios || []);
- if (d.articular) ejs = ejs.concat(R.bloques_comunes.articular.items.map(i => ({ ...i, series: 1 })));
- if (d.estiramiento_previo) ejs = ejs.concat(R.bloques_comunes.estiramiento_previo.items.map(i => ({ ...i, series: 1 })));
- if (d.calentamiento) ejs = ejs.concat(R.bloques_comunes.calentamiento.items.map(i => ({ ...i, series: 1 })));
- if (d.enfriamiento) ejs = ejs.concat(R.bloques_comunes.enfriamiento.items.map(i => ({ ...i, series: 1 })));
+ ejs = ejs.concat(bloquesDelDia(e.dia).flatMap(b => b.items).map(i => ({ ...i, series: 1 })));
  ejs.forEach(x => {
  filas.push([
  f, e.dia, e.tipo || d.tipo, e.variante || '', e.hecho ? 'si' : 'no',
@@ -1241,6 +1243,19 @@ function pintarPie() {
  <ul>${R.alertas.map(a => `<li><b>${a.senal}:</b> ${a.accion}</li>`).join('')}</ul>
  </div>
  ${R.notas_finales.map(t => `<p>${md(t)}</p>`).join('')}`;
+}
+
+/* Un valor que va dentro de un atributo HTML. Sin esto, una nota con comillas
+ rompe el atributo y corrompe el render. */
+function attr(v) {
+ return String(v == null ? '' : v)
+ .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+ .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* Solo https. Evita que un enlace guardado pueda ejecutar código. */
+function urlSegura(u) {
+ return typeof u === 'string' && /^https:\/\//i.test(u) ? u : '';
 }
 
 /* ---------- negritas de markdown, sin librería ---------- */

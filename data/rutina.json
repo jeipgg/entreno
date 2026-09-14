@@ -18,313 +18,408 @@
     "6": "s"
   },
   "bloques_comunes": {
-    "calentamiento": {
-      "nombre": "Activación",
-      "mins": 6,
-      "cuando": "lun, mié y vie",
-      "nota": "Ya moviste las articulaciones; esto enciende los músculos que van a sostener la columna durante la sesión. Boca arriba o en cuadrupedia, nunca doblando la espalda de pie.",
-      "items": [
-        {
-          "nombre": "Respiración 90/90 con pies en la silla",
-          "dosis": "5 resp.",
-          "para": "Baja las costillas y activa la retroversión pélvica contra esa curva de más",
-          "busqueda": "90 90 breathing exercise",
-          "video": "https://www.youtube.com/watch?v=I9wZTNaDlVo",
-          "id": "w-resp9090",
-          "modo": "reps"
-        },
-        {
-          "nombre": "Puente de glúteo",
-          "dosis": "12",
-          "para": "Despierta el glúteo dormido por el sedentarismo",
-          "busqueda": "glute bridge",
-          "video": "https://www.youtube.com/watch?v=18GVqjfHy-M",
-          "id": "w-puente",
-          "modo": "reps"
-        },
-        {
-          "nombre": "Dead bug lento",
-          "dosis": "6 × lado",
-          "para": "Core anti-extensión, con la lumbar pegada al piso",
-          "busqueda": "dead bug exercise",
-          "video": "https://www.youtube.com/watch?v=GbSC02oU3To",
-          "id": "w-deadbug",
-          "infografia": "dead-bug",
-          "modo": "reps"
-        },
-        {
-          "nombre": "Bird dog",
-          "dosis": "6 × lado",
-          "para": "Estabilidad cruzada, directamente para tu asimetría",
-          "busqueda": "bird dog exercise",
-          "video": "https://www.youtube.com/watch?v=xEDnlOxeJH4",
-          "id": "w-birddog",
-          "infografia": "bird-dog",
-          "modo": "reps"
-        }
-      ]
-    },
-    "enfriamiento": {
-      "nombre": "Enfriamiento",
-      "mins": 12,
-      "cuando": "lun, mié y vie",
-      "items": [
-        {
-          "nombre": "Colgada pasiva suave en la barra",
-          "dosis": "2 × 20 seg",
-          "para": "Tracción directa sobre la espalda baja: descompresión real",
-          "busqueda": "dead hang decompression",
-          "video": "https://www.youtube.com/watch?v=kKXyCA7i-20",
-          "id": "c-colgada",
-          "infografia": "colgada-activa",
-          "modo": "tiempo",
-          "segundos": 20
-        },
-        {
-          "nombre": "Psoas en zancada, con retroversión de pelvis",
-          "dosis": "45 seg × lado",
-          "para": "El psoas corto es la mitad de esa curva de más",
-          "busqueda": "kneeling hip flexor stretch posterior pelvic tilt",
-          "video": "https://www.youtube.com/watch?v=KiTGo4L4Bgg",
-          "id": "c-psoas",
-          "modo": "tiempo",
-          "segundos": 45
-        },
-        {
-          "id": "c-antebrazo",
-          "nombre": "Antebrazo: flexores y extensores",
-          "dosis": "30 seg × cada uno",
-          "modo": "tiempo",
-          "segundos": 30,
-          "para": "Después de colgarte, el antebrazo queda acortado. Es la prevención directa de la epicondilitis",
-          "busqueda": "forearm flexor extensor stretch"
-        },
-        {
-          "id": "c-pectoral",
-          "nombre": "Pectoral en el marco de la puerta",
-          "dosis": "40 seg × lado",
-          "modo": "tiempo",
-          "segundos": 40,
-          "para": "El pectoral corto tira del hombro adelante y te cierra el rango que el pole necesita",
-          "busqueda": "doorway pec stretch"
-        },
-        {
-          "id": "c-dorsal",
-          "nombre": "Dorsal arrodillada, manos en una silla",
-          "dosis": "40 seg",
-          "modo": "tiempo",
-          "segundos": 40,
-          "para": "Abre el hombro por encima de la cabeza sin arquear la espalda baja",
-          "busqueda": "kneeling lat stretch on bench"
-        },
-        {
-          "id": "c-isquios",
-          "nombre": "Isquiotibiales tumbada, con toalla",
-          "dosis": "40 seg × lado",
-          "modo": "tiempo",
-          "segundos": 40,
-          "para": "Tumbada y con toalla, nunca de pie tocando la punta del pie: así el estiramiento no lo paga la espalda baja",
-          "busqueda": "supine hamstring stretch with strap"
-        },
-        {
-          "id": "c-cuadriceps",
-          "nombre": "Cuádriceps de lado, con la pelvis metida",
-          "dosis": "40 seg × lado",
-          "modo": "tiempo",
-          "segundos": 40,
-          "para": "Mete la pelvis antes de tirar del pie. Si no, el estiramiento se va a la lumbar",
-          "busqueda": "side lying quad stretch posterior pelvic tilt"
-        },
-        {
-          "id": "c-gemelo",
-          "nombre": "Gemelo y sóleo en la pared",
-          "dosis": "30 seg × cada uno",
-          "modo": "tiempo",
-          "segundos": 30,
-          "para": "Cierra el trabajo de pantorrilla del día",
-          "busqueda": "calf soleus wall stretch"
-        },
-        {
-          "nombre": "Postura del niño, rodillas separadas",
-          "dosis": "60 seg",
-          "para": "Descarga lumbar y apertura de cadera",
-          "busqueda": "childs pose wide knees",
-          "video": "https://www.youtube.com/watch?v=1Y0YjXS9sKI",
-          "id": "c-nino",
-          "modo": "tiempo",
-          "segundos": 60
-        },
-        {
-          "nombre": "Figura 4 de glúteo, tumbada",
-          "dosis": "45 seg × lado",
-          "para": "Glúteo y piriforme, causa frecuente de dolor lumbar referido",
-          "busqueda": "supine figure 4 stretch",
-          "video": "https://www.youtube.com/watch?v=-6kCsMI5giY",
-          "id": "c-figura4",
-          "modo": "tiempo",
-          "segundos": 45
-        },
-        {
-          "nombre": "Piernas arriba en la pared",
-          "dosis": "3–5 min",
-          "para": "Retorno venoso y circulación de retorno, específico para el retención en piernas",
-          "busqueda": "legs up the wall pose",
-          "video": "https://www.youtube.com/watch?v=-6kCsMI5giY",
-          "id": "c-pared",
-          "modo": "tiempo"
-        }
-      ],
-      "nota": "Ahora sí se estira: en frío el estiramiento estático resta fuerza, al terminar es cuando sirve. Cada posición entra despacio, se respira y se sostiene. Nada de rebotes. Si algo pincha, sales."
-    },
     "articular": {
       "nombre": "Movilidad articular",
       "mins": 5,
-      "cuando": "antes de cualquier sesión",
-      "nota": "Todas las articulaciones, de arriba abajo, sin saltarse ninguna. Unas 8 repeticiones en cada una: movimiento controlado y sin rebote. No es estiramiento — es llevar cada articulación por su rango para que llegue lubricada a la carga.",
+      "cuando": "todos los días",
+      "recortable": false,
+      "nota": "Once articulaciones, de arriba abajo. Ocho repeticiones controladas en cada una, sin rebote. No es estiramiento: es llevar cada articulación por su rango para que llegue lubricada. Con tu espalda, esto no es preparación para el trabajo — es parte del trabajo, y no se recorta nunca.",
       "items": [
         {
-          "id": "a-cuello",
+          "id": "a-01",
           "nombre": "Cuello",
-          "dosis": "5 sí · 5 no · 5 lados",
+          "dosis": "8 semicírculos",
           "modo": "reps",
-          "para": "Rango lento y corto. Nada de círculos completos: la extensión forzada de cuello no aporta y sí molesta",
-          "busqueda": "neck mobility yes no maybe drill"
+          "para": "Semicírculo, nunca círculo completo: la extensión de cuello cargada no aporta y comprime"
         },
         {
-          "id": "a-escapulas",
+          "id": "a-02",
           "nombre": "Escápulas",
-          "dosis": "8 arriba-abajo · 8 círculos",
+          "dosis": "8 circunducciones",
           "modo": "reps",
-          "para": "La escápula manda sobre el hombro, y el hombro sobre todo lo que hagas en barra",
-          "busqueda": "scapular mobility drill"
+          "para": "Es la articulación que manda en todo el pole. Va temprano y sin fatiga"
         },
         {
-          "id": "a-hombros",
+          "id": "a-03",
           "nombre": "Hombros",
-          "dosis": "10 círculos · 8 pases con toalla",
+          "dosis": "8 círculos amplios",
           "modo": "reps",
-          "para": "Círculos completos en los dos sentidos y pases por encima de la cabeza. Manos separadas al principio",
-          "busqueda": "shoulder CARs pass through towel"
+          "para": "Prepara el rango de flexión del que depende el invertido"
         },
         {
-          "id": "a-codos",
-          "nombre": "Codos",
-          "dosis": "10 flexión · 10 giros",
+          "id": "a-04",
+          "nombre": "Codos y giro de antebrazo",
+          "dosis": "8 + 8",
           "modo": "reps",
-          "para": "Flexión-extensión y giro de antebrazo. Volver a la barra sin preparar el codo lleva a la epicondilitis, que cuesta 6–12 semanas",
-          "busqueda": "elbow warm up pronation supination"
+          "para": "El giro de antebrazo es lo primero que se pierde con trabajo de barra"
         },
         {
-          "id": "a-munecas",
+          "id": "a-05",
           "nombre": "Muñecas y dedos",
-          "dosis": "10 círculos · 5 apoyos · abrir y cerrar",
+          "dosis": "8 círculos + 8 abrir/cerrar",
           "modo": "reps",
-          "para": "Flexiones, fondos y plancha cargan la muñeca en extensión. Abrir los dedos compensa lo que el agarre cierra",
-          "busqueda": "wrist warm up calisthenics"
+          "para": "Calienta el tejido que va a recibir todo el peso de tu cuerpo"
         },
         {
-          "id": "a-pecho",
-          "nombre": "Caja torácica y pecho",
-          "dosis": "8 aperturas · 5 respiraciones costales",
-          "modo": "reps",
-          "para": "Abre el pecho y despierta la expansión de las costillas. Un pecho cerrado te roba el rango del hombro por encima de la cabeza",
-          "busqueda": "thoracic rib expansion chest opener"
-        },
-        {
-          "id": "a-toracica",
+          "id": "a-06",
           "nombre": "Columna torácica",
-          "dosis": "6 rotaciones × lado",
+          "dosis": "8 rotaciones × lado",
           "modo": "reps",
-          "para": "Rotación en cuadrupedia. Lo que no se mueve aquí lo compensa la espalda baja",
-          "busqueda": "thoracic rotation quadruped"
+          "para": "Lo que la torácica no gira, lo gira la espalda baja. Prioridad alta por la asimetría"
         },
         {
-          "id": "a-lumbar",
-          "nombre": "Lumbar y pelvis",
-          "dosis": "8 gato-camello · 8 basculaciones",
+          "id": "a-07",
+          "nombre": "Pelvis",
+          "dosis": "8 basculaciones, rango medio",
           "modo": "reps",
-          "para": "Rango medio, nunca al final del recorrido. Aprende a mover la pelvis sin mover la espalda",
-          "busqueda": "cat cow pelvic tilt"
+          "para": "Solo pelvis y solo rango medio: la espalda baja no se moviliza al final del recorrido, se estabiliza"
         },
         {
-          "id": "a-caderas",
+          "id": "a-08",
           "nombre": "Caderas",
-          "dosis": "8 círculos × lado · 6 cambios 90/90",
+          "dosis": "8 círculos × pierna",
           "modo": "reps",
-          "para": "Círculos completos, abrir y cerrar, y rotación 90/90. Es la base del invertido y donde más rango te falta",
-          "busqueda": "hip CARs 90 90 switch"
+          "para": "Es la que debe absorber lo que la espalda baja no puede"
         },
         {
-          "id": "a-rodillas",
+          "id": "a-09",
           "nombre": "Rodillas",
-          "dosis": "10 círculos · 10 flexiones",
+          "dosis": "8 círculos + 8 flexiones",
           "modo": "reps",
-          "para": "Suave y sin carga, solo para despertar la articulación",
-          "busqueda": "knee circles mobility"
+          "para": "Dosis mínima; aporta sobre todo en el día de cadera"
         },
         {
-          "id": "a-tobillos",
+          "id": "a-10",
           "nombre": "Tobillos",
-          "dosis": "10 círculos · 8 rodilla a la pared",
+          "dosis": "8 círculos × pie",
           "modo": "reps",
-          "para": "Sentadillas y zancadas piden tobillo. Si no lo tiene, lo pagan la rodilla y la cadera",
-          "busqueda": "ankle mobility knee to wall"
+          "para": "Tobillo rígido = sentadilla compensada en la espalda baja"
         },
         {
-          "id": "a-pies",
+          "id": "a-11",
           "nombre": "Pies y dedos",
-          "dosis": "10 × pie",
+          "dosis": "8 + 8 × pie",
           "modo": "reps",
-          "para": "Agarrar y soltar con los dedos, rodar la planta. El pie es la base de todo lo que hagas de pie, y en pole además agarra",
-          "busqueda": "foot intrinsic mobility toe splay"
+          "para": "Bomba plantar: primer eslabón del retorno venoso"
         }
       ]
     },
-    "estiramiento_previo": {
-      "nombre": "Estiramiento de entrada",
-      "mins": 4,
-      "cuando": "después de la movilidad, antes de la carga",
-      "nota": "Dinámico y activo: entras al rango y sales, sin quedarte. Sostener un estiramiento más de 30 segundos en frío le quita fuerza al músculo que vas a usar enseguida — por eso el estiramiento largo va al final.",
+    "apertura": {
+      "nombre": "Apertura",
+      "mins": 3,
+      "cuando": "días de fuerza",
+      "recortable": false,
+      "nota": "Enciende lo que va a sostener la columna durante la sesión.",
       "items": [
         {
-          "id": "e-gato-din",
-          "nombre": "Balanceo de cadera en cuadrupedia",
+          "id": "c-01",
+          "nombre": "Respiración 360° tumbada",
+          "dosis": "6 ciclos, exhalar en 6 seg",
+          "modo": "reps",
+          "para": "Es el patrón que reemplaza la maniobra de aguantar el aire. Si no se ensaya en frío, no aparece bajo esfuerzo"
+        },
+        {
+          "id": "c-02",
+          "nombre": "Puente de glúteo con costillas cerradas",
           "dosis": "10",
           "modo": "reps",
-          "para": "Lleva la cadera al rango sin cargar la columna",
-          "busqueda": "rocking quadruped hip mobility"
+          "para": "Glúteo dormido = espalda baja haciendo el trabajo de la cadera todo el día"
         },
         {
-          "id": "e-psoas-din",
-          "nombre": "Zancada con alcance de brazo",
-          "dosis": "6 × lado",
+          "id": "c-03",
+          "nombre": "Deslizamiento escapular en pared",
+          "dosis": "8",
           "modo": "reps",
-          "para": "Abre el psoas en movimiento. Mete la pelvis antes de estirar",
-          "busqueda": "world greatest stretch"
+          "para": "Enciende el serrato antes de que el dorsal se lo lleve todo"
         },
         {
-          "id": "e-isquio-din",
-          "nombre": "Patada de talón al frente, controlada",
-          "dosis": "8 × lado",
+          "id": "c-04",
+          "nombre": "Bombeo de pantorrilla de pie",
+          "dosis": "30",
           "modo": "reps",
-          "para": "Isquios en dinámico, sin doblar la espalda",
-          "busqueda": "leg swings hamstring dynamic"
+          "para": "Arranca el retorno venoso antes de 50 minutos de sesión"
+        }
+      ]
+    },
+    "salida_comun": {
+      "nombre": "Salida — siempre",
+      "mins": 2,
+      "cuando": "todos los días",
+      "recortable": false,
+      "nota": "Estos dos no dependen de lo que hiciste hoy. Van siempre, por la curva de tu espalda y por la espalda baja.",
+      "items": [
+        {
+          "id": "s-com-1",
+          "nombre": "Psoas en media rodilla, con la pelvis metida",
+          "dosis": "40 seg × lado",
+          "modo": "tiempo",
+          "segundos": 40,
+          "para": "El psoas corto es el motor de esa curva de más. Sin meter la pelvis primero, el estiramiento se va a la espalda baja y hace daño en vez de bien"
         },
         {
-          "id": "e-pecho-din",
-          "nombre": "Apertura de pecho con brazos",
-          "dosis": "10",
-          "modo": "reps",
-          "para": "Abre el hombro antes de colgarte",
-          "busqueda": "arm swings chest opener"
+          "id": "s-com-2",
+          "nombre": "Descarga 90/90: pantorrillas sobre una silla",
+          "dosis": "40 seg",
+          "modo": "tiempo",
+          "segundos": 40,
+          "para": "Descompresión en posición neutra. Sustituye a las rodillas al pecho, que es flexión de espalda y está prohibida"
+        }
+      ]
+    },
+    "salidas": {
+      "s-f1": {
+        "nombre": "Salida — tracción",
+        "mins": 5,
+        "items": [
+          {
+            "id": "s-f1-1",
+            "nombre": "Flexores de antebrazo y dedos",
+            "dosis": "2 × 30 seg",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "antebrazo",
+            "para": "El que no te puedes saltar: sin esto aparece epicondilitis y se van 6–12 semanas de barra"
+          },
+          {
+            "id": "s-f1-2",
+            "nombre": "Dorsal en apoyo, desde bisagra",
+            "dosis": "2 × 30 seg",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "dorsal",
+            "para": "El dorsal corto te roba los grados de hombro que el invertido necesita. Lo sientes en la axila, nunca en la espalda"
+          },
+          {
+            "id": "s-f1-3",
+            "nombre": "Bíceps y pectoral en pared",
+            "dosis": "30 seg × lado",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "biceps",
+            "para": "El codo trabaja en excéntrica en cada remo y cada negativa"
+          },
+          {
+            "id": "s-f1-4",
+            "nombre": "Extensión torácica sobre rodillo",
+            "dosis": "60 seg",
+            "modo": "tiempo",
+            "segundos": 60,
+            "estructura": "recto_abdominal",
+            "para": "El hollow acorta el abdomen. El rodillo va bajo la punta de la escápula: la extensión se busca arriba, la espalda baja se queda quieta"
+          },
+          {
+            "id": "s-f1-5",
+            "nombre": "Inclinación lateral de pie",
+            "dosis": "30 seg × lado",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "oblicuo",
+            "para": "El pallof deja el oblicuo cargado y tenso de un solo lado"
+          }
+        ]
+      },
+      "s-f2": {
+        "nombre": "Salida — empuje",
+        "mins": 6,
+        "items": [
+          {
+            "id": "s-f2-1",
+            "nombre": "Pectoral en el marco, tres alturas de codo",
+            "dosis": "3 × 30 seg",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "pectoral_mayor",
+            "para": "La flexión ancha carga una parte y la estrecha otra. Una sola altura deja medio músculo sin tocar"
+          },
+          {
+            "id": "s-f2-2",
+            "nombre": "Pectoral menor: brazo en pared con giro",
+            "dosis": "40 seg × lado",
+            "modo": "tiempo",
+            "segundos": 40,
+            "estructura": "pectoral_menor",
+            "para": "El que decide si algún día hay invertido: acortado, bascula la escápula adelante y te roba los últimos 15 grados de hombro"
+          },
+          {
+            "id": "s-f2-3",
+            "nombre": "Tríceps por encima de la cabeza",
+            "dosis": "30 seg × lado",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "triceps",
+            "para": "Es el músculo con más volumen del día"
+          },
+          {
+            "id": "s-f2-4",
+            "nombre": "Muñeca: flexores y extensores",
+            "dosis": "2 × 20 seg",
+            "modo": "tiempo",
+            "segundos": 20,
+            "estructura": "muneca",
+            "para": "Toda flexión y toda plancha carga la muñeca al final de su rango. Es la queja número uno al volver"
+          },
+          {
+            "id": "s-f2-5",
+            "nombre": "Inclinación lateral de pie",
+            "dosis": "30 seg × lado",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "oblicuo",
+            "para": "Plancha lateral: unilateral y sostenida"
+          },
+          {
+            "id": "s-f2-6",
+            "nombre": "Deltoides posterior cruzado",
+            "dosis": "15 seg × lado",
+            "modo": "tiempo",
+            "segundos": 15,
+            "estructura": "deltoides",
+            "para": "Dosis mínima para reequilibrar el hombro tras seis minutos de empuje"
+          }
+        ]
+      },
+      "s-f3": {
+        "nombre": "Salida — cadera y agarre",
+        "mins": 6,
+        "items": [
+          {
+            "id": "s-f3-1",
+            "nombre": "Cuádriceps en media rodilla, pelvis metida",
+            "dosis": "40 seg × lado",
+            "modo": "tiempo",
+            "segundos": 40,
+            "estructura": "cuadriceps",
+            "para": "El recto femoral también flexiona la cadera: sin meter la pelvis estarías estirando la espalda baja, no el muslo"
+          },
+          {
+            "id": "s-f3-2",
+            "nombre": "Figura 4 de glúteo, tumbada",
+            "dosis": "30 seg × lado",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "gluteo",
+            "para": "El piriforme tenso da síntomas que se confunden con lumbares"
+          },
+          {
+            "id": "s-f3-3",
+            "nombre": "Isquios en supino con banda, rodilla algo doblada",
+            "dosis": "25 seg × lado",
+            "modo": "tiempo",
+            "segundos": 25,
+            "estructura": "isquios",
+            "para": "Nunca sentada estirando a la punta del pie: con tu espalda baja, buena parte de esa tensión es del nervio y el estiramiento agresivo la empeora"
+          },
+          {
+            "id": "s-f3-4",
+            "nombre": "Aductores: rana o de pie",
+            "dosis": "40 seg",
+            "modo": "tiempo",
+            "segundos": 40,
+            "estructura": "aductores",
+            "para": "Sentadilla y zancada, y además es el rango que el pole va a pedir"
+          },
+          {
+            "id": "s-f3-5",
+            "nombre": "Gemelo en pared, rodilla estirada",
+            "dosis": "25 seg × lado",
+            "modo": "tiempo",
+            "segundos": 25,
+            "estructura": "gemelo",
+            "para": "Doble función: estiramiento y bombeo"
+          },
+          {
+            "id": "s-f3-6",
+            "nombre": "Flexores de antebrazo",
+            "dosis": "2 × 20 seg",
+            "modo": "tiempo",
+            "segundos": 20,
+            "estructura": "antebrazo",
+            "para": "Hoy también hubo agarre. La piel y el flexor de los dedos son tu techo actual"
+          },
+          {
+            "id": "s-f3-7",
+            "nombre": "Extensión torácica sobre rodillo",
+            "dosis": "20 seg",
+            "modo": "tiempo",
+            "segundos": 20,
+            "estructura": "recto_abdominal",
+            "para": "Dosis corta: hoy el volumen de hollow fue menor"
+          }
+        ]
+      },
+      "s-car": {
+        "nombre": "Salida — cardio",
+        "mins": 5,
+        "items": [
+          {
+            "id": "s-car-1",
+            "nombre": "Gemelo en pared, rodilla estirada",
+            "dosis": "30 seg × lado",
+            "modo": "tiempo",
+            "segundos": 30,
+            "estructura": "gemelo",
+            "para": "Talones más 45 minutos de marcha o pedal"
+          },
+          {
+            "id": "s-car-2",
+            "nombre": "Sóleo: misma pared, rodilla doblada",
+            "dosis": "25 seg × lado",
+            "modo": "tiempo",
+            "segundos": 25,
+            "estructura": "soleo",
+            "para": "Gemelo y sóleo no se estiran en la misma posición, y el sóleo es el que trabaja en el pedal"
+          },
+          {
+            "id": "s-car-3",
+            "nombre": "Tibial anterior: empeine",
+            "dosis": "25 seg × lado",
+            "modo": "tiempo",
+            "segundos": 25,
+            "estructura": "tibial",
+            "para": "Es el antagonista que se carga en la bici y que nadie estira nunca"
+          },
+          {
+            "id": "s-car-4",
+            "nombre": "Psoas en media rodilla, pelvis metida",
+            "dosis": "40 seg × lado",
+            "modo": "tiempo",
+            "segundos": 40,
+            "estructura": "psoas",
+            "para": "En bici es el que más se acorta: 45 minutos con la cadera doblada"
+          },
+          {
+            "id": "s-car-5",
+            "nombre": "Figura 4 de glúteo",
+            "dosis": "25 seg × lado",
+            "modo": "tiempo",
+            "segundos": 25,
+            "estructura": "gluteo",
+            "para": "Marcha y pedal van en un solo plano"
+          }
+        ]
+      }
+    },
+    "drenaje": {
+      "nombre": "Drenaje",
+      "mins": 4,
+      "cuando": "todos los días",
+      "recortable": false,
+      "nota": "Esto no es enfriamiento y no se recorta con él: es tratamiento.",
+      "items": [
+        {
+          "id": "dr-1",
+          "nombre": "Piernas arriba en la pared",
+          "dosis": "3 min",
+          "modo": "tiempo",
+          "segundos": 180,
+          "para": "Retorno venoso"
         },
         {
-          "id": "e-torso-din",
-          "nombre": "Rotación de torso de pie",
-          "dosis": "8 × lado",
+          "id": "dr-2",
+          "nombre": "Bombeo de pantorrilla tumbada",
+          "dosis": "30",
           "modo": "reps",
-          "para": "Suave, girando desde el pecho y no desde la cintura",
-          "busqueda": "standing torso rotation warm up"
+          "para": "Cierra el bombeo del día"
         }
       ]
     }
@@ -337,8 +432,6 @@
       "tipo": "fuerza",
       "corto": "Tracción",
       "nota": "El día más importante. Escápulas, dorsal, agarre y hollow: todo lo del pole nace aquí. La barra además te descomprime la lumbar mientras entrenas — y después de un día sentada, eso vale doble.",
-      "calentamiento": true,
-      "enfriamiento": true,
       "ejercicios": [
         {
           "id": "colgada-activa",
@@ -594,7 +687,10 @@
       ],
       "aviso_agarre": true,
       "articular": true,
-      "estiramiento_previo": true
+      "drenaje": true,
+      "apertura": true,
+      "salida_comun": true,
+      "salida": "s-f1"
     },
     "b": {
       "letra": "Día B",
@@ -603,8 +699,6 @@
       "tipo": "fuerza",
       "corto": "Empuje",
       "nota": "Vigila una sola cosa en todos los ejercicios: que la cadera no se hunda. Cuando se hunde, el que trabaja es tu espalda baja.",
-      "calentamiento": true,
-      "enfriamiento": true,
       "ejercicios": [
         {
           "id": "flexion-ancha",
@@ -853,7 +947,10 @@
         }
       ],
       "articular": true,
-      "estiramiento_previo": true
+      "drenaje": true,
+      "apertura": true,
+      "salida_comun": true,
+      "salida": "s-f2"
     },
     "c": {
       "letra": "Día C",
@@ -862,8 +959,6 @@
       "tipo": "fuerza",
       "corto": "Cadera",
       "nota": "Pierna sin carga sobre la columna, glúteo fuerte para corregir la curva de la espalda desde la cadera, y bombeo para el retención en piernas. Este día termina con las piernas en la pared, obligatorio.",
-      "calentamiento": true,
-      "enfriamiento": true,
       "ejercicios": [
         {
           "id": "sentadilla-silla",
@@ -1046,7 +1141,10 @@
         }
       ],
       "articular": true,
-      "estiramiento_previo": true
+      "drenaje": true,
+      "apertura": true,
+      "salida_comun": true,
+      "salida": "s-f3"
     },
     "d1": {
       "letra": "Día D",
@@ -1055,8 +1153,6 @@
       "tipo": "cardio",
       "corto": "Continuo",
       "nota": "Este día reemplaza la natación. No es el paseo con el perro: es cardio de entreno. El bombeo sostenido de pantorrilla es el mismo drenaje que el retención en piernas necesita, y cuesta cero.",
-      "calentamiento": false,
-      "enfriamiento": false,
       "variantes": {
         "bici": {
           "nombre": "Bicicleta estática",
@@ -1224,7 +1320,10 @@
           ]
         }
       },
-      "articular": true
+      "articular": true,
+      "drenaje": true,
+      "salida": "s-car",
+      "salida_comun": true
     },
     "d2": {
       "letra": "Día D",
@@ -1233,8 +1332,6 @@
       "tipo": "cardio",
       "corto": "Intervalos",
       "nota": "Mismo día que el martes con una diferencia: aquí cambias de ritmo. Los intervalos suben la capacidad sin impacto, que es exactamente lo que tu lumbar necesita que evites.",
-      "calentamiento": false,
-      "enfriamiento": false,
       "variantes": {
         "bici": {
           "nombre": "Bicicleta estática",
@@ -1386,7 +1483,10 @@
           ]
         }
       },
-      "articular": true
+      "articular": true,
+      "drenaje": true,
+      "salida": "s-car",
+      "salida_comun": true
     },
     "e": {
       "letra": "Día E",
@@ -1395,8 +1495,6 @@
       "tipo": "movilidad",
       "corto": "Movilidad",
       "nota": "Suave a propósito. Aquí no hay series ni esfuerzo: es la movilidad de hombro y de cadera que el pole te va a exigir y que ningún día de fuerza construye. Si amaneces fundida, este es el día del que sí puedes prescindir.",
-      "calentamiento": false,
-      "enfriamiento": false,
       "prescindible": true,
       "ejercicios": [
         {
@@ -1518,7 +1616,8 @@
           "video": "https://www.youtube.com/watch?v=-6kCsMI5giY"
         }
       ],
-      "articular": true
+      "articular": true,
+      "drenaje": true
     },
     "s": {
       "letra": "Sábado",
@@ -1541,8 +1640,6 @@
       "tipo": "minima",
       "corto": "15 min",
       "nota": "Los días de poca energía, de sobrecarga sensorial o de rebrote, no eliges entre la sesión completa y nada. Eliges entre la completa y esta. Hacer esta versión cuenta como haber entrenado, sin asterisco.",
-      "calentamiento": false,
-      "enfriamiento": false,
       "ejercicios": [
         {
           "id": "min-colgada",
@@ -1614,7 +1711,8 @@
           "video": "https://www.youtube.com/watch?v=-6kCsMI5giY"
         }
       ],
-      "articular": true
+      "articular": true,
+      "drenaje": true
     }
   },
   "cardio_corto": {

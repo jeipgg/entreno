@@ -1,6 +1,6 @@
 /* Pole — service worker
    Sube CACHE cuando cambies cualquier archivo, o el iPhone seguirá con la versión vieja. */
-const CACHE = 'pole-v10';
+const CACHE = 'pole-v11';
 
 const ASSETS = [
   './',

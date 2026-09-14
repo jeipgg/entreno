@@ -556,6 +556,7 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
 .hs-logros li{font-size:.813rem;color:var(--ink-2)}
 .hs-logros b{font-family:var(--f-mono);color:var(--ink)}
 
+.aviso-csv{margin:.4rem 0 0;font-size:.75rem;color:var(--muted);line-height:1.35}
 .semanas{margin-top:.9rem;display:flex;flex-direction:column;gap:.4rem}
 .sem{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:.65rem .75rem}
 .sem.actual{border-color:var(--steel);background:var(--steel-soft)}
