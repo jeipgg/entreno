@@ -1,6 +1,6 @@
 /* GENERADO por herramientas/generar-sw.mjs — no editar a mano.
    El nombre de caché es el hash del contenido: cambia solo cuando cambia algo. */
-const CACHE = 'pole-2151bcd5ad';
+const CACHE = 'pole-e17511f4d6';
 const ASSETS = [
   "./",
   "./README.md",
@@ -8,7 +8,6 @@ const ASSETS = [
   "./app/data/arbol.json",
   "./app/data/calendario.json",
   "./app/data/ejercicios.json",
-  "./app/data/rutina.json",
   "./app/data/sesiones.json",
   "./app/data/textos.json",
   "./app/icons/icon-180.png",

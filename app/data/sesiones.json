@@ -148,6 +148,83 @@
         "e-f3-4",
         "e-f3-5"
       ]
+    },
+    "calor-pole": {
+      "nombre": "Calor de pole",
+      "mins": 6,
+      "recortable": false,
+      "nota": "Entras en calor moviéndote, no estirando.",
+      "items": [
+        "voc-cam-2",
+        "voc-br-1",
+        "voc-pie-1",
+        "voc-piso-3"
+      ]
+    },
+    "flex-1": {
+      "nombre": "Flexibilidad — cadera y arco",
+      "mins": 12,
+      "recortable": false,
+      "nota": "Tres estructuras. Máximo 4 minutos de trabajo cargado. Si el check-in marca molestia en la espalda baja, el bloque cargado no se ofrece.",
+      "items": [
+        "flex-h-2",
+        "flex-h-3",
+        "flex-t-1",
+        "flex-t-2",
+        "flex-h-4"
+      ]
+    },
+    "flex-2": {
+      "nombre": "Flexibilidad — split y cadera",
+      "mins": 12,
+      "recortable": false,
+      "nota": "El split se mide en centímetros de bloque, con las caderas cuadradas. Si la pelvis se abre, el número no cuenta.",
+      "items": [
+        "flex-p-1",
+        "flex-p-2",
+        "flex-p-3",
+        "flex-h-2",
+        "flex-p-4"
+      ]
+    },
+    "flex-3": {
+      "nombre": "Flexibilidad — arco, aductores y compresión",
+      "mins": 12,
+      "recortable": false,
+      "nota": "El arco se paga con cadera y con tórax. La espalda baja solo pone lo que ya tiene, que es bastante.",
+      "items": [
+        "flex-t-3",
+        "flex-t-4",
+        "flex-a-1",
+        "flex-a-2",
+        "flex-c-1"
+      ]
+    },
+    "flex-descarga": {
+      "nombre": "Flexibilidad — semana suave",
+      "mins": 10,
+      "recortable": false,
+      "nota": "Semana de descarga: solo activo y pasivo corto. Cero cargado, cero PNF. El vocabulario se queda completo — es el día en que se disfruta.",
+      "items": [
+        "flex-h-2",
+        "flex-a-1",
+        "flex-p-3",
+        "flex-c-1"
+      ]
+    },
+    "vocabulario": {
+      "nombre": "Vocabulario",
+      "mins": 8,
+      "recortable": true,
+      "prioridad_corte": 2,
+      "nota": "Esto no es el premio del final: es la mitad del motivo por el que estás aquí.",
+      "items": [
+        "voc-ola-1",
+        "voc-ola-2",
+        "voc-cam-1",
+        "voc-piso-1",
+        "voc-piso-2"
+      ]
     }
   },
   "tipos": {
@@ -377,6 +454,32 @@
         "a-06"
       ],
       "cierre": []
+    },
+    "POLE": {
+      "nombre": "Día de Pole",
+      "carga": false,
+      "carga_axial": false,
+      "tbc_max_min": 2,
+      "minimo_valido_min": 15,
+      "demanda": "media",
+      "nota": "Flexibilidad y vocabulario. El día que se siente a pole y no a fisioterapia — y el que sostiene todo lo demás.",
+      "bloques": [
+        "apertura",
+        "articular",
+        "calor-pole"
+      ],
+      "flex_rotativo": {
+        "1": "flex-1",
+        "2": "flex-2",
+        "3": "flex-3",
+        "4": "flex-descarga"
+      },
+      "ejercicios": [],
+      "cierre": [
+        "vocabulario",
+        "salida_comun",
+        "drenaje"
+      ]
     }
   }
 }

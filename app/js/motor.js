@@ -149,7 +149,13 @@ function materializar(tipoId, contenido, estado, ctx) {
  ids = t.variantes[v] || Object.values(t.variantes)[0];
  }
 
- const bl = (t.bloques || []).map(b => bloque(b, contenido, cat));
+ const bloquesId = [...(t.bloques || [])];
+ if (t.flex_rotativo) {
+ // rota por semana del mesociclo: las mismas estructuras no se acumulan
+ const b = t.flex_rotativo[String(ctx.semanaMeso)] || t.flex_rotativo['1'];
+ if (b) bloquesId.push(b);
+ }
+ const bl = bloquesId.map(b => bloque(b, contenido, cat));
  const cierre = (t.cierre || []).map(b => bloque(b, contenido, cat));
  const calMin = bl.reduce((a, b) => a + (b.mins || 0), 0);
 
@@ -159,6 +165,8 @@ function materializar(tipoId, contenido, estado, ctx) {
  aviso_agarre: !!t.aviso_agarre, prescindible: !!t.prescindible,
  minimo_valido_min: t.minimo_valido_min || 15,
  calentamiento_min: calMin,
+ demanda: t.demanda || (t.carga ? 'alta' : 'baja'),
+ flex_cargado: bl.some(b => (b.items || []).some(i => i.rama === 'FLEX' && i.modo === 'reps')),
  modo: 'completo',
  bloques: bl, cierre,
  ejercicios: ids.map(dame),
@@ -181,6 +189,11 @@ export function puertasDuras(plan, ctx, contenido) {
 
  if (ctx.banderas.irradiado) return piso1(T.irradiado);
  if (ctx.checkin && ctx.checkin.dolor_lumbar >= 3) return piso1(T.irradiado);
+
+ // La semana de descarga alcanza a TODO, no solo a los días de carga:
+ // el Día de Pole también baja el trabajo cargado en rango final.
+ if (ctx.semanaMeso === 4) plan = { ...plan, descarga: true };
+
  if (!plan.carga) return plan;
 
  const v = R.ventana(ctx.minutos);
@@ -197,8 +210,8 @@ export function puertasDuras(plan, ctx, contenido) {
  if (ctx.horasDesdeCarga !== null && ctx.horasDesdeCarga < R.HORAS_ENTRE_CARGA)
  return piso1(T['48h']);
 
- if (ctx.semanaMeso === 4)
- plan = { ...plan, descarga: true, motivo: T.descarga, progresion: false,
+ if (plan.descarga)
+ plan = { ...plan, motivo: T.descarga, progresion: false,
  ejercicios: plan.ejercicios.map(e => ({ ...e, series: Math.max(1, Math.ceil(e.series / 2)) })) };
 
  // el check-in decide el modo
@@ -342,6 +355,29 @@ function ultimaDe(id, log, hoy) {
 }
 
 /* ============================================================
+ PROGRESIÓN DE FLEXIBILIDAD — marca y banda, no escalones.
+ A un split no se le suma una repetición. Se entrena en el
+ 90–95 % de la marca; la marca solo se mueve en el test.
+ ============================================================ */
+export function planFlex(nodoId, estadoFlex, medidaTest) {
+ const e = estadoFlex || {};
+ if (medidaTest == null) {
+ return { marca: e.marca || null, banda: R.bandaFlex(e.marca),
+ nota: e.marca ? 'banda' : 'sin_marca', congelado: !!e.congelado_hasta };
+ }
+ // el test es lo ÚNICO que mueve la marca
+ if (!e.marca) return { marca: medidaTest, banda: R.bandaFlex(medidaTest), nota: 'primera_marca' };
+
+ const mejora = (medidaTest - e.marca) / e.marca;
+ if (mejora >= R.FLEX_MEJORA_MIN)
+ return { marca: medidaTest, banda: R.bandaFlex(medidaTest), nota: 'marca_nueva' };
+ if (mejora <= -R.FLEX_CAIDA_MAX)
+ return { marca: e.marca, banda: R.bandaFlex(e.marca * 0.85),
+ congelado_hasta: 'dos_semanas', nota: 'retrocede' };
+ return { marca: e.marca, banda: R.bandaFlex(e.marca), nota: 'mantiene_sube_tiempo' };
+}
+
+/* ============================================================
  5 · CUPO — máximo 2 ascensos por sesión
  ============================================================ */
 export function aplicarCupo(props, ctx) {
@@ -411,10 +447,18 @@ function cerrar(plan, ctx, contenido) {
 }
 
 export function tbc(plan) {
- return (plan.ejercicios || []).reduce((a, e) => {
- const porSerie = e.unidad === 'tiempo' ? (e.objetivo || 20) : (e.objetivo || 6) * R.TEMPO_POR_REP_SEG;
- return a + porSerie * (e.series || 1);
- }, 0);
+ const cuenta = (e, factor = 1) => {
+ const porSerie = e.unidad === 'tiempo' ? (e.objetivo || e.segundos || 20)
+ : (e.objetivo || 6) * R.TEMPO_POR_REP_SEG;
+ return porSerie * (e.series || 1) * factor;
+ };
+ let t = (plan.ejercicios || []).reduce((a, e) => a + cuenta(e), 0);
+ // El trabajo cargado en rango final cuenta a la mitad: es excéntrico, no estímulo
+ // de fuerza. Lo activo y lo pasivo no cuentan.
+ for (const b of plan.bloques || [])
+ for (const i of b.items || [])
+ if (i.rama === 'FLEX' && i.modo === 'reps') t += cuenta(i, R.FLEX_FACTOR_TBC);
+ return t;
 }
 
 /** Estado del árbol: se DERIVA, nunca se guarda una conclusión. */
@@ -428,11 +472,15 @@ export function estadoArbol(contenido, ctx) {
  const puerta = !n.requiere_puerta_medica || R.puertaMedicaAbierta(ctx.puertaMedica);
  // El motivo del bloqueo importa: "te falta un paso" y "falta una cita
  // médica" son cosas distintas y la app tiene que decir cuál es.
- const estado = dom(id) ? 'dominado' : (listo && puerta) ? 'disponible' : 'bloqueado';
- const motivo = estado !== 'bloqueado' ? null
+ // Un nodo fuera de ruta no está bloqueado ni disponible: es otra cosa,
+ // y se muestra con su propio motivo en vez de esconderse.
+ const estado = n.fuera_de_ruta ? 'fuera_de_ruta'
+ : dom(id) ? 'dominado'
+ : (listo && puerta) ? 'disponible' : 'bloqueado';
+ const porque = estado !== 'bloqueado' ? null
  : !listo ? 'prerequisitos'
  : 'puerta_medica';
- out[id] = { ...n, estado, motivo,
+ out[id] = { ...n, estado, porque,
  faltan: n.prerequisitos.filter(p => !dom(p)) };
  }
  return out;

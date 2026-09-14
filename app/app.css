@@ -669,3 +669,11 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
   background:var(--alarm);color:#fff;padding:.7rem 1rem;font-size:.875rem;
   font-weight:600;text-align:center;line-height:1.4
 }
+
+/* nodos del árbol: flexibilidad, vocabulario y fuera de ruta */
+.nodo.fuera_de_ruta{opacity:.55;border-style:dashed}
+.nodo.fuera_de_ruta .nodo-est{color:var(--muted)}
+.nodo-por{
+  display:block;font-size:.688rem;color:var(--muted);
+  margin-top:.15rem;line-height:1.35;font-style:italic
+}

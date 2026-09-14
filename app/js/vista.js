@@ -232,11 +232,12 @@ function arbolHTML(arbol, textos) {
  ${Object.entries(arbol).map(([id, x]) => `
  <div class="nodo ${x.estado}">
  <span class="nodo-id">${id}</span>
- <span class="nodo-nom">${x.nombre}</span>
+ <span class="nodo-nom">${x.nombre}${x.motivo ? `<span class="nodo-por">${x.motivo}</span>` : ''}</span>
  <span class="nodo-est">${
  x.estado === 'dominado' ? '✓' :
  x.estado === 'disponible' ? '·' :
- x.motivo === 'puerta_medica' ? '🔒' : '—'}</span>
+ x.estado === 'fuera_de_ruta' ? '✕' :
+ x.porque === 'puerta_medica' ? '🔒' : '—'}</span>
  </div>`).join('')}
  </div>
  ${disp.length ? `<p class="arbol-hoy">Disponibles ahora: ${disp.map(x => x.nombre).join(' · ')}</p>` : ''}

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "meta_visible": "Del punto de partida al invertido hay 16 pasos. Es un camino de meses, no de semanas — y esa es la verdad útil.",
+  "meta_visible": "Del punto de partida al invertido hay 16 pasos, y a la flexibilidad del pole unos cuantos más. Es un camino de meses, no de semanas — y esa es la verdad útil.",
   "nodos": {
     "GRIP-0": {
       "rama": "GRIP",
@@ -217,6 +217,409 @@
       },
       "nivel": 3,
       "requiere_puerta_medica": true
+    },
+    "FLEX-H0": {
+      "rama": "FLEX",
+      "nombre": "Psoas sin dolor, con la pelvis metida",
+      "prerequisitos": [
+        "CORE-0"
+      ],
+      "test": {
+        "ejercicio": "flex-h-2",
+        "umbral": 40,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "FLEX-H1": {
+      "rama": "FLEX",
+      "nombre": "Cadera: muslo a 5 cm de la horizontal",
+      "prerequisitos": [
+        "FLEX-H0"
+      ],
+      "test": {
+        "ejercicio": "flex-h-3",
+        "umbral": 40,
+        "series": 3
+      },
+      "nivel": 1,
+      "medida": "T11"
+    },
+    "FLEX-H2": {
+      "rama": "FLEX",
+      "nombre": "Cadera: muslo horizontal",
+      "prerequisitos": [
+        "FLEX-H1"
+      ],
+      "test": {
+        "ejercicio": "flex-h-3",
+        "umbral": 40,
+        "series": 3
+      },
+      "nivel": 2,
+      "medida": "T11"
+    },
+    "FLEX-H3": {
+      "rama": "FLEX",
+      "nombre": "Cadera cargada: muslo bajo la horizontal",
+      "prerequisitos": [
+        "FLEX-H2"
+      ],
+      "test": {
+        "ejercicio": "flex-h-4",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 3,
+      "medida": "T11"
+    },
+    "FLEX-T0": {
+      "rama": "FLEX",
+      "nombre": "Esfinge cerrada sin molestia",
+      "prerequisitos": [
+        "CORE-0"
+      ],
+      "test": {
+        "ejercicio": "flex-t-1",
+        "umbral": 25,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "FLEX-T1": {
+      "rama": "FLEX",
+      "nombre": "Tórax: pecho a 15 cm del piso",
+      "prerequisitos": [
+        "FLEX-T0"
+      ],
+      "test": {
+        "ejercicio": "flex-t-2",
+        "umbral": 45,
+        "series": 3
+      },
+      "nivel": 1,
+      "medida": "T15"
+    },
+    "FLEX-T2": {
+      "rama": "FLEX",
+      "nombre": "Tórax: pecho a 8 cm + camello alto",
+      "prerequisitos": [
+        "FLEX-T1"
+      ],
+      "test": {
+        "ejercicio": "flex-t-4",
+        "umbral": 20,
+        "series": 3
+      },
+      "nivel": 2,
+      "medida": "T15"
+    },
+    "FLEX-T3": {
+      "rama": "FLEX",
+      "nombre": "Hombro a 170° + cerrada de hombro",
+      "prerequisitos": [
+        "FLEX-T2"
+      ],
+      "test": {
+        "ejercicio": "flex-t-3",
+        "umbral": 30,
+        "series": 3
+      },
+      "nivel": 2,
+      "medida": "T14"
+    },
+    "FLEX-P0": {
+      "rama": "FLEX",
+      "nombre": "Isquio activo a 60°",
+      "prerequisitos": [
+        "CORE-1"
+      ],
+      "test": {
+        "ejercicio": "flex-p-2",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 0,
+      "medida": "T13"
+    },
+    "FLEX-P1": {
+      "rama": "FLEX",
+      "nombre": "Split en bloque de 30 cm, caderas cuadradas",
+      "prerequisitos": [
+        "FLEX-P0",
+        "FLEX-H1"
+      ],
+      "test": {
+        "ejercicio": "flex-p-1",
+        "umbral": 40,
+        "series": 3
+      },
+      "nivel": 1,
+      "medida": "T12"
+    },
+    "FLEX-P2": {
+      "rama": "FLEX",
+      "nombre": "Split en bloque de 15 cm",
+      "prerequisitos": [
+        "FLEX-P1"
+      ],
+      "test": {
+        "ejercicio": "flex-p-1",
+        "umbral": 40,
+        "series": 3
+      },
+      "nivel": 2,
+      "medida": "T12"
+    },
+    "FLEX-P3": {
+      "rama": "FLEX",
+      "nombre": "Split al piso, caderas cuadradas",
+      "prerequisitos": [
+        "FLEX-P2",
+        "FLEX-H2"
+      ],
+      "test": {
+        "ejercicio": "flex-p-5",
+        "umbral": 30,
+        "series": 3
+      },
+      "nivel": 3,
+      "medida": "T12",
+      "requiere_foto": true
+    },
+    "FLEX-A0": {
+      "rama": "FLEX",
+      "nombre": "Rana apoyada sin molestia",
+      "prerequisitos": [],
+      "test": {
+        "ejercicio": "flex-a-1",
+        "umbral": 40,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "FLEX-A1": {
+      "rama": "FLEX",
+      "nombre": "Apertura activa",
+      "prerequisitos": [
+        "FLEX-A0",
+        "CORE-1"
+      ],
+      "test": {
+        "ejercicio": "flex-a-2",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 1
+    },
+    "FLEX-A2": {
+      "rama": "FLEX",
+      "nombre": "Straddle desde bisagra, pecho al piso",
+      "prerequisitos": [
+        "FLEX-A1",
+        "HIP-7"
+      ],
+      "test": {
+        "ejercicio": "flex-a-3",
+        "umbral": 30,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "FLEX-C0": {
+      "rama": "FLEX",
+      "nombre": "Compresión activa sentada",
+      "prerequisitos": [
+        "CORE-2"
+      ],
+      "test": {
+        "ejercicio": "flex-c-1",
+        "umbral": 20,
+        "series": 3
+      },
+      "nivel": 1
+    },
+    "FLEX-C1": {
+      "rama": "FLEX",
+      "nombre": "Compresión en V",
+      "prerequisitos": [
+        "FLEX-C0",
+        "CORE-5"
+      ],
+      "test": {
+        "ejercicio": "flex-c-2",
+        "umbral": 15,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "POLE-V0": {
+      "rama": "POLE-V",
+      "nombre": "Brazos, punta y flex, ochos de cadera",
+      "prerequisitos": [],
+      "test": {
+        "ejercicio": "voc-br-1",
+        "umbral": 8,
+        "series": 4
+      },
+      "nivel": 0,
+      "desde_dia_uno": true,
+      "nota": "Sin prerrequisitos. Se puede hacer hoy, en la sala de tu casa, sin tubo y sin fuerza previa."
+    },
+    "POLE-V1": {
+      "rama": "POLE-V",
+      "nombre": "Ola adelante de pie",
+      "prerequisitos": [
+        "POLE-V0"
+      ],
+      "test": {
+        "ejercicio": "voc-ola-1",
+        "umbral": 6,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "POLE-V2": {
+      "rama": "POLE-V",
+      "nombre": "Ola atrás de rodillas",
+      "prerequisitos": [
+        "POLE-V0",
+        "FLEX-H0"
+      ],
+      "test": {
+        "ejercicio": "voc-ola-2",
+        "umbral": 6,
+        "series": 3
+      },
+      "nivel": 0
+    },
+    "POLE-V3": {
+      "rama": "POLE-V",
+      "nombre": "Caminata en tacón, plataforma",
+      "prerequisitos": [
+        "POLE-V0"
+      ],
+      "test": {
+        "ejercicio": "voc-cam-1",
+        "umbral": 8,
+        "series": 4
+      },
+      "nivel": 0
+    },
+    "POLE-V4": {
+      "rama": "POLE-V",
+      "nombre": "Suelo básico: bajada, sirena, gato",
+      "prerequisitos": [
+        "POLE-V0",
+        "HIP-7"
+      ],
+      "test": {
+        "ejercicio": "voc-piso-1",
+        "umbral": 4,
+        "series": 4
+      },
+      "nivel": 1
+    },
+    "POLE-V5": {
+      "rama": "POLE-V",
+      "nombre": "Ola atrás de pie",
+      "prerequisitos": [
+        "POLE-V2",
+        "FLEX-H1",
+        "FLEX-T1"
+      ],
+      "test": {
+        "ejercicio": "voc-ola-2",
+        "umbral": 6,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "POLE-V6": {
+      "rama": "POLE-V",
+      "nombre": "Frase de movimiento: 8 tiempos encadenados",
+      "prerequisitos": [
+        "POLE-V1",
+        "POLE-V3",
+        "POLE-V4"
+      ],
+      "test": {
+        "ejercicio": "voc-ola-4",
+        "umbral": 4,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "POLE-V7": {
+      "rama": "POLE-V",
+      "nombre": "Suelo con deslizada y entrada de pie",
+      "prerequisitos": [
+        "POLE-V4"
+      ],
+      "test": {
+        "ejercicio": "voc-piso-4",
+        "umbral": 4,
+        "series": 3
+      },
+      "nivel": 2
+    },
+    "POLE-8": {
+      "rama": "POLE",
+      "nombre": "Layback / cerrada básica",
+      "prerequisitos": [
+        "POLE-3",
+        "FLEX-H2",
+        "FLEX-T2"
+      ],
+      "test": {
+        "ejercicio": "flex-t-4",
+        "umbral": 20,
+        "series": 3
+      },
+      "nivel": 3,
+      "requiere_puerta_medica": true
+    },
+    "POLE-9": {
+      "rama": "POLE",
+      "nombre": "Gancho de rodilla con extensión",
+      "prerequisitos": [
+        "POLE-4",
+        "FLEX-H3",
+        "FLEX-T3"
+      ],
+      "test": {
+        "ejercicio": "flex-h-4",
+        "umbral": 8,
+        "series": 3
+      },
+      "nivel": 4,
+      "requiere_puerta_medica": true
+    },
+    "POLE-10": {
+      "rama": "POLE",
+      "nombre": "Split aéreo / jade",
+      "prerequisitos": [
+        "POLE-4",
+        "FLEX-P3",
+        "FLEX-H3"
+      ],
+      "test": {
+        "ejercicio": "flex-p-5",
+        "umbral": 30,
+        "series": 3
+      },
+      "nivel": 4,
+      "requiere_puerta_medica": true
+    },
+    "POLE-X": {
+      "rama": "POLE",
+      "nombre": "Arcos profundos: rainbow, cocoon, eagle",
+      "prerequisitos": [],
+      "nivel": 5,
+      "fuera_de_ruta": true,
+      "motivo": "Su expresión clásica se paga con la espalda baja. Hay versiones alternas con más cadera que sí están en la ruta.",
+      "test": null
     }
-  }
+  },
+  "regla_maestra": "El arco se paga con cadera y con tórax. La espalda baja solo pone lo que ya tiene, que es bastante."
 }

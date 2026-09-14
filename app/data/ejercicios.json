@@ -2078,6 +2078,600 @@
       "patron": [],
       "carga_axial": false,
       "cuenta_tut_barra": false
+    },
+    "flex-t-1": {
+      "nombre": "Esfinge cerrada",
+      "dosis": "3 × 25 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Extensión del pecho con la pelvis pegada al piso",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 25,
+      "claves": [
+        "La pelvis no se despega, el pecho sí",
+        "Glúteo prendido todo el rato",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Codos adelante → codos bajo el hombro → una mano al frente"
+    },
+    "flex-t-2": {
+      "nombre": "Tórax sobre rodillo, tres alturas",
+      "dosis": "3 × 45 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "El rodillo elige la vértebra, no la gravedad",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 45,
+      "claves": [
+        "Rodillo bajo la punta de la escápula",
+        "El glúteo apoyado",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Sube el rodillo un nivel cada 4 semanas"
+    },
+    "flex-t-3": {
+      "nombre": "Cerrada de hombro en banco",
+      "dosis": "3 × 30 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Cada grado de hombro es un grado que tu espalda baja no tiene que poner",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 30,
+      "claves": [
+        "Costillas cerradas",
+        "El estiramiento se busca en la axila",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Manos juntas → manos anchas → con peso ligero"
+    },
+    "flex-t-4": {
+      "nombre": "Camello alto",
+      "dosis": "3 × 20 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Cadera y tórax disfrazados de camello",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 20,
+      "claves": [
+        "La cadera al frente primero, el pecho después",
+        "Nunca buscas los talones: buscas el techo",
+        "La cabeza no cae atrás",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Manos en glúteos → manos en la espalda → una mano al talón, solo desde N2",
+      "desde_nivel": 2
+    },
+    "flex-t-5": {
+      "nombre": "Arco de pie en la pared",
+      "dosis": "3 × 20 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "La pared limita el rango, que es lo que hace falta al principio",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 20,
+      "claves": [
+        "Cadera adelante, pecho arriba",
+        "Mentón neutro",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Manos altas → manos bajas"
+    },
+    "flex-h-1": {
+      "nombre": "Puente alto de hombro",
+      "dosis": "3 × 30 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "El puente que sí puedes hacer: cadera con glúteo, espalda neutra",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 30,
+      "claves": [
+        "Costillas cerradas",
+        "Empuja con el talón",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Pies al piso → pies elevados → una pierna"
+    },
+    "flex-h-2": {
+      "nombre": "Psoas cargado en media rodilla",
+      "dosis": "3 × 40 seg × lado",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "El ejercicio más importante de toda la flexibilidad",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 40,
+      "claves": [
+        "La cola debajo ANTES de bajar",
+        "Si sientes la espalda baja, todavía no metiste la pelvis",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Sin brazo → brazo arriba → brazo arriba con inclinación"
+    },
+    "flex-h-3": {
+      "nombre": "Couch stretch: pie en la pared",
+      "dosis": "3 × 40 seg × lado",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Psoas y recto femoral juntos: lo que el arco y el split trasero piden de verdad",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 40,
+      "claves": [
+        "Pelvis metida antes de subir el tronco",
+        "Si lo sientes en la espalda baja, el ejercicio salió mal — no tu espalda. Tiene que sentirse en el frente del muslo, en la ingle o entre los omóplatos."
+      ],
+      "progresion": "Tronco inclinado → vertical → vertical con brazo arriba"
+    },
+    "flex-h-4": {
+      "nombre": "Extensión de cadera con banda, boca abajo",
+      "dosis": "3 × 8 con 3 seg",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Fuerza en el rango que acabas de abrir. Sin esto el rango se pierde en 72 horas",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "claves": [
+        "Glúteo, no espalda baja",
+        "Sube poco y sostén"
+      ],
+      "progresion": "Sin banda → banda ligera → banda media"
+    },
+    "flex-p-1": {
+      "nombre": "Split en bloques, caderas cuadradas",
+      "dosis": "3 × 40 seg × lado",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Se mide en centímetros de bloque, no en qué tan abajo llegaste",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 40,
+      "claves": [
+        "Las dos caderas miran al frente",
+        "Si una se abre, subes el bloque"
+      ],
+      "progresion": "El bloque baja 5 cm cuando aguantas 3 × 40 seg sin compensar"
+    },
+    "flex-p-2": {
+      "nombre": "Isquio activo en supino con banda",
+      "dosis": "3 × 8 con 3 seg × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Activo, con la espalda apoyada. Es lo que reemplaza para siempre al pike sentado",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "claves": [
+        "Rodilla apenas doblada",
+        "La espalda baja no se despega"
+      ],
+      "progresion": "Rodilla flexionada → recta → banda más corta"
+    },
+    "flex-p-3": {
+      "nombre": "Deslizamiento del ciático",
+      "dosis": "8 × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "No es estiramiento: es deslizamiento del nervio. Es lo que ayuda cuando la tensión viene de la espalda baja",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "claves": [
+        "Movimiento, nunca sostén",
+        "Si hormiguea, acorta el recorrido"
+      ],
+      "progresion": "Rango corto → rango completo"
+    },
+    "flex-p-4": {
+      "nombre": "PNF de isquio con banda",
+      "dosis": "3 ciclos: 5 seg + 20 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Contracción suave y estiramiento después",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 20,
+      "claves": [
+        "Contraes al 40 %, no más",
+        "EXHALANDO siempre: la contracción es donde se cuela aguantar el aire"
+      ],
+      "progresion": "Se añaden 5 grados de rango por mes"
+    },
+    "flex-p-5": {
+      "nombre": "Split deslizado con control",
+      "dosis": "3 × 30 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Bajar al split es fácil; salir es lo que te protege",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 30,
+      "claves": [
+        "Entrada y salida controladas",
+        "Caderas cuadradas"
+      ],
+      "progresion": "Con manos apoyadas → sin apoyo",
+      "desde_nivel": 2
+    },
+    "flex-a-1": {
+      "nombre": "Rana apoyada",
+      "dosis": "3 × 40 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Pasivo corto y apoyado. Nunca con alguien empujando",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 40,
+      "claves": [
+        "Con medias de compresión",
+        "Si molesta, sales"
+      ],
+      "progresion": "Rodillas juntas → anchas → pecho apoyado"
+    },
+    "flex-a-2": {
+      "nombre": "Apertura activa sentada",
+      "dosis": "3 × 8 × pierna",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Fuerza de abductores en rango final. Esto sí se usa en el tubo; la rana pasiva no",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "claves": [
+        "Sube la pierna sin inclinar el tronco"
+      ],
+      "progresion": "Manos apoyadas → manos sueltas"
+    },
+    "flex-a-3": {
+      "nombre": "Straddle adelante desde bisagra",
+      "dosis": "3 × 30 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "El pecho va al piso desde la cadera, no desde la espalda",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 30,
+      "claves": [
+        "La espalda se queda larga, siempre"
+      ],
+      "progresion": "Manos adelante → antebrazos → pecho"
+    },
+    "flex-a-4": {
+      "nombre": "Deslizamiento lateral de pie",
+      "dosis": "3 × 8 × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Aductor en excéntrico: es lo que previene el tirón",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "claves": [
+        "Controla la bajada"
+      ],
+      "progresion": "Rango corto → completo"
+    },
+    "flex-c-1": {
+      "nombre": "Compresión activa sentada",
+      "dosis": "3 × 20 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "Fuerza en rango, no estiramiento. Es lo que el invertido necesita",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 20,
+      "claves": [
+        "Talones 2 cm del piso",
+        "Espalda larga"
+      ],
+      "progresion": "Manos en bloques → manos en el piso"
+    },
+    "flex-c-2": {
+      "nombre": "Compresión en V",
+      "dosis": "3 × 15 seg",
+      "modo": "tiempo",
+      "unidad": "tiempo",
+      "series": 3,
+      "rama": "FLEX",
+      "para": "El siguiente paso de la compresión",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "segundos": 15,
+      "claves": [
+        "Sin redondear la espalda"
+      ],
+      "progresion": "Con apoyo → sin apoyo",
+      "desde_nivel": 2
+    },
+    "voc-ola-1": {
+      "nombre": "Ola adelante",
+      "dosis": "3 × 6",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "Empieza sentada en talones: así la pelvis no puede irse a ningún lado y la ola sale del pecho",
+      "claves": [
+        "De arriba abajo, secuencial",
+        "Lenta: la ola rápida no es ola"
+      ],
+      "progresion": "Sentada en talones → de rodillas → de pie → con desplazamiento",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-ola-2": {
+      "nombre": "Ola atrás",
+      "dosis": "3 × 6",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "La ola que arranca en el pecho te duele; la que arranca en la pelvis no",
+      "claves": [
+        "La ola arranca en la pelvis y sube. La espalda baja no inicia nada, solo transmite.",
+        "Costillas CERRADAS todo el recorrido: costilla que se abre es espalda que se arquea",
+        "La cabeza no cae atrás todavía"
+      ],
+      "progresion": "De rodillas con manos en muslos → de rodillas libre → de pie con manos en el tubo → de pie libre",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-ola-3": {
+      "nombre": "Ola lateral",
+      "dosis": "3 × 6 × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "Le trabaja directo al lado corto de tu asimetría, que casi nada más hace",
+      "claves": [
+        "Crece antes de inclinarte"
+      ],
+      "progresion": "Con apoyo → libre",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-ola-4": {
+      "nombre": "Ola con desplazamiento",
+      "dosis": "3 × 4",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "Es la ola convertida en frase de movimiento, que es para lo que existe",
+      "claves": [
+        "La ola arranca en la pelvis y sube. La espalda baja no inicia nada, solo transmite."
+      ],
+      "progresion": "En el sitio → un paso → alrededor del tubo",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false,
+      "desde_nivel": 1
+    },
+    "voc-cam-1": {
+      "nombre": "Caminata en tacón",
+      "dosis": "4 largos de 8 pasos",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 4,
+      "rama": "POLE-V",
+      "para": "La plataforma es MÁS estable que el tacón fino: se empieza por ahí",
+      "claves": [
+        "Peso en la almohadilla del pie",
+        "Rodilla suave, cadera cruzada, torso alto"
+      ],
+      "progresion": "Descalza → tacón bajo → plataforma → plataforma con giro",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-cam-2": {
+      "nombre": "Ochos de cadera",
+      "dosis": "3 × 8 en cada sentido",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "Es movilidad de cadera vestida de pole, y de lo que mejor se siente al volver",
+      "claves": [
+        "Dibuja el ocho, no lo empujes"
+      ],
+      "progresion": "En el sitio → caminando → alrededor del tubo",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-cam-3": {
+      "nombre": "Body roll lateral",
+      "dosis": "3 × 6 × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "Movilidad de costilla en el plano de tu asimetría",
+      "claves": [
+        "Costilla por costilla"
+      ],
+      "progresion": "Con apoyo en la pared → libre",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-br-1": {
+      "nombre": "Brazos",
+      "dosis": "4 secuencias de 8 tiempos",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 4,
+      "rama": "POLE-V",
+      "para": "Cero costo físico y es lo que más cambia cómo se ve y cómo se siente todo lo demás",
+      "claves": [
+        "Los dedos terminan el movimiento",
+        "Mira la mano que se va"
+      ],
+      "progresion": "2 caminos → 4 caminos → con ola",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-pie-1": {
+      "nombre": "Punta y flex",
+      "dosis": "2 × 20",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 2,
+      "rama": "POLE-V",
+      "para": "Es lo único que hace que un movimiento cualquiera se lea como pole — y de paso es bombeo",
+      "claves": [
+        "Punta desde el metatarso, no desde los dedos"
+      ],
+      "progresion": "Sentada → de pie → en movimiento",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-piso-1": {
+      "nombre": "Bajada al suelo",
+      "dosis": "4 bajadas × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 4,
+      "rama": "POLE-V",
+      "para": "La técnica más importante del suelo para tu espalda",
+      "claves": [
+        "Se baja con bisagra de cadera y apoyo de mano, NUNCA enrollando la columna",
+        "Rodilleras"
+      ],
+      "progresion": "Con mano y rodilla → con una mano → sin manos, desde N2",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-piso-2": {
+      "nombre": "Sirena y cambio de lado",
+      "dosis": "4 cambios × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 4,
+      "rama": "POLE-V",
+      "para": "Rotación de cadera y transición: la base de la mitad del suelo",
+      "claves": [
+        "El cambio pasa por el centro"
+      ],
+      "progresion": "Con mano apoyada → libre → con ola",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-piso-3": {
+      "nombre": "Gato",
+      "dosis": "3 × 4 recorridos",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "Cuadrupedia con intención: seguro, bonito y le trabaja el hombro",
+      "claves": [
+        "Escápulas primero"
+      ],
+      "progresion": "Lento → con pausa → con giro",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-piso-4": {
+      "nombre": "Deslizada de rodilla",
+      "dosis": "3 × 4 × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 3,
+      "rama": "POLE-V",
+      "para": "Lenta al principio: la deslizada rápida es rodilla y fricción",
+      "claves": [
+        "Rodilleras SIEMPRE"
+      ],
+      "progresion": "Corta y lenta → media → con entrada de pie, desde N2",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
+    },
+    "voc-tubo-1": {
+      "nombre": "Caminata de pole, sin subir",
+      "dosis": "4 vueltas × lado",
+      "modo": "reps",
+      "unidad": "reps",
+      "series": 4,
+      "rama": "POLE-V",
+      "para": "Agarre mínimo, cero carga vertical. Puedes hacerlo el primer día que pises el estudio",
+      "claves": [
+        "La mano alta guía, el cuerpo sigue",
+        "Camina alrededor, no cuelgues"
+      ],
+      "progresion": "Caminata → con cambio de mano → con giro básico",
+      "patron": [],
+      "carga_axial": false,
+      "cuenta_tut_barra": false
     }
   }
 }

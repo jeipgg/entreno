@@ -47,13 +47,26 @@ export const PATRONES_VALIDOS = [
  'valsalva', 'carga_axial_pesada', 'impacto',
 ];
 
+/* ---------- flexibilidad ----------
+ No progresa por escalones: a un split no se le suma una repetición.
+ Se entrena en el 90–95 % de la marca, nunca EN la marca: perseguir el
+ récord cada viernes es como se lesiona la gente en flexibilidad. */
+export const FLEX_BANDA = [0.90, 0.95];
+export const FLEX_MEJORA_MIN = 0.03; // sube la marca solo con +3 % en el test
+export const FLEX_CAIDA_MAX = 0.05; // −5 % → baja la banda y congela
+export const FLEX_CONGELA_SEMANAS = 2;
+export const PNF_MAX_ESTRUCTURAS = 2; // por sesión
+export const PNF_CONTRACCION_MAX = 0.40; // del máximo, y exhalando
+export const FLEX_CARGADO_MAX_MIN = { 0: 4, 1: 4, 2: 6, 3: 6, 4: 6, 5: 6 };
+export const FLEX_FACTOR_TBC = 0.5; // el cargado cuenta a la mitad
+
 export const PRIORIDAD_RAMA = {
- 0: ['GRIP','CORE','HIP','PULL','PUSH','MOB','POLE'],
- 1: ['GRIP','CORE','HIP','PULL','PUSH','MOB','POLE'],
- 2: ['GRIP','CORE','PULL','HIP','PUSH','MOB','POLE'],
- 3: ['GRIP','CORE','PULL','HIP','PUSH','MOB','POLE'],
- 4: ['PULL','CORE','POLE','GRIP','PUSH','HIP','MOB'],
- 5: ['PULL','CORE','POLE','GRIP','PUSH','HIP','MOB'],
+ 0: ['GRIP','CORE','HIP','FLEX','PULL','PUSH','MOB','POLE-V','POLE'],
+ 1: ['GRIP','CORE','HIP','FLEX','PULL','PUSH','MOB','POLE-V','POLE'],
+ 2: ['GRIP','CORE','PULL','FLEX','HIP','PUSH','MOB','POLE-V','POLE'],
+ 3: ['GRIP','CORE','PULL','FLEX','HIP','PUSH','MOB','POLE-V','POLE'],
+ 4: ['PULL','CORE','POLE','FLEX','GRIP','PUSH','HIP','POLE-V','MOB'],
+ 5: ['PULL','CORE','POLE','FLEX','GRIP','PUSH','HIP','POLE-V','MOB'],
 };
 
 /* ---------- las 14 prohibiciones (Ixchel 7.1) ----------
@@ -116,6 +129,16 @@ export const PROHIBICIONES = [
  plan: (plan, ctx) => !plan.carga ||
  (plan.calentamiento_min || 0) >= calentamientoMinimoMin(ctx.minutos),
  copy: 'Una sesión de carga necesita su calentamiento completo.' },
+ { id: 'flex-con-lumbar', n: 15,
+ contenido: () => true,
+ plan: (plan, ctx) => !plan.flex_cargado ||
+ !ctx.checkin || (ctx.checkin.dolor_lumbar || 0) < 1,
+ copy: 'Con molestia en la espalda baja no hay flexibilidad cargada.' },
+ { id: 'flex-48h', n: 16,
+ contenido: () => true,
+ plan: (plan, ctx) => !plan.flex_cargado || ctx.horasDesdeCarga === null ||
+ ctx.horasDesdeCarga >= HORAS_ENTRE_CARGA,
+ copy: 'El trabajo cargado en rango final necesita 48 horas desde la última sesión que cargó esas estructuras.' },
  { id: 'una-variable', n: 14,
  contenido: () => true,
  plan: plan => (plan.decisiones || []).every(d => (d.cambios || 0) <= 1),
@@ -186,6 +209,15 @@ export function tutBarraSesion(sesionesAgarre) {
 }
 
 export function tbcSemanalMax(nivel) { return TBC_SEMANAL_MIN[nivel] ?? 22; }
+
+/** La banda de trabajo de un nodo de flexibilidad: 90–95 % de la marca. */
+export function bandaFlex(marca) {
+ if (!marca) return null;
+ return [Math.round(marca * FLEX_BANDA[0] * 10) / 10,
+ Math.round(marca * FLEX_BANDA[1] * 10) / 10];
+}
+
+export function flexCargadoMaxMin(nivel) { return FLEX_CARGADO_MAX_MIN[nivel] ?? 4; }
 
 /** Ventana horaria: qué se permite a esta hora. */
 export function ventana(minutos) {
