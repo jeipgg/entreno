@@ -108,7 +108,9 @@ function itemSimple(i, plan, prefs) {
  <input type="checkbox" class="chk chk-sm" data-item="${i.id}" ${done ? 'checked' : ''}
  aria-label="${attr(i.nombre)}">
  <div class="n">
- <span class="t">${i.nombre}</span>${i.para ? `<span class="para">${i.para}</span>` : ''}
+ <span class="t">${i.nombre}</span>
+ ${i.dosis ? `<span class="d">${i.dosis}</span>` : ''}
+ ${i.para ? `<span class="para">${i.para}</span>` : ''}
  <span class="logro">
  <input type="text" inputmode="numeric" data-nota="${i.id}" value="${attr(nota)}"
  placeholder="—" aria-label="${unidad} en ${attr(i.nombre)}">
@@ -118,7 +120,6 @@ function itemSimple(i, plan, prefs) {
  <span class="acts">
  ${video ? `<a class="mini" href="${video}" target="_blank" rel="noopener" aria-label="Video">▶</a>` : ''}
  ${i.infografia ? `<button type="button" class="mini fig" data-fig="${i.infografia}" data-ex="${i.id}" aria-label="Diagrama">◧</button>` : ''}
- <span class="d">${i.dosis || ''}</span>
  </span>
  </li>`;
 }

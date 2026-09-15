@@ -210,12 +210,14 @@ button{font-family:inherit;font-size:inherit;color:inherit}
 .ex.done .ex-name{color:var(--muted);text-decoration:line-through}
 .ex.bloqueado{opacity:.5}
 
-.ex-head{display:flex;justify-content:space-between;gap:.7rem;align-items:baseline}
-.ex-name{font-weight:600;font-size:1rem;line-height:1.25}
+/* Con flex-wrap, una dosis larga baja a su propia línea en vez de
+   empujar el nombre fuera de la pantalla. */
+.ex-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.2rem .7rem;align-items:baseline}
+.ex-name{font-weight:600;font-size:1rem;line-height:1.25;min-width:0;flex:1 1 auto;overflow-wrap:anywhere}
 .ex-num{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);margin-right:.4rem;font-weight:400}
 .ex-dose{
-  font-family:var(--f-mono);font-size:.813rem;font-weight:500;
-  white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)
+  font-family:var(--f-mono);font-size:.813rem;font-weight:500;flex:0 1 auto;
+  white-space:normal;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;color:var(--ink)
 }
 
 /* ---------- aviso de agarre ---------- */
@@ -336,20 +338,26 @@ button{font-family:inherit;font-size:inherit;color:inherit}
   list-style:none;margin:0;padding:.15rem .85rem;
   background:var(--surface);border:1px solid var(--line);border-radius:9px
 }
+/* minmax(0,1fr) y no 1fr: sin el mínimo en 0, un hijo largo (la dosis) empuja
+   la columna y el texto se sale de la pantalla en vez de partirse. */
 .simple li{
-  display:grid;grid-template-columns:auto 1fr auto;gap:.7rem;align-items:start;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.7rem;align-items:start;
   padding:.6rem 0;border-bottom:1px solid var(--line)
 }
 .simple li:last-child{border-bottom:none}
 /* el tachado va solo en el nombre: line-through se hereda y no se puede cancelar en un hijo */
 .simple li.done .t{color:var(--muted);text-decoration:line-through}
 .simple li.done .para{color:var(--muted);opacity:.7}
-.simple .n{font-size:.875rem;line-height:1.3}
+.simple .n{font-size:.875rem;line-height:1.3;min-width:0}
+.simple .t{display:block;overflow-wrap:anywhere}
 .simple .para{display:block;font-size:.75rem;color:var(--muted);margin-top:.1rem}
-.simple .acts{display:flex;align-items:center;gap:.4rem}
+.simple .acts{display:flex;align-items:center;gap:.4rem;flex:none}
+/* La dosis va DEBAJO del nombre, no a su lado: "8 basculaciones, rango medio"
+   no cabe en una columna lateral, y al forzarla se salía de la pantalla. */
 .simple .d{
-  font-family:var(--f-mono);font-size:.75rem;color:var(--muted);
-  white-space:nowrap;font-variant-numeric:tabular-nums
+  display:block;margin-top:.15rem;
+  font-family:var(--f-mono);font-size:.719rem;color:var(--chalk);
+  white-space:normal;overflow-wrap:anywhere;font-variant-numeric:tabular-nums
 }
 .simple .logro{display:flex;align-items:center;gap:.4rem;margin-top:.35rem}
 .simple .logro input{
