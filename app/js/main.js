@@ -451,9 +451,9 @@ function wirePanel() {
  if (!confirm('Se borra el token de este teléfono y se deja de copiar. El registro no se toca. ¿Seguir?')) return;
  E.olvidarNube(); abrirPanel();
  });
- ['teatro-n','teatro-fin'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
- const n = Math.max(0, Math.min(4, Number($('#teatro-n').value) || 0));
- E.guardarPrefs({ teatros_semana: n, teatros_hasta: $('#teatro-fin').value || null });
+ ['taller-n','taller-fecha'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
+ const n = Math.max(0, Math.min(4, Number($('#taller-n').value) || 0));
+ E.guardarPrefs({ taller_dias_semana: n, taller_muestra_final: $('#taller-fecha').value || null });
  calcular(); pintar(); abrirPanel();
  }); });
 
@@ -535,10 +535,10 @@ function diasDeCarga() {
 function validarCalendario(cal) {
  const tipos = CONTENIDO.sesiones.tipos;
  const carga = Object.values(cal).filter(t => tipos[t] && tipos[t].carga);
- const teatros = R.teatrosVigentes(E.prefs(), HOY);
- const tope = R.topeCargaSemana(teatros);
+ const taller = R.tallerVigente(E.prefs(), HOY);
+ const tope = R.topeCargaSemana(taller);
  if (carga.length > tope)
- return `Quedan ${carga.length} días de carga y el tope es ${tope}${teatros >= 2 ? ' (el teatro también cuenta como día de demanda)' : ''}.`;
+ return `Quedan ${carga.length} días de carga y el tope es ${tope}${taller >= 2 ? ' (los días de taller también cuentan como demanda)' : ''}.`;
  for (let d = 0; d < 7; d++) {
  const a = tipos[cal[String((d + 6) % 7)]], b = tipos[cal[String(d)]];
  if (a && b && a.carga && b.carga)

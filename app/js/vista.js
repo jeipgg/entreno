@@ -202,7 +202,7 @@ export function panel(plan, datos, textos) {
  ${arbolHTML(plan.arbol, textos)}
  ${statsHTML(plan, datos)}
  ${puertaHTML(datos.puerta)}
- ${teatroHTML(plan.teatro, datos.hoy, datos.diasCargaCalendario)}
+ ${tallerHTML(plan.taller, datos.hoy, datos.diasCargaCalendario)}
  ${historialHTML(datos.log, datos.checkins, datos.catalogo)}
  <button type="button" class="btn-ghost" id="exportar" style="margin-top:1rem">Exportar el registro (CSV)</button>
  <p class="aviso-csv">El archivo sale sin cifrar. Si lo guardas en iCloud se sincroniza con tus otros dispositivos.</p>
@@ -261,38 +261,40 @@ function puertaHTML(p) {
  </div>`;
 }
 
-/* La temporada de teatro es un dato con fecha de vencimiento: cuando pasa,
- el tope de días de carga vuelve solo. Se muestra siempre —activa o no—
- porque el cambio mueve una regla y no puede ocurrir en silencio. */
-function teatroHTML(t, hoy, diasCalendario) {
+/* El taller va hasta la muestra final, y esa fecha se puede correr.
+ Se muestra siempre —en curso o terminado— porque cuando la fecha pasa
+ se mueve una regla, y una regla no puede moverse en silencio. */
+function tallerHTML(t, hoy, diasCalendario) {
  if (!t) return '';
- const vigente = t.por_semana > 0;
- const hasta = t.hasta ? fechaConAno(t.hasta) : null;
- const terminada = !!(t.hasta && hoy && hoy > t.hasta);
+ const dias = t.configurado ?? t.por_semana;
+ const cuenta = t.por_semana > 0;
+ const fecha = t.hasta ? fechaConAno(t.hasta) : null;
+ const terminado = !!(t.hasta && hoy && hoy > t.hasta);
 
- const texto = terminada
- ? `Terminó el ${hasta}. El tope volvió a ${t.tope_carga} días de carga por semana.
- Tu calendario no cambió solo: si quieres usar ese día, súbelo desde «Cambiar qué día
- es cada sesión». El tope es un techo, no una meta.`
- : vigente
- ? `Hasta el ${hasta}. Mientras dure, el tope es ${t.tope_carga} días de carga por semana
- en vez de 4: el teatro también es un día de demanda alta y el cuerpo no distingue.`
- : `Sin teatro en el calendario. El tope es ${t.tope_carga} días de carga por semana.`;
+ const texto = terminado
+ ? `La muestra final fue el ${fecha}. El tope volvió a ${t.tope_carga} días de carga
+ por semana. Si el taller se extendió, cambia la fecha aquí y el tope vuelve a bajar.`
+ : cuenta
+ ? `Hasta la muestra final${fecha ? `, el ${fecha}` : ''}. Mientras dure, el tope es
+ ${t.tope_carga} días de carga por semana en vez de 4: los días de taller también
+ son días de demanda alta y el cuerpo no distingue de dónde viene el cansancio.`
+ : `Sin taller en el calendario. El tope es ${t.tope_carga} días de carga por semana.`;
 
- return `<div class="teatro ${terminada ? 'fin' : vigente ? 'activa' : ''}">
- <h3>Temporada de teatro</h3>
- <p class="teatro-nota">${texto}</p>
- ${diasCalendario != null ? `<p class="teatro-nota">Tu calendario tiene ${diasCalendario} ${
- diasCalendario === 1 ? 'día' : 'días'} de carga.</p>` : ''}
+ return `<div class="taller ${terminado ? 'fin' : cuenta ? 'activa' : ''}">
+ <h3>El taller</h3>
+ <p class="taller-nota">${texto}</p>
  <div class="pm-campos">
- <label>Funciones por semana
- <input type="number" id="teatro-n" min="0" max="4" step="1" value="${attr(t.configurado ?? t.por_semana)}">
+ <label>Muestra final
+ <input type="date" id="taller-fecha" value="${attr(t.hasta || '')}">
  </label>
- <label>Hasta
- <input type="date" id="teatro-fin" value="${attr(t.hasta || '')}">
+ <label>Días de taller por semana
+ <input type="number" id="taller-n" min="0" max="4" step="1" value="${attr(dias)}">
  </label>
  </div>
- <p class="teatro-nota">Si la temporada se alarga, cambia la fecha aquí y el tope vuelve a bajar.</p>
+ <p class="taller-nota">La app está contando <strong>${dias}</strong> ${
+ dias === 1 ? 'día' : 'días'} de taller por semana${
+ diasCalendario != null ? `, y tu calendario tiene ${diasCalendario} de carga` : ''}.
+ Si no es así, corrígelo aquí: de ese número sale el tope.</p>
  </div>`;
 }
 

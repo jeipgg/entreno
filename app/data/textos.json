@@ -24,7 +24,7 @@
   "bloqueo": {
     "irradiado": "Hoy no se entrena. Hormigueo o corrientazo bajando por la pierna es una señal nerviosa, y entrenar encima la empeora. Consulta antes de la siguiente sesión.",
     "puerta_medica": "Esta rama se abre cuando registres las dos fechas: laboratorios y control. No es burocracia — el ejercicio es parte de tu tratamiento, y la otra mitad lleva tiempo esperando.",
-    "cupo_carga": "Ya van {n} días de carga esta semana. El tope es {max}, y el teatro también cuenta como día de demanda.",
+    "cupo_carga": "Ya van {n} días de carga esta semana. El tope es {max}, y los días de taller también cuentan como demanda.",
     "48h": "La última sesión de carga fue hace menos de 48 horas. Hoy toca movilidad o caminata.",
     "ventana_temprano": "Antes de las 7 de la mañana no hay barra ni carga: tu espalda lleva toda la noche rehidratándose y es el peor momento del día para cargarla.",
     "ventana_tarde": "Pasadas las 20:30 solo queda el Piso 1. Lo que ganes entrenando ahora lo pierdes durmiendo peor.",

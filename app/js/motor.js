@@ -103,9 +103,9 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  horasDesdeCarga,
  sesionesAgarre,
  adherencia,
- teatros: R.teatrosVigentes(estado.prefs, hoy),
- teatroHasta: (estado.prefs && estado.prefs.teatros_hasta) || null,
- teatroConfig: (estado.prefs && estado.prefs.teatros_semana) ?? 2,
+ tallerDias: R.tallerVigente(estado.prefs, hoy),
+ muestraFinal: (estado.prefs && estado.prefs.taller_muestra_final) || null,
+ tallerConfig: (estado.prefs && estado.prefs.taller_dias_semana) ?? 2,
  manos: (checkin && checkin.manos) || 'integra',
  puertaMedica: estado.puerta_medica || null,
  semanaMeso: semanaMesociclo(log),
@@ -205,9 +205,9 @@ export function puertasDuras(plan, ctx, contenido) {
  if (ctx.checkin === null)
  return { ...plan, modo: 'minimo', carga: false, motivo: T.sin_checkin, progresion: false };
 
- if (ctx.diasCarga7 >= R.topeCargaSemana(ctx.teatros))
+ if (ctx.diasCarga7 >= R.topeCargaSemana(ctx.tallerDias))
  return piso1(T.cupo_carga.replace('{n}', ctx.diasCarga7)
- .replace('{max}', R.topeCargaSemana(ctx.teatros)));
+ .replace('{max}', R.topeCargaSemana(ctx.tallerDias)));
 
  if (ctx.horasDesdeCarga !== null && ctx.horasDesdeCarga < R.HORAS_ENTRE_CARGA)
  return piso1(T['48h']);
@@ -444,8 +444,8 @@ function cerrar(plan, ctx, contenido) {
  plan.minimo_valido_min = plan.minimo_valido_min || 15;
  plan.nivel = ctx.nivel;
  plan.semana_meso = ctx.semanaMeso;
- plan.teatro = { por_semana: ctx.teatros, configurado: ctx.teatroConfig,
- hasta: ctx.teatroHasta, tope_carga: R.topeCargaSemana(ctx.teatros) };
+ plan.taller = { por_semana: ctx.tallerDias, configurado: ctx.tallerConfig,
+ hasta: ctx.muestraFinal, tope_carga: R.topeCargaSemana(ctx.tallerDias) };
  plan.arbol = estadoArbol(contenido, ctx);
  return plan;
 }
