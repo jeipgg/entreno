@@ -36,6 +36,13 @@ export function fechaLarga(d = ahora()) {
  return d.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
+/** "31 de diciembre de 2026" — con año, para fechas que no son de esta semana. */
+export function fechaConAno(iso) {
+ const [Y, M, D] = iso.split('-').map(Number);
+ return new Date(Y, M - 1, D).toLocaleDateString('es-CO',
+ { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 export function fechaCorta(iso) {
  const [Y, M, D] = iso.split('-').map(Number);
  return new Date(Y, M - 1, D).toLocaleDateString('es-CO',

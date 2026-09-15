@@ -9,6 +9,7 @@
 'use strict';
 
 import { hoyISO, haceDias } from './tiempo.js';
+import { TEATRO_FIN_POR_DEFECTO } from './reglas.js';
 
 export const K = {
  esquema: 'pole.esquema',
@@ -23,6 +24,9 @@ export const K = {
  exportado: 'pole.ultimo_respaldo',
  nube: 'pole.nube', // {token, repo, ultimo, ultimo_error}
 };
+
+/** Lo que asume la app cuando todavía no hay preferencias guardadas. */
+const PREFS_DEFECTO = { teatros_semana: 2, teatros_hasta: TEATRO_FIN_POR_DEFECTO };
 
 export const ESQUEMA_ACTUAL = 1;
 
@@ -124,7 +128,7 @@ export function cargar() {
  arbol: read(K.arbol, {}),
  banderas: read(K.banderas, {}),
  puerta_medica: read(K.puerta, null),
- prefs: read(K.prefs, { teatros_semana: 2 }),
+ prefs: read(K.prefs, PREFS_DEFECTO),
  nivel_actual: read(K.prefs, {}).nivel_actual || 0,
  };
 }
@@ -271,7 +275,20 @@ export function guardarPuertaMedica(p) {
 }
 
 /* ---------- preferencias ---------- */
-export function prefs() { return read(K.prefs, { teatros_semana: 2 }); }
+export function prefs() { return read(K.prefs, PREFS_DEFECTO); }
+
+/** Rellena preferencias que nacieron DESPUÉS de una migración ya hecha.
+ Corre en cada arranque y solo escribe lo que falta: una preferencia
+ nueva no puede obligar a subir el esquema y volver a migrar a todos.
+ Un valor puesto a null a propósito no se vuelve a sembrar. */
+export function sembrarPrefs() {
+ const p = read(K.prefs, {});
+ let falta = false;
+ for (const [k, v] of Object.entries(PREFS_DEFECTO))
+ if (p[k] === undefined) { p[k] = v; falta = true; }
+ if (falta) write(K.prefs, p);
+ return p;
+}
 
 export function guardarPrefs(p) {
  return write(K.prefs, { ...read(K.prefs, {}), ...p });

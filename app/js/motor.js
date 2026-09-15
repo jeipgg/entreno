@@ -103,7 +103,9 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  horasDesdeCarga,
  sesionesAgarre,
  adherencia,
- teatros: (estado.prefs && estado.prefs.teatros_semana) ?? 2,
+ teatros: R.teatrosVigentes(estado.prefs, hoy),
+ teatroHasta: (estado.prefs && estado.prefs.teatros_hasta) || null,
+ teatroConfig: (estado.prefs && estado.prefs.teatros_semana) ?? 2,
  manos: (checkin && checkin.manos) || 'integra',
  puertaMedica: estado.puerta_medica || null,
  semanaMeso: semanaMesociclo(log),
@@ -442,6 +444,8 @@ function cerrar(plan, ctx, contenido) {
  plan.minimo_valido_min = plan.minimo_valido_min || 15;
  plan.nivel = ctx.nivel;
  plan.semana_meso = ctx.semanaMeso;
+ plan.teatro = { por_semana: ctx.teatros, configurado: ctx.teatroConfig,
+ hasta: ctx.teatroHasta, tope_carga: R.topeCargaSemana(ctx.teatros) };
  plan.arbol = estadoArbol(contenido, ctx);
  return plan;
 }

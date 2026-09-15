@@ -650,6 +650,17 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
   padding:.42rem .5rem;font-family:var(--f-mono);font-size:.813rem;color:var(--ink)
 }
 
+/* temporada de teatro — misma caja que la puerta médica, otro acento */
+.teatro{
+  margin-top:.9rem;background:var(--chalk-soft);border:1px solid var(--chalk);
+  border-radius:9px;padding:.85rem
+}
+.teatro.activa{border-left:3px solid var(--chalk)}
+.teatro.fin{background:var(--go-soft);border-color:var(--go)}
+.teatro h3{font-family:var(--f-display);font-size:.938rem;margin-bottom:.35rem}
+.teatro-nota{margin:0 0 .6rem;font-size:.844rem;color:var(--ink-2);line-height:1.45}
+.teatro .pm-campos{margin-bottom:.6rem}
+
 /* editor de calendario */
 .cal-nota{font-size:.844rem;color:var(--ink-2);margin:0 0 .8rem;line-height:1.45}
 .cal-fila{

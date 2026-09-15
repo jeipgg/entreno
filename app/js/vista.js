@@ -6,7 +6,7 @@
  ============================================================ */
 'use strict';
 
-import { fechaCorta, fechaLarga, fmt } from './tiempo.js';
+import { fechaCorta, fechaLarga, fechaConAno, fmt } from './tiempo.js';
 
 /* Un valor dentro de un atributo. Sin esto, una nota con comillas
  rompe el HTML y corrompe el render. */
@@ -202,6 +202,7 @@ export function panel(plan, datos, textos) {
  ${arbolHTML(plan.arbol, textos)}
  ${statsHTML(plan, datos)}
  ${puertaHTML(datos.puerta)}
+ ${teatroHTML(plan.teatro, datos.hoy, datos.diasCargaCalendario)}
  ${historialHTML(datos.log, datos.checkins, datos.catalogo)}
  <button type="button" class="btn-ghost" id="exportar" style="margin-top:1rem">Exportar el registro (CSV)</button>
  <p class="aviso-csv">El archivo sale sin cifrar. Si lo guardas en iCloud se sincroniza con tus otros dispositivos.</p>
@@ -257,6 +258,41 @@ function puertaHTML(p) {
  <label>Laboratorios<input type="date" id="pm1" value="${attr(p && p.control_1 || '')}"></label>
  <label>Control<input type="date" id="pm2" value="${attr(p && p.control_2 || '')}"></label>
  </div>
+ </div>`;
+}
+
+/* La temporada de teatro es un dato con fecha de vencimiento: cuando pasa,
+ el tope de días de carga vuelve solo. Se muestra siempre —activa o no—
+ porque el cambio mueve una regla y no puede ocurrir en silencio. */
+function teatroHTML(t, hoy, diasCalendario) {
+ if (!t) return '';
+ const vigente = t.por_semana > 0;
+ const hasta = t.hasta ? fechaConAno(t.hasta) : null;
+ const terminada = !!(t.hasta && hoy && hoy > t.hasta);
+
+ const texto = terminada
+ ? `Terminó el ${hasta}. El tope volvió a ${t.tope_carga} días de carga por semana.
+ Tu calendario no cambió solo: si quieres usar ese día, súbelo desde «Cambiar qué día
+ es cada sesión». El tope es un techo, no una meta.`
+ : vigente
+ ? `Hasta el ${hasta}. Mientras dure, el tope es ${t.tope_carga} días de carga por semana
+ en vez de 4: el teatro también es un día de demanda alta y el cuerpo no distingue.`
+ : `Sin teatro en el calendario. El tope es ${t.tope_carga} días de carga por semana.`;
+
+ return `<div class="teatro ${terminada ? 'fin' : vigente ? 'activa' : ''}">
+ <h3>Temporada de teatro</h3>
+ <p class="teatro-nota">${texto}</p>
+ ${diasCalendario != null ? `<p class="teatro-nota">Tu calendario tiene ${diasCalendario} ${
+ diasCalendario === 1 ? 'día' : 'días'} de carga.</p>` : ''}
+ <div class="pm-campos">
+ <label>Funciones por semana
+ <input type="number" id="teatro-n" min="0" max="4" step="1" value="${attr(t.configurado ?? t.por_semana)}">
+ </label>
+ <label>Hasta
+ <input type="date" id="teatro-fin" value="${attr(t.hasta || '')}">
+ </label>
+ </div>
+ <p class="teatro-nota">Si la temporada se alarga, cambia la fecha aquí y el tope vuelve a bajar.</p>
  </div>`;
 }
 

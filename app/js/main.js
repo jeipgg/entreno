@@ -11,6 +11,7 @@ import * as E from './estado.js';
 import * as V from './vista.js';
 import * as C from './cronometro.js';
 import { construirPlan, valores } from './motor.js';
+import * as R from './reglas.js';
 import * as NUBE from './respaldo.js';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -50,6 +51,7 @@ async function init() {
  return;
  }
 
+ E.sembrarPrefs();
  E.purgarBanderasVencidas();
  registrarSW();
 
@@ -413,6 +415,7 @@ function abrirPanel() {
  nube: E.nube(), diasSinSubir: E.diasSinSubir(),
  sesiones: Object.values(log).filter(e => e && e.hecho).length,
  recordColgada: rec('colgada-activa'), recordHollow: rec('hollow-hold'),
+ hoy: HOY, diasCargaCalendario: diasDeCarga(),
  }, CONTENIDO.arbol);
  $('#panel').hidden = false;
  wirePanel();
@@ -448,6 +451,12 @@ function wirePanel() {
  if (!confirm('Se borra el token de este teléfono y se deja de copiar. El registro no se toca. ¿Seguir?')) return;
  E.olvidarNube(); abrirPanel();
  });
+ ['teatro-n','teatro-fin'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
+ const n = Math.max(0, Math.min(4, Number($('#teatro-n').value) || 0));
+ E.guardarPrefs({ teatros_semana: n, teatros_hasta: $('#teatro-fin').value || null });
+ calcular(); pintar(); abrirPanel();
+ }); });
+
  ['pm1','pm2'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
  E.guardarPuertaMedica({ control_1: $('#pm1').value, control_2: $('#pm2').value });
  calcular(); pintar(); abrirPanel();
@@ -515,12 +524,19 @@ function abrirCalendario() {
  });
 }
 
+/** Cuántos días de carga tiene el calendario vigente. */
+function diasDeCarga() {
+ const cal = E.prefs().calendario || CONTENIDO.calendario.por_defecto;
+ const tipos = CONTENIDO.sesiones.tipos;
+ return Object.values(cal).filter(t => tipos[t] && tipos[t].carga).length;
+}
+
 /** Un calendario que rompe las reglas no se guarda. */
 function validarCalendario(cal) {
  const tipos = CONTENIDO.sesiones.tipos;
  const carga = Object.values(cal).filter(t => tipos[t] && tipos[t].carga);
- const teatros = E.prefs().teatros_semana ?? 2;
- const tope = teatros >= 2 ? 3 : 4;
+ const teatros = R.teatrosVigentes(E.prefs(), HOY);
+ const tope = R.topeCargaSemana(teatros);
  if (carga.length > tope)
  return `Quedan ${carga.length} días de carga y el tope es ${tope}${teatros >= 2 ? ' (el teatro también cuenta como día de demanda)' : ''}.`;
  for (let d = 0; d < 7; d++) {

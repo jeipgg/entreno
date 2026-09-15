@@ -13,6 +13,7 @@
 export const MAX_DIAS_CARGA_SEMANA = 4; // techo absoluto, nunca meta
 export const MAX_DIAS_CARGA_CON_2_TEATROS = 3;
 export const MAX_DEMANDA_ALTA_SEMANA = 5; // Sakti 12: el teatro cuenta
+export const TEATRO_FIN_POR_DEFECTO = '2026-12-31';
 export const HORAS_ENTRE_CARGA = 48;
 export const VENTANA_INICIO_MIN = 7 * 60; // 07:00
 export const VENTANA_FIN_MIN = 20 * 60 + 30; // 20:30
@@ -188,6 +189,23 @@ export const CONDICIONES_SAKTI = [
 ];
 
 /* ---------- funciones que las reglas usan ---------- */
+
+/* ---------- temporada de teatro ----------
+ El teatro no es una condición permanente: es una temporada con fecha
+ de fin. Mientras dura, cuenta como día de demanda alta y baja el tope
+ de días de carga; cuando pasa, el tope vuelve solo.
+
+ La fecha vive en prefs y se edita desde el panel. Una fecha quemada
+ en el código es exactamente la que nadie corrige cuando cambia. */
+export function teatrosVigentes(prefs, hoyISO) {
+ const p = prefs || {};
+ const n = p.teatros_semana ?? 2;
+ if (!n) return 0;
+ const fin = p.teatros_hasta;
+ // las fechas ISO se comparan como texto: 2027-01-01 > 2026-12-31
+ if (fin && hoyISO && hoyISO > fin) return 0;
+ return n;
+}
 
 export function topeCargaSemana(teatros = 0) {
  return teatros >= 2 ? MAX_DIAS_CARGA_CON_2_TEATROS : MAX_DIAS_CARGA_SEMANA;
