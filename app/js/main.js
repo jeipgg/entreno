@@ -519,16 +519,34 @@ async function restaurarDesdeNube() {
 }
 
 function abrirCalendario() {
- const cal = E.prefs().calendario || CONTENIDO.calendario.por_defecto;
- $('#panel-body').innerHTML = V.editorCalendario(cal, CONTENIDO.sesiones.tipos);
+ const pr = E.prefs();
+ const cal = pr.calendario || CONTENIDO.calendario.por_defecto;
+ $('#panel-body').innerHTML = V.editorCalendario(
+ cal, CONTENIDO.sesiones.tipos, pr.franja_entreno || {}, pr.taller_horario || []);
  $('#cal-guardar').addEventListener('click', () => {
- const nuevo = {};
+ const nuevo = {}, franjas = {};
  $$('[data-dia]', $('#panel-body')).forEach(s => { nuevo[s.dataset.dia] = s.value; });
- const err = validarCalendario(nuevo);
+ $$('[data-franja]', $('#panel-body')).forEach(s => {
+ if (s.value) franjas[s.dataset.franja] = s.value;
+ });
+ const err = validarCalendario(nuevo) || validarFranjas(franjas, nuevo);
  if (err) { $('#cal-aviso').textContent = err; return; }
- E.guardarPrefs({ calendario: nuevo });
+ E.guardarPrefs({ calendario: nuevo, franja_entreno: franjas });
  calcular(); pintar(); $('#panel').hidden = true;
  });
+}
+
+/** Una franja que se pisa con el taller de ese día no se guarda. */
+function validarFranjas(franjas, cal) {
+ const L = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+ const horario = E.prefs().taller_horario || [];
+ for (const [d, f] of Object.entries(franjas)) {
+ const bloque = horario.find(b => b && b.desde && String(b.dia) === String(d));
+ if (R.chocaConTaller(f, bloque))
+ return `El ${L[Number(d)]} tienes taller de ${bloque.desde} a ${bloque.hasta}: ` +
+ `no puedes entrenar en la ${f === 'am' ? 'mañana' : 'tarde'} ese día.`;
+ }
+ return null;
 }
 
 /** Cuántos días de carga tiene el calendario vigente. */

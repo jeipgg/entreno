@@ -42,9 +42,17 @@ export function selector(calendario, tipos, actual) {
 export function pintarDia(plan, textos, prefs) {
  let h = '';
 
+ const franja = plan.franja_hoy === 'am' ? 'en la mañana'
+ : plan.franja_hoy === 'pm' ? 'en la tarde' : '';
+ const taller = plan.taller && plan.taller.hoy;
+
  h += `<div class="day-head">
  <div class="letra">${plan.tipo} · ${fechaLarga()}</div>
  <h2>${plan.nombre}</h2>
+ ${franja || taller ? `<p class="day-franja">${
+ [franja && `Hoy entrenas ${franja}`,
+ taller && `taller de ${taller.desde} a ${taller.hasta}`]
+ .filter(Boolean).join(' · ')}</p>` : ''}
  </div>`;
 
  if (plan.motivo) h += `<div class="motivo ${plan.modo === 'piso1' ? 'stop' : 'warn'}"><p>${md(plan.motivo)}</p></div>`;
@@ -435,19 +443,30 @@ function historialHTML(log, checkins, catalogo) {
 /* ============================================================
  PANTALLA DE CALENDARIO
  ============================================================ */
-export function editorCalendario(cal, tipos) {
+export function editorCalendario(cal, tipos, franjas = {}, horario = []) {
  const L = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
  const orden = [1,2,3,4,5,6,0];
+ const tallerDe = d => horario.find(b => b && b.desde && String(b.dia) === String(d));
  return `<div class="cal-editor">
- <p class="cal-nota">Mueve las sesiones al día que te sirva. No se pierde ningún escalón ni nada del historial: el día de la semana es solo dónde aparece.</p>
- ${orden.map(d => `
- <label class="cal-fila">
- <span>${L[d]}</span>
- <select data-dia="${d}">
- ${Object.entries(tipos).map(([id, t]) =>
- `<option value="${id}" ${cal[String(d)] === id ? 'selected' : ''}>${t.nombre}</option>`).join('')}
+ <p class="cal-nota">Mueve las sesiones al día que te sirva. No se pierde ningún escalón ni nada del historial: el día de la semana es solo dónde aparece. La franja es a qué hora entrenas ese día.</p>
+ ${orden.map(d => {
+ const t = tallerDe(d);
+ const f = franjas[String(d)] || '';
+ return `
+ <div class="cal-fila">
+ <span>${L[d]}${t ? `<em class="cal-taller">taller ${t.desde}–${t.hasta}</em>` : ''}</span>
+ <div class="cal-controles">
+ <select data-dia="${d}" aria-label="Sesión del ${L[d]}">
+ ${Object.entries(tipos).map(([id, x]) =>
+ `<option value="${id}" ${cal[String(d)] === id ? 'selected' : ''}>${x.nombre}</option>`).join('')}
  </select>
- </label>`).join('')}
+ <select data-franja="${d}" aria-label="Franja del ${L[d]}">
+ <option value=""${f ? '' : ' selected'}>hora libre</option>
+ <option value="am"${f === 'am' ? ' selected' : ''}>mañana</option>
+ <option value="pm"${f === 'pm' ? ' selected' : ''}>tarde</option>
+ </select>
+ </div>
+ </div>`; }).join('')}
  <p class="cal-aviso" id="cal-aviso"></p>
  <button type="button" class="btn-primary" id="cal-guardar">Guardar</button>
  </div>`;

@@ -20,6 +20,9 @@ export const HORARIO_TALLER_POR_DEFECTO = [
  { dia: '1', desde: '18:30', hasta: '20:30' },
  { dia: '6', desde: '14:00', hasta: '18:00' },
 ];
+
+/** El lunes se entrena en la mañana, antes del taller. */
+export const FRANJA_ENTRENO_POR_DEFECTO = { '1': 'am' };
 export const HORAS_ENTRE_CARGA = 48;
 export const VENTANA_INICIO_MIN = 7 * 60; // 07:00
 export const VENTANA_FIN_MIN = 20 * 60 + 30; // 20:30
@@ -213,6 +216,25 @@ export function tallerVigente(prefs, hoyISO) {
  // el conteo se DERIVA del horario: un número aparte se desincroniza solo
  if (Array.isArray(p.taller_horario)) return p.taller_horario.filter(b => b && b.desde).length;
  return p.taller_dias_semana ?? 0;
+}
+
+/* ---------- a qué hora del día se entrena ----------
+ dio la franja, no la hora ("el lunes entreno en AM"), así que
+ eso es lo que se guarda. Inventar un "06:30" sería precisión falsa. */
+export const FRANJAS = { '': 'sin fijar', am: 'en la mañana', pm: 'en la tarde' };
+
+export function franjaDe(minutosDelDia) {
+ return minutosDelDia < 12 * 60 ? 'am' : 'pm';
+}
+
+/** ¿La franja de entreno de ese día se pisa con el taller de ese día? */
+export function chocaConTaller(franja, bloque) {
+ if (!franja || !bloque || !bloque.desde) return false;
+ const ini = aMinutos(bloque.desde), fin = aMinutos(bloque.hasta);
+ if (ini == null) return false;
+ // el taller toca la mañana si empieza antes del mediodía;
+ // toca la tarde si termina (o sigue) después
+ return franja === 'am' ? ini < 12 * 60 : (fin == null ? true : fin > 12 * 60);
 }
 
 /** "18:30" → 1110. Devuelve null si no es una hora. */

@@ -108,6 +108,7 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  tallerHoy: R.tallerDeHoy(estado.prefs, String(ahora.diaSemana), hoy),
  tallerHorario: (estado.prefs && estado.prefs.taller_horario) || [],
  ventanaFin: R.ventanaFin(estado.prefs, String(ahora.diaSemana), hoy),
+ franjaHoy: ((estado.prefs && estado.prefs.franja_entreno) || {})[String(ahora.diaSemana)] || '',
  manos: (checkin && checkin.manos) || 'integra',
  puertaMedica: estado.puerta_medica || null,
  semanaMeso: semanaMesociclo(log),
@@ -450,6 +451,7 @@ function cerrar(plan, ctx, contenido) {
  plan.minimo_valido_min = plan.minimo_valido_min || 15;
  plan.nivel = ctx.nivel;
  plan.semana_meso = ctx.semanaMeso;
+ plan.franja_hoy = ctx.franjaHoy;
  plan.taller = { por_semana: ctx.tallerDias, horario: ctx.tallerHorario, hoy: ctx.tallerHoy,
  hasta: ctx.muestraFinal, tope_carga: R.topeCargaSemana(ctx.tallerDias) };
  plan.arbol = estadoArbol(contenido, ctx);

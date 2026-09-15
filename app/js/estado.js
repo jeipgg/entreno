@@ -9,7 +9,8 @@
 'use strict';
 
 import { hoyISO, haceDias } from './tiempo.js';
-import { MUESTRA_FINAL_POR_DEFECTO, HORARIO_TALLER_POR_DEFECTO } from './reglas.js';
+import { MUESTRA_FINAL_POR_DEFECTO, HORARIO_TALLER_POR_DEFECTO,
+ FRANJA_ENTRENO_POR_DEFECTO } from './reglas.js';
 
 export const K = {
  esquema: 'pole.esquema',
@@ -29,6 +30,7 @@ export const K = {
 const PREFS_DEFECTO = {
  taller_muestra_final: MUESTRA_FINAL_POR_DEFECTO,
  taller_horario: HORARIO_TALLER_POR_DEFECTO,
+ franja_entreno: FRANJA_ENTRENO_POR_DEFECTO,
 };
 
 export const ESQUEMA_ACTUAL = 1;
