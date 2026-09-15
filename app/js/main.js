@@ -451,11 +451,18 @@ function wirePanel() {
  if (!confirm('Se borra el token de este teléfono y se deja de copiar. El registro no se toca. ¿Seguir?')) return;
  E.olvidarNube(); abrirPanel();
  });
- ['taller-n','taller-fecha'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
- const n = Math.max(0, Math.min(4, Number($('#taller-n').value) || 0));
- E.guardarPrefs({ taller_dias_semana: n, taller_muestra_final: $('#taller-fecha').value || null });
+ const guardarTaller = () => {
+ const horario = $$('.taller-fila', $('#panel-body')).map(f => ({
+ dia: $('[data-campo="dia"]', f).value,
+ desde: $('[data-campo="desde"]', f).value,
+ hasta: $('[data-campo="hasta"]', f).value,
+ })).filter(b => b.dia && b.desde); // una franja sin día o sin hora no existe
+ E.guardarPrefs({ taller_horario: horario,
+ taller_muestra_final: $('#taller-fecha').value || null });
  calcular(); pintar(); abrirPanel();
- }); });
+ };
+ const tf = $('#taller-fecha'); if (tf) tf.addEventListener('change', guardarTaller);
+ const th = $('#taller-horario'); if (th) th.addEventListener('change', guardarTaller);
 
  ['pm1','pm2'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
  E.guardarPuertaMedica({ control_1: $('#pm1').value, control_2: $('#pm2').value });

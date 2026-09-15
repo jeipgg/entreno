@@ -29,7 +29,8 @@
     "ventana_temprano": "Antes de las 7 de la mañana no hay barra ni carga: tu espalda lleva toda la noche rehidratándose y es el peor momento del día para cargarla.",
     "ventana_tarde": "Pasadas las 20:30 solo queda el Piso 1. Lo que ganes entrenando ahora lo pierdes durmiendo peor.",
     "descarga": "Semana de descarga: mitad de series, mismo escalón. No es opcional y no se salta.",
-    "sin_checkin": "Sin saber cómo llegas, la app no puede decidir si hoy toca la sesión completa."
+    "sin_checkin": "Sin saber cómo llegas, la app no puede decidir si hoy toca la sesión completa.",
+    "ventana_taller": "Hoy hay taller a las {desde} y ya no cabe la sesión completa antes. Entrenar encima del taller es cómo se acumula el cansancio que no se ve. Te dejo el Piso 1."
   },
   "adherencia": {
     "etiqueta": "sesiones en 14 días",

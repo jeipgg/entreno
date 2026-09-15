@@ -105,7 +105,9 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  adherencia,
  tallerDias: R.tallerVigente(estado.prefs, hoy),
  muestraFinal: (estado.prefs && estado.prefs.taller_muestra_final) || null,
- tallerConfig: (estado.prefs && estado.prefs.taller_dias_semana) ?? 2,
+ tallerHoy: R.tallerDeHoy(estado.prefs, String(ahora.diaSemana), hoy),
+ tallerHorario: (estado.prefs && estado.prefs.taller_horario) || [],
+ ventanaFin: R.ventanaFin(estado.prefs, String(ahora.diaSemana), hoy),
  manos: (checkin && checkin.manos) || 'integra',
  puertaMedica: estado.puerta_medica || null,
  semanaMeso: semanaMesociclo(log),
@@ -198,9 +200,11 @@ export function puertasDuras(plan, ctx, contenido) {
 
  if (!plan.carga) return plan;
 
- const v = R.ventana(ctx.minutos);
+ const v = R.ventana(ctx.minutos, ctx.ventanaFin);
  if (v === 'solo_piso1')
- return piso1(ctx.minutos < R.VENTANA_INICIO_MIN ? T.ventana_temprano : T.ventana_tarde);
+ return piso1(ctx.minutos < R.VENTANA_INICIO_MIN ? T.ventana_temprano
+ : ctx.tallerHoy ? T.ventana_taller.replace('{desde}', ctx.tallerHoy.desde)
+ : T.ventana_tarde);
 
  if (ctx.checkin === null)
  return { ...plan, modo: 'minimo', carga: false, motivo: T.sin_checkin, progresion: false };
@@ -223,9 +227,11 @@ export function puertasDuras(plan, ctx, contenido) {
  ejercicios: plan.ejercicios.slice(0, 3).map(e => ({ ...e, series: 2 })) };
 
  // fuera de la ventana de inicio: la sesión completa no cabe antes de las 20:00
- if (ctx.minutos > R.ULTIMA_HORA_INICIO_FUERZA)
+ if (ctx.minutos > R.ultimaHoraFuerza(ctx.ventanaFin))
  return { ...plan, modo: 'reducido', progresion: false, semaforo: 'verde',
- motivo: 'Es tarde para la sesión completa: esta versión cierra antes de las 20:00.',
+ motivo: ctx.tallerHoy
+ ? `Hoy hay taller a las ${ctx.tallerHoy.desde}: la sesión completa no cabe antes. Esta sí.`
+ : 'Es tarde para la sesión completa: esta versión cierra antes de las 20:00.',
  ejercicios: plan.ejercicios.slice(0, 3).map(e => ({ ...e, series: 2 })) };
 
  return { ...plan, semaforo: 'verde', progresion: true };
@@ -444,7 +450,7 @@ function cerrar(plan, ctx, contenido) {
  plan.minimo_valido_min = plan.minimo_valido_min || 15;
  plan.nivel = ctx.nivel;
  plan.semana_meso = ctx.semanaMeso;
- plan.taller = { por_semana: ctx.tallerDias, configurado: ctx.tallerConfig,
+ plan.taller = { por_semana: ctx.tallerDias, horario: ctx.tallerHorario, hoy: ctx.tallerHoy,
  hasta: ctx.muestraFinal, tope_carga: R.topeCargaSemana(ctx.tallerDias) };
  plan.arbol = estadoArbol(contenido, ctx);
  return plan;

@@ -9,7 +9,7 @@
 'use strict';
 
 import { hoyISO, haceDias } from './tiempo.js';
-import { MUESTRA_FINAL_POR_DEFECTO } from './reglas.js';
+import { MUESTRA_FINAL_POR_DEFECTO, HORARIO_TALLER_POR_DEFECTO } from './reglas.js';
 
 export const K = {
  esquema: 'pole.esquema',
@@ -26,7 +26,10 @@ export const K = {
 };
 
 /** Lo que asume la app cuando todavía no hay preferencias guardadas. */
-const PREFS_DEFECTO = { taller_dias_semana: 2, taller_muestra_final: MUESTRA_FINAL_POR_DEFECTO };
+const PREFS_DEFECTO = {
+ taller_muestra_final: MUESTRA_FINAL_POR_DEFECTO,
+ taller_horario: HORARIO_TALLER_POR_DEFECTO,
+};
 
 export const ESQUEMA_ACTUAL = 1;
 
@@ -111,7 +114,6 @@ export function migrar() {
  if (variante && !prefs.variante) prefs.variante = variante;
  const videos = read('pole.videos', null);
  if (videos && !prefs.videos) prefs.videos = videos;
- if (prefs.taller_dias_semana == null) prefs.taller_dias_semana = 2;
  write(K.prefs, prefs);
 
  write(K.esquema, { v: ESQUEMA_ACTUAL, migrado_el: new Date().toISOString() });
@@ -281,22 +283,17 @@ export function prefs() { return read(K.prefs, PREFS_DEFECTO); }
  Corre en cada arranque y solo escribe lo que falta: una preferencia
  nueva no puede obligar a subir el esquema y volver a migrar a todos.
  Un valor puesto a null a propósito no se vuelve a sembrar. */
-/** Preferencias que cambiaron de nombre. Se copia el valor y se borra la
- vieja. `teatros_hasta` NO está aquí a propósito: la fecha que guardaba
- era una suposición equivocada, y arrastrarla sería propagar el error. */
-const PREFS_RENOMBRADAS = { teatros_semana: 'taller_dias_semana' };
-
 export function sembrarPrefs() {
  const p = read(K.prefs, {});
  let falta = false;
- for (const [viejo, nuevo] of Object.entries(PREFS_RENOMBRADAS)) {
- if (p[viejo] === undefined) continue;
- if (p[nuevo] === undefined) p[nuevo] = p[viejo];
- delete p[viejo]; falta = true;
- }
- if (p.teatros_hasta !== undefined) { delete p.teatros_hasta; falta = true; }
+
+ // claves muertas: el conteo de días ya no se guarda, se deriva del horario
+ for (const k of ['teatros_hasta', 'teatros_semana', 'taller_dias_semana'])
+ if (p[k] !== undefined) { delete p[k]; falta = true; }
+
  for (const [k, v] of Object.entries(PREFS_DEFECTO))
- if (p[k] === undefined) { p[k] = v; falta = true; }
+ if (p[k] === undefined) { p[k] = JSON.parse(JSON.stringify(v)); falta = true; }
+
  if (falta) write(K.prefs, p);
  return p;
 }

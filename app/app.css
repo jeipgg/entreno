@@ -660,6 +660,18 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
 .taller h3{font-family:var(--f-display);font-size:.938rem;margin-bottom:.35rem}
 .taller-nota{margin:0 0 .6rem;font-size:.844rem;color:var(--ink-2);line-height:1.45}
 .taller .pm-campos{margin-bottom:.6rem}
+.taller-horario{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.6rem}
+.taller-fila{display:flex;gap:.4rem;align-items:center}
+.taller-fila select,.taller-fila input{
+  flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);
+  border-radius:7px;padding:.42rem .5rem;font-size:.813rem;color:var(--ink)
+}
+.taller-fila input{font-family:var(--f-mono)}
+.taller-hoy{
+  margin:0 0 .6rem;padding:.5rem .6rem;border-radius:7px;
+  background:var(--steel-soft);color:var(--ink-2);
+  font-size:.813rem;line-height:1.4
+}
 
 /* editor de calendario */
 .cal-nota{font-size:.844rem;color:var(--ink-2);margin:0 0 .8rem;line-height:1.45}

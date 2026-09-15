@@ -263,38 +263,55 @@ function puertaHTML(p) {
 
 /* El taller va hasta la muestra final, y esa fecha se puede correr.
  Se muestra siempre —en curso o terminado— porque cuando la fecha pasa
- se mueve una regla, y una regla no puede moverse en silencio. */
+ se mueve una regla, y una regla no puede moverse en silencio.
+
+ El horario no es decoración: de él sale el conteo de días de demanda
+ Y la hora a la que se cierra la ventana de entreno ese día. */
+const DIAS_SEMANA = [['1','lunes'],['2','martes'],['3','miércoles'],['4','jueves'],
+ ['5','viernes'],['6','sábado'],['0','domingo']];
+
 function tallerHTML(t, hoy, diasCalendario) {
  if (!t) return '';
- const dias = t.configurado ?? t.por_semana;
- const cuenta = t.por_semana > 0;
+ const bloques = (t.horario || []).filter(b => b && b.desde);
+ const enCurso = t.por_semana > 0;
  const fecha = t.hasta ? fechaConAno(t.hasta) : null;
  const terminado = !!(t.hasta && hoy && hoy > t.hasta);
 
  const texto = terminado
  ? `La muestra final fue el ${fecha}. El tope volvió a ${t.tope_carga} días de carga
- por semana. Si el taller se extendió, cambia la fecha aquí y el tope vuelve a bajar.`
- : cuenta
+ por semana. Si el taller se extendió, cambia la fecha y el tope vuelve a bajar.`
+ : enCurso
  ? `Hasta la muestra final${fecha ? `, el ${fecha}` : ''}. Mientras dure, el tope es
  ${t.tope_carga} días de carga por semana en vez de 4: los días de taller también
  son días de demanda alta y el cuerpo no distingue de dónde viene el cansancio.`
  : `Sin taller en el calendario. El tope es ${t.tope_carga} días de carga por semana.`;
 
- return `<div class="taller ${terminado ? 'fin' : cuenta ? 'activa' : ''}">
+ const filas = [...bloques, { dia: '', desde: '', hasta: '' }].map((b, i) => `
+ <div class="taller-fila" data-fila="${i}">
+ <select data-campo="dia" aria-label="Día">
+ <option value=""${b.dia ? '' : ' selected'}>—</option>
+ ${DIAS_SEMANA.map(([v, n]) =>
+ `<option value="${v}"${String(b.dia) === v ? ' selected' : ''}>${n}</option>`).join('')}
+ </select>
+ <input type="time" data-campo="desde" value="${attr(b.desde || '')}" aria-label="Desde">
+ <input type="time" data-campo="hasta" value="${attr(b.hasta || '')}" aria-label="Hasta">
+ </div>`).join('');
+
+ return `<div class="taller ${terminado ? 'fin' : enCurso ? 'activa' : ''}">
  <h3>El taller</h3>
  <p class="taller-nota">${texto}</p>
  <div class="pm-campos">
  <label>Muestra final
  <input type="date" id="taller-fecha" value="${attr(t.hasta || '')}">
  </label>
- <label>Días de taller por semana
- <input type="number" id="taller-n" min="0" max="4" step="1" value="${attr(dias)}">
- </label>
  </div>
- <p class="taller-nota">La app está contando <strong>${dias}</strong> ${
- dias === 1 ? 'día' : 'días'} de taller por semana${
- diasCalendario != null ? `, y tu calendario tiene ${diasCalendario} de carga` : ''}.
- Si no es así, corrígelo aquí: de ese número sale el tope.</p>
+ <p class="taller-nota">Horario. Deja el día en «—» para quitar una franja.</p>
+ <div class="taller-horario" id="taller-horario">${filas}</div>
+ ${t.hoy ? `<p class="taller-hoy">Hoy hay taller de ${t.hoy.desde} a ${t.hoy.hasta}:
+ la ventana de entreno se cierra a las ${t.hoy.desde}.</p>` : ''}
+ <p class="taller-nota">Son <strong>${bloques.length}</strong> ${
+ bloques.length === 1 ? 'día' : 'días'} de demanda por semana${
+ diasCalendario != null ? `, más ${diasCalendario} de carga en tu calendario` : ''}.</p>
  </div>`;
 }
 

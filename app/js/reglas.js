@@ -14,10 +14,17 @@ export const MAX_DIAS_CARGA_SEMANA = 4; // techo absoluto, nunca meta
 export const MAX_DIAS_CARGA_CON_TALLER = 3;
 export const MAX_DEMANDA_ALTA_SEMANA = 5; // Sakti 12: el taller cuenta
 export const MUESTRA_FINAL_POR_DEFECTO = '2026-11-30'; // se puede correr: se edita en el panel
+
+/** El horario real del taller. 0 = domingo. Editable desde el panel. */
+export const HORARIO_TALLER_POR_DEFECTO = [
+ { dia: '1', desde: '18:30', hasta: '20:30' },
+ { dia: '6', desde: '14:00', hasta: '18:00' },
+];
 export const HORAS_ENTRE_CARGA = 48;
 export const VENTANA_INICIO_MIN = 7 * 60; // 07:00
 export const VENTANA_FIN_MIN = 20 * 60 + 30; // 20:30
 export const ULTIMA_HORA_INICIO_FUERZA = 18 * 60 + 45;
+export const DURACION_SESION_COMPLETA_MIN = 105; // lo que tarda una completa con calentamiento y cierre
 export const AVISO_CIERRE_MIN = 19 * 60 + 45;
 export const CALENTAMIENTO_MIN_BASE = 6;
 export const CALENTAMIENTO_MIN_MANANA = 10;
@@ -200,12 +207,42 @@ export const CONDICIONES_SAKTI = [
  que nadie corrige cuando cambia. */
 export function tallerVigente(prefs, hoyISO) {
  const p = prefs || {};
- const n = p.taller_dias_semana ?? 2;
- if (!n) return 0;
  const fin = p.taller_muestra_final;
- // las fechas ISO se comparan como texto: 2027-01-01 > 2026-12-31
+ // las fechas ISO se comparan como texto: 2026-12-01 > 2026-11-30
  if (fin && hoyISO && hoyISO > fin) return 0;
- return n;
+ // el conteo se DERIVA del horario: un número aparte se desincroniza solo
+ if (Array.isArray(p.taller_horario)) return p.taller_horario.filter(b => b && b.desde).length;
+ return p.taller_dias_semana ?? 0;
+}
+
+/** "18:30" → 1110. Devuelve null si no es una hora. */
+export function aMinutos(hhmm) {
+ const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
+ if (!m) return null;
+ const h = Number(m[1]), min = Number(m[2]);
+ if (h > 23 || min > 59) return null;
+ return h * 60 + min;
+}
+
+/** El bloque de taller de hoy, si lo hay. */
+export function tallerDeHoy(prefs, diaSemana, hoyISO) {
+ const p = prefs || {};
+ if (!tallerVigente(p, hoyISO)) return null;
+ const h = Array.isArray(p.taller_horario) ? p.taller_horario : [];
+ return h.find(b => b && b.desde && String(b.dia) === String(diaSemana)) || null;
+}
+
+/** La ventana de entreno se cierra ANTES si hoy hay taller: no se entrena
+ encima de él, y después ya no cabe nada. */
+export function ventanaFin(prefs, diaSemana, hoyISO) {
+ const t = tallerDeHoy(prefs, diaSemana, hoyISO);
+ const inicio = t ? aMinutos(t.desde) : null;
+ return inicio == null ? VENTANA_FIN_MIN : Math.min(VENTANA_FIN_MIN, inicio);
+}
+
+/** La última hora a la que una sesión completa todavía cabe entera. */
+export function ultimaHoraFuerza(fin = VENTANA_FIN_MIN) {
+ return Math.min(ULTIMA_HORA_INICIO_FUERZA, fin - DURACION_SESION_COMPLETA_MIN);
 }
 
 export function topeCargaSemana(diasTaller = 0) {
@@ -239,9 +276,9 @@ export function bandaFlex(marca) {
 export function flexCargadoMaxMin(nivel) { return FLEX_CARGADO_MAX_MIN[nivel] ?? 4; }
 
 /** Ventana horaria: qué se permite a esta hora. */
-export function ventana(minutos) {
+export function ventana(minutos, fin = VENTANA_FIN_MIN) {
  if (minutos < VENTANA_INICIO_MIN) return 'solo_piso1';
- if (minutos > VENTANA_FIN_MIN) return 'solo_piso1';
+ if (minutos > fin) return 'solo_piso1';
  return 'normal';
 }
 
