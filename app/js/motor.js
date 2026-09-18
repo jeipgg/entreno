@@ -88,6 +88,8 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  const diasCarga7 = fechasCarga.filter(f => diffDias(f, hoy) < 7).length;
  const horasDesdeCarga = fechasCarga.length ? diffDias(fechasCarga[0], hoy) * 24 : null;
 
+ const horasPorEstructura = horasDesdeCargaPorEstructura(log, hoy, contenido);
+
  const sesionesAgarre = Object.values(log)
  .filter(e => e && e.hecho && e.tut_barra_seg > 0).length;
 
@@ -105,6 +107,7 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  nivel: estado.nivel_actual || 0,
  diasCarga7,
  horasDesdeCarga,
+ horasPorEstructura,
  sesionesAgarre,
  adherencia,
  tallerDias: R.tallerVigente(estado.prefs, hoy),
@@ -119,6 +122,28 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  banderas: estado.banderas || {},
  log,
  };
+}
+
+/** Cuántas horas van desde la última sesión que cargó cada estructura.
+ Las estructuras de una sesión salen de las ramas de sus ejercicios:
+ así no hay una tabla paralela que se pueda quedar vieja. */
+function horasDesdeCargaPorEstructura(log, hoy, contenido) {
+ const tipos = (contenido && contenido.sesiones && contenido.sesiones.tipos) || {};
+ const cat = (contenido && contenido.ejercicios && contenido.ejercicios.ejercicios) || {};
+ const out = {};
+
+ for (const [fecha, e] of Object.entries(log)) {
+ if (!e || !e.hecho || !e.carga || fecha === hoy) continue;
+ const t = tipos[e.tipo];
+ if (!t) continue;
+ const horas = diffDias(fecha, hoy) * 24;
+ for (const id of t.ejercicios || []) {
+ const rama = (cat[id] || {}).rama;
+ for (const est of R.ESTRUCTURAS_POR_RAMA[rama] || [])
+ if (out[est] == null || horas < out[est]) out[est] = horas;
+ }
+ }
+ return out;
 }
 
 const diffDias = (a, b) => {
@@ -269,23 +294,31 @@ export function puntaje(c) {
  ============================================================ */
 export function recortarFlexCargado(plan, ctx, contenido) {
  if (!plan.flex_cargado) return plan;
- const permiso = R.flexCargadoPermitido(ctx);
- if (permiso.ok) return plan;
 
  const T = (contenido && contenido.textos && contenido.textos.flex) || {};
  const quitados = [];
+ let motivo = null;
+
  const bloques = (plan.bloques || []).map(b => {
  const items = (b.items || []).filter(i => {
  if (!R.esFlexCargado(i)) return true;
- quitados.push(i.nombre); return false;
+ const permiso = R.flexCargadoPermitido(ctx, i);
+ if (permiso.ok) return true;
+ quitados.push(i.nombre);
+ motivo = motivo || permiso;
+ return false;
  });
  return items.length === (b.items || []).length ? b : { ...b, items };
  });
 
- return { ...plan, bloques, flex_cargado: false, flex_recortado: {
- porque: permiso.porque, quitados,
- texto: T[permiso.porque] || 'Hoy no toca el trabajo en rango final.',
- }};
+ if (!quitados.length) return plan;
+
+ const texto = (T[motivo.porque] || 'Hoy no toca el trabajo en rango final.')
+ .replace('{estructura}', motivo.estructura || 'esa zona');
+
+ return { ...plan, bloques,
+ flex_cargado: bloques.some(b => (b.items || []).some(R.esFlexCargado)),
+ flex_recortado: { porque: motivo.porque, estructura: motivo.estructura, quitados, texto } };
 }
 
 /* ============================================================

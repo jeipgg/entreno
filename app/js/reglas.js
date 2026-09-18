@@ -147,8 +147,7 @@ export const PROHIBICIONES = [
  copy: 'Con molestia en la espalda baja no hay flexibilidad cargada.' },
  { id: 'flex-48h', n: 16,
  contenido: () => true,
- plan: (plan, ctx) => !plan.flex_cargado || ctx.horasDesdeCarga === null ||
- ctx.horasDesdeCarga >= HORAS_ENTRE_CARGA,
+ plan: (plan, ctx) => flexCargadosDe(plan).every(i => flexCargadoPermitido(ctx, i).ok),
  copy: 'El trabajo cargado en rango final necesita 48 horas desde la última sesión que cargó esas estructuras.' },
  { id: 'una-variable', n: 14,
  contenido: () => true,
@@ -224,12 +223,40 @@ export function tallerVigente(prefs, hoyISO) {
  se declara en el ejercicio, no se adivina desde el modo. */
 export const esFlexCargado = i => !!(i && i.rama === 'FLEX' && i.cargado);
 
-/** ¿Se puede hacer trabajo cargado en rango final hoy? */
-export function flexCargadoPermitido(ctx) {
+/* ---------- las 48 horas son POR ESTRUCTURA ----------
+ Ixchel, al diseñar el viernes: "48 h limpias entre jueves (empuje) y
+ domingo (cadera)". El descanso lo pide el tejido que se cargó, no el
+ calendario: un día de empuje no le debe nada a la cadera.
+
+ Las estructuras de una sesión se DERIVAN de las ramas que contiene.
+ Una tabla aparte se desincroniza; esta no puede. */
+export const ESTRUCTURAS_POR_RAMA = {
+ PULL: ['espalda', 'hombro'],
+ PUSH: ['pecho', 'hombro'],
+ HIP: ['cadera', 'isquios', 'aductores'],
+ GRIP: ['agarre'],
+ CORE: ['core'],
+};
+export const ESTRUCTURAS = [...new Set(Object.values(ESTRUCTURAS_POR_RAMA).flat())];
+
+/** ¿Se puede hacer HOY este trabajo en rango final? */
+export function flexCargadoPermitido(ctx, item) {
  if (ctx.checkin && (ctx.checkin.dolor_lumbar || 0) >= 1) return { ok: false, porque: 'lumbar' };
- if (ctx.horasDesdeCarga !== null && ctx.horasDesdeCarga < HORAS_ENTRE_CARGA)
- return { ok: false, porque: '48h' };
+ const horas = (ctx && ctx.horasPorEstructura) || {};
+ for (const e of (item && item.estructuras) || []) {
+ const h = horas[e];
+ if (h != null && h < HORAS_ENTRE_CARGA)
+ return { ok: false, porque: '48h', estructura: e, horas: h };
+ }
  return { ok: true };
+}
+
+/** Los ejercicios en rango final que lleva un plan, estén donde estén. */
+export function flexCargadosDe(plan) {
+ const out = [];
+ for (const b of (plan && plan.bloques) || [])
+ for (const i of b.items || []) if (esFlexCargado(i)) out.push(i);
+ return out;
 }
 
 /* ---------- a qué hora del día se entrena ----------

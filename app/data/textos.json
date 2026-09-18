@@ -38,7 +38,7 @@
     "nota": "Sin meta y sin reset: no baja por no entrenar hoy."
   },
   "flex": {
-    "48h": "Hoy quité el trabajo en rango final: la última sesión de carga fue hace menos de 48 horas y ese es el trabajo que más necesita tejido descansado. El resto del bloque queda igual, y es donde está la mayor parte de la ganancia de rango.",
+    "48h": "Hoy quité el trabajo en rango final de {estructura}: esa zona se cargó hace menos de 48 horas y es justo el trabajo que pide tejido descansado. El resto del bloque queda igual.",
     "lumbar": "Hoy quité el trabajo en rango final por la molestia en la espalda baja. Lo sostenido y lo pasivo se quedan: eso sí ayuda cuando la espalda avisa."
   }
 }

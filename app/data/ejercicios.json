@@ -2248,7 +2248,10 @@
         "Sube poco y sostén"
       ],
       "progresion": "Sin banda → banda ligera → banda media",
-      "cargado": true
+      "cargado": true,
+      "estructuras": [
+        "cadera"
+      ]
     },
     "flex-p-1": {
       "nombre": "Split en bloques, caderas cuadradas",
@@ -2284,7 +2287,10 @@
         "La espalda baja no se despega"
       ],
       "progresion": "Rodilla flexionada → recta → banda más corta",
-      "cargado": true
+      "cargado": true,
+      "estructuras": [
+        "isquios"
+      ]
     },
     "flex-p-3": {
       "nombre": "Deslizamiento del ciático",
@@ -2374,7 +2380,10 @@
         "Sube la pierna sin inclinar el tronco"
       ],
       "progresion": "Manos apoyadas → manos sueltas",
-      "cargado": true
+      "cargado": true,
+      "estructuras": [
+        "aductores"
+      ]
     },
     "flex-a-3": {
       "nombre": "Straddle adelante desde bisagra",
@@ -2408,7 +2417,10 @@
         "Controla la bajada"
       ],
       "progresion": "Rango corto → completo",
-      "cargado": true
+      "cargado": true,
+      "estructuras": [
+        "aductores"
+      ]
     },
     "flex-c-1": {
       "nombre": "Compresión activa sentada",
