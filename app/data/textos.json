@@ -30,10 +30,15 @@
     "ventana_tarde": "Pasadas las 20:30 solo queda el Piso 1. Lo que ganes entrenando ahora lo pierdes durmiendo peor.",
     "descarga": "Semana de descarga: mitad de series, mismo escalón. No es opcional y no se salta.",
     "sin_checkin": "Sin saber cómo llegas, la app no puede decidir si hoy toca la sesión completa.",
-    "ventana_taller": "Hoy hay taller a las {desde} y ya no cabe la sesión completa antes. Entrenar encima del taller es cómo se acumula el cansancio que no se ve. Te dejo el Piso 1."
+    "ventana_taller": "Hoy hay taller a las {desde} y ya no cabe la sesión completa antes. Entrenar encima del taller es cómo se acumula el cansancio que no se ve. Te dejo el Piso 1.",
+    "invariante": "El plan de hoy rompía una regla del sistema ({reglas}), así que te dejo el Piso 1. Si vuelve a pasar, está para arreglarse."
   },
   "adherencia": {
     "etiqueta": "sesiones en 14 días",
     "nota": "Sin meta y sin reset: no baja por no entrenar hoy."
+  },
+  "flex": {
+    "48h": "Hoy quité el trabajo en rango final: la última sesión de carga fue hace menos de 48 horas y ese es el trabajo que más necesita tejido descansado. El resto del bloque queda igual, y es donde está la mayor parte de la ganancia de rango.",
+    "lumbar": "Hoy quité el trabajo en rango final por la molestia en la espalda baja. Lo sostenido y lo pasivo se quedan: eso sí ayuda cuando la espalda avisa."
   }
 }

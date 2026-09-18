@@ -2247,7 +2247,8 @@
         "Glúteo, no espalda baja",
         "Sube poco y sostén"
       ],
-      "progresion": "Sin banda → banda ligera → banda media"
+      "progresion": "Sin banda → banda ligera → banda media",
+      "cargado": true
     },
     "flex-p-1": {
       "nombre": "Split en bloques, caderas cuadradas",
@@ -2282,7 +2283,8 @@
         "Rodilla apenas doblada",
         "La espalda baja no se despega"
       ],
-      "progresion": "Rodilla flexionada → recta → banda más corta"
+      "progresion": "Rodilla flexionada → recta → banda más corta",
+      "cargado": true
     },
     "flex-p-3": {
       "nombre": "Deslizamiento del ciático",
@@ -2299,7 +2301,8 @@
         "Movimiento, nunca sostén",
         "Si hormiguea, acorta el recorrido"
       ],
-      "progresion": "Rango corto → rango completo"
+      "progresion": "Rango corto → rango completo",
+      "cargado": false
     },
     "flex-p-4": {
       "nombre": "PNF de isquio con banda",
@@ -2370,7 +2373,8 @@
       "claves": [
         "Sube la pierna sin inclinar el tronco"
       ],
-      "progresion": "Manos apoyadas → manos sueltas"
+      "progresion": "Manos apoyadas → manos sueltas",
+      "cargado": true
     },
     "flex-a-3": {
       "nombre": "Straddle adelante desde bisagra",
@@ -2403,7 +2407,8 @@
       "claves": [
         "Controla la bajada"
       ],
-      "progresion": "Rango corto → completo"
+      "progresion": "Rango corto → completo",
+      "cargado": true
     },
     "flex-c-1": {
       "nombre": "Compresión activa sentada",

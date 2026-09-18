@@ -64,8 +64,12 @@ export function construirPlan({ contenido, estado, ahora, checkin }) {
  // 8 · si algo viola un invariante, se entrega Piso 1
  const fallos = R.comprobar(plan, ctx);
  if (fallos.length) {
+ // "salió raro" no le sirve a nadie: la regla que falló se nombra.
+ const T = contenido.textos.bloqueo;
  return cerrar({ ...PISO1_FIJO, fallos_invariante: fallos,
- motivo: 'El plan de hoy salió raro, así que te dejo el Piso 1.' }, ctx, contenido);
+ motivo: (T.invariante || 'El plan de hoy rompía una regla ({reglas}).')
+ .replace('{reglas}', fallos.map(f => f.id).join(', ')) },
+ ctx, contenido);
  }
  return cerrar(plan, ctx, contenido);
 }
@@ -171,7 +175,7 @@ function materializar(tipoId, contenido, estado, ctx) {
  minimo_valido_min: t.minimo_valido_min || 15,
  calentamiento_min: calMin,
  demanda: t.demanda || (t.carga ? 'alta' : 'baja'),
- flex_cargado: bl.some(b => (b.items || []).some(i => i.rama === 'FLEX' && i.modo === 'reps')),
+ flex_cargado: bl.some(b => (b.items || []).some(R.esFlexCargado)),
  modo: 'completo',
  bloques: bl, cierre,
  ejercicios: ids.map(dame),
@@ -199,7 +203,7 @@ export function puertasDuras(plan, ctx, contenido) {
  // el Día de Pole también baja el trabajo cargado en rango final.
  if (ctx.semanaMeso === 4) plan = { ...plan, descarga: true };
 
- if (!plan.carga) return plan;
+ if (!plan.carga) return recortarFlexCargado(plan, ctx, contenido);
 
  const v = R.ventana(ctx.minutos, ctx.ventanaFin);
  if (v === 'solo_piso1')
@@ -216,6 +220,8 @@ export function puertasDuras(plan, ctx, contenido) {
 
  if (ctx.horasDesdeCarga !== null && ctx.horasDesdeCarga < R.HORAS_ENTRE_CARGA)
  return piso1(T['48h']);
+
+ plan = recortarFlexCargado(plan, ctx, contenido);
 
  if (plan.descarga)
  plan = { ...plan, motivo: T.descarga, progresion: false,
@@ -248,6 +254,38 @@ export function puntaje(c) {
  if (h != null && h < 6) base -= 0.10;
  if (c.rpe_previo > 8.5) base -= 0.05;
  return Math.max(0, base);
+}
+
+/* ============================================================
+ FLEXIBILIDAD CARGADA — se recorta, NO tumba la sesión
+
+ El trabajo en rango final necesita 48 h desde la última sesión de
+ carga y una espalda sin molestia. Cuando no se cumple, antes el
+ plan llegaba entero a la etapa 8, fallaba el invariante y toda la
+ sesión se caía al Piso 1 con un "salió raro" que no explicaba nada.
+
+ Una condición que se puede cumplir quitando dos ejercicios no
+ justifica cancelar la sesión.
+ ============================================================ */
+export function recortarFlexCargado(plan, ctx, contenido) {
+ if (!plan.flex_cargado) return plan;
+ const permiso = R.flexCargadoPermitido(ctx);
+ if (permiso.ok) return plan;
+
+ const T = (contenido && contenido.textos && contenido.textos.flex) || {};
+ const quitados = [];
+ const bloques = (plan.bloques || []).map(b => {
+ const items = (b.items || []).filter(i => {
+ if (!R.esFlexCargado(i)) return true;
+ quitados.push(i.nombre); return false;
+ });
+ return items.length === (b.items || []).length ? b : { ...b, items };
+ });
+
+ return { ...plan, bloques, flex_cargado: false, flex_recortado: {
+ porque: permiso.porque, quitados,
+ texto: T[permiso.porque] || 'Hoy no toca el trabajo en rango final.',
+ }};
 }
 
 /* ============================================================
@@ -469,7 +507,7 @@ export function tbc(plan) {
  // de fuerza. Lo activo y lo pasivo no cuentan.
  for (const b of plan.bloques || [])
  for (const i of b.items || [])
- if (i.rama === 'FLEX' && i.modo === 'reps') t += cuenta(i, R.FLEX_FACTOR_TBC);
+ if (R.esFlexCargado(i)) t += cuenta(i, R.FLEX_FACTOR_TBC);
  return t;
 }
 

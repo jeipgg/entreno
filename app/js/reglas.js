@@ -218,6 +218,20 @@ export function tallerVigente(prefs, hoyISO) {
  return p.taller_dias_semana ?? 0;
 }
 
+/* ---------- qué cuenta como flexibilidad cargada ----------
+ NO es "todo lo que va por repeticiones": el deslizamiento del ciático
+ va por repeticiones y es movilidad neural, no rango final. La etiqueta
+ se declara en el ejercicio, no se adivina desde el modo. */
+export const esFlexCargado = i => !!(i && i.rama === 'FLEX' && i.cargado);
+
+/** ¿Se puede hacer trabajo cargado en rango final hoy? */
+export function flexCargadoPermitido(ctx) {
+ if (ctx.checkin && (ctx.checkin.dolor_lumbar || 0) >= 1) return { ok: false, porque: 'lumbar' };
+ if (ctx.horasDesdeCarga !== null && ctx.horasDesdeCarga < HORAS_ENTRE_CARGA)
+ return { ok: false, porque: '48h' };
+ return { ok: true };
+}
+
 /* ---------- a qué hora del día se entrena ----------
  dio la franja, no la hora ("el lunes entreno en AM"), así que
  eso es lo que se guarda. Inventar un "06:30" sería precisión falsa. */

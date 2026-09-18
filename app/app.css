@@ -689,6 +689,10 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
   padding:.5rem .7rem;margin-bottom:.3rem
 }
 .cal-fila span{font-size:.875rem;font-weight:600;display:flex;flex-direction:column;gap:.1rem}
+.motivo-det{
+  margin:.4rem 0 0;font-size:.781rem;color:var(--muted);
+  font-family:var(--f-mono);overflow-wrap:anywhere
+}
 .day-franja{
   margin:.25rem 0 0;font-size:.781rem;color:var(--muted);
   font-family:var(--f-mono);letter-spacing:.01em

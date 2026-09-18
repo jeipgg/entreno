@@ -58,6 +58,9 @@ export function pintarDia(plan, textos, prefs) {
  if (plan.motivo) h += `<div class="motivo ${plan.modo === 'piso1' ? 'stop' : 'warn'}"><p>${md(plan.motivo)}</p></div>`;
  if (plan.nota) h += `<p class="day-note">${plan.nota}</p>`;
  if (plan.descarga) h += `<div class="motivo warn"><p>${md(textos.bloqueo.descarga)}</p></div>`;
+ if (plan.flex_recortado) h += `<div class="motivo warn"><p>${md(plan.flex_recortado.texto)}</p>
+ ${plan.flex_recortado.quitados.length
+ ? `<p class="motivo-det">Fuera hoy: ${plan.flex_recortado.quitados.join(' · ')}</p>` : ''}</div>`;
 
  if (plan.descanso_total && plan.texto)
  h += `<div class="libre">${plan.texto.map(t => `<p>${md(t)}</p>`).join('')}</div>`;
@@ -373,8 +376,9 @@ export function pantallaToken(repo) {
  Nada de permisos de cuenta.</li>
  <li>El respaldo <b>conserva el historial</b>: borrar algo en la app no lo borra de las copias
  anteriores.</li>
- <li>No publiques ninguna otra página en GitHub Pages con esta cuenta: compartiría dirección
- con la app y podría leer este token.</li>
+ <li>Cada página que publiques en GitHub Pages con esta cuenta comparte dirección con la app
+ y podría leer este token. Por eso se pide acotado a un solo repositorio: el peor caso se
+ queda en tu registro. Hoy comparte dirección <code>jeipgg.github.io/cafes</code>.</li>
  </ul>
  </div>
 
