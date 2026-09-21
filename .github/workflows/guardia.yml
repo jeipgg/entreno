@@ -18,7 +18,7 @@ jobs:
 
       - name: Buscar datos personales en el contenido
         run: |
-          if grep -rIniE "lipedema|L5-S1|discopat|olanzapina|escoli|hemorroid|fisura|hipotiro|levotiroxina|InBody|Jeimmy|jeimmy|Fede|Lucas|linfátic|prediabet|hígado graso|higado graso|colon irritable|BMR|cintura.cadera|ansios|depresiv|psiquiatr|[a-z0-9._%+-]+@[a-z0-9.-]+" . --exclude-dir=.git --exclude-dir=.github; then
+          if grep -rIniE "lipedema|L5-S1|discopat|olanzapina|escoli|hemorroid|fisura|hipotiro|levotiroxina|InBody|Jeimmy|jeimmy|Fede|Lucas|linfátic|prediabet|hígado graso|higado graso|colon irritable|BMR|cintura.cadera|ansios|depresiv|psiquiatr|menstrua|menarqu|amenorre|dismenorre|sangrado|[a-z0-9._%+-]+@[a-z0-9.-]+" . --exclude-dir=.git --exclude-dir=.github; then
             echo "::error::Hay datos personales en el repositorio. No debe quedar así."
             exit 1
           fi

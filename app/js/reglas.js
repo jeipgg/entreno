@@ -58,6 +58,45 @@ export const PATRONES_VALIDOS = [
  'valsalva', 'carga_axial_pesada', 'impacto',
 ];
 
+/* ---------- ciclo ----------
+ Ixchel: la app NO prescribe por fase teórica. La evidencia para eso es
+ débil y la variación entre mujeres supera a la variación entre fases.
+ Lo que sí es sólido es el síntoma que ella reporta, y ese es el dato
+ con el que se trabaja.
+
+ El ciclo no decide qué entrenar. Decide qué NO interpretar mal. */
+export const CICLO_DIAS_MIN = 18; // menos que esto no es un ciclo nuevo
+export const CICLO_DIAS_ESPERADO = 28; // solo para estimar, nunca para afirmar
+export const CICLO_DOLOR_VETA_REGRESION = 1; // con dolor, el escalón NO baja
+export const CICLO_PENALIZACION = { 0: 0, 1: 0.05, 2: 0.12, 3: 0.22 };
+export const CICLO_SEMANA_MIN_DESCARGA = 2; // en la semana 1 no se adelanta
+
+/** ¿El dolor de hoy impide leer este día como medida de fuerza? */
+export const cicloVetaRegresion = c =>
+ !!c && (c.ciclo || 0) >= CICLO_DOLOR_VETA_REGRESION;
+
+/** Días desde el último inicio registrado. null si no hay ninguno. */
+export function diaDelCiclo(inicios, hoyISO, dif) {
+ if (!Array.isArray(inicios) || !inicios.length || !hoyISO) return null;
+ const ultimo = [...inicios].sort().reverse().find(f => f <= hoyISO);
+ return ultimo ? dif(ultimo, hoyISO) + 1 : null;
+}
+
+/** Estimación del próximo inicio. Devuelve null con menos de dos ciclos:
+ con un solo dato no hay nada que estimar y afirmarlo sería mentir. */
+export function proximoInicio(inicios, dif, sumar) {
+ if (!Array.isArray(inicios) || inicios.length < 2) return null;
+ const orden = [...inicios].sort();
+ const largos = [];
+ for (let i = 1; i < orden.length; i++) {
+ const d = dif(orden[i - 1], orden[i]);
+ if (d >= CICLO_DIAS_MIN) largos.push(d);
+ }
+ if (!largos.length) return null;
+ const medio = Math.round(largos.reduce((a, b) => a + b, 0) / largos.length);
+ return { fecha: sumar(orden[orden.length - 1], medio), largo: medio, ciclos: largos.length };
+}
+
 /* ---------- flexibilidad ----------
  No progresa por escalones: a un split no se le suma una repetición.
  Se entrena en el 90–95 % de la marca, nunca EN la marca: perseguir el

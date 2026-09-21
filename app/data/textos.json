@@ -10,7 +10,8 @@
     "manual": "Escalón elegido por ti. Anota lo que salga y desde ahí sigo yo.",
     "veto_rpe": "La última vez terminaste muy al límite. Hoy no subimos aunque los números den.",
     "cupo": "Listo para subir — te toca en la próxima sesión.",
-    "corte_piel": "Cortaste por el agarre. Eso no cuenta como fallo: la piel manda."
+    "corte_piel": "Cortaste por el agarre. Eso no cuenta como fallo: la piel manda.",
+    "ciclo_sostiene": "Sostiene el escalón: hoy el número no dice lo que parece."
   },
   "celebracion": {
     "escalon": "Subiste de escalón.",
@@ -35,10 +36,28 @@
   },
   "adherencia": {
     "etiqueta": "sesiones en 14 días",
-    "nota": "Sin meta y sin reset: no baja por no entrenar hoy."
+    "nota": "Sin meta y sin reset: no baja por no entrenar hoy.",
+    "ciclo": "{n} de esos días fueron de periodo."
   },
   "flex": {
     "48h": "Hoy quité el trabajo en rango final de {estructura}: esa zona se cargó hace menos de 48 horas y es justo el trabajo que pide tejido descansado. El resto del bloque queda igual.",
     "lumbar": "Hoy quité el trabajo en rango final por la molestia en la espalda baja. Lo sostenido y lo pasivo se quedan: eso sí ayuda cuando la espalda avisa."
+  },
+  "ciclo": {
+    "pregunta": "¿Estás con el periodo?",
+    "opciones": [
+      "No",
+      "Sí, sin dolor",
+      "Sí, con dolor",
+      "Sí, dolor fuerte"
+    ],
+    "pie": "Separado de la espalda baja a propósito: el dolor del periodo no es lo mismo y no debe disparar las mismas alarmas.",
+    "sostiene": "Hoy no bajo el escalón. Un día con dolor no mide fuerza — mide el día.",
+    "descarga": "Esta semana pasa a ser la de descarga: mitad de series, mismo escalón. Ya venía tocando, y así cae donde el cuerpo la está pidiendo.",
+    "titulo": "El ciclo",
+    "sin_datos": "Cuando marques el periodo en el check-in, el día queda registrado aquí. Un toque, nada más: la app no pregunta cuándo termina ni pide ningún otro dato.",
+    "para_que": "Sirve para dos cosas concretas: que un día con dolor no te baje de escalón, y que la semana de descarga caiga donde ya la estás necesitando. No prescribe nada por fase.",
+    "estimacion": "Con dos ciclos esto es una referencia, no una fecha.",
+    "privacidad": "Esto se queda en el teléfono y en tu respaldo privado. No sale en el CSV."
   }
 }

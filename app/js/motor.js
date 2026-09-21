@@ -90,6 +90,9 @@ export function contexto({ contenido, estado, ahora, checkin }) {
 
  const horasPorEstructura = horasDesdeCargaPorEstructura(log, hoy, contenido);
 
+ const ciclo = estado.ciclo || {};
+ const inicios = ciclo.inicios || [];
+
  const sesionesAgarre = Object.values(log)
  .filter(e => e && e.hecho && e.tut_barra_seg > 0).length;
 
@@ -104,6 +107,7 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  minutos: ahora.minutos,
  diaSemana: String(ahora.diaSemana),
  checkin: checkin || null,
+ checkins: estado.checkins || {},
  nivel: estado.nivel_actual || 0,
  diasCarga7,
  horasDesdeCarga,
@@ -118,7 +122,16 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  franjaHoy: ((estado.prefs && estado.prefs.franja_entreno) || {})[String(ahora.diaSemana)] || '',
  manos: (checkin && checkin.manos) || 'integra',
  puertaMedica: estado.puerta_medica || null,
- semanaMeso: semanaMesociclo(log),
+ semanaMeso: semanaMesociclo(log, ciclo),
+ ciclo: {
+ dia: R.diaDelCiclo(inicios, hoy, diffDias),
+ dolor: (checkin && checkin.ciclo) || 0,
+ inicios,
+ proximo: R.proximoInicio(inicios, diffDias, sumarDias),
+ diasEnVentana: inicios.length
+ ? diasDeCicloEnVentana(inicios, hoy, R.VENTANA_ADHERENCIA_DIAS, diffDias)
+ : 0,
+ },
  banderas: estado.banderas || {},
  log,
  };
@@ -150,15 +163,35 @@ const diffDias = (a, b) => {
  const [ay, am, ad] = a.split('-').map(Number), [by, bm, bd] = b.split('-').map(Number);
  return Math.round((Date.UTC(by, bm - 1, bd) - Date.UTC(ay, am - 1, ad)) / 864e5);
 };
+/** Cuántos de los últimos N días cayeron en los primeros 5 de un ciclo.
+ Cinco es una aproximación deliberada: la app no pregunta cuándo terminó,
+ porque preguntarlo sería un campo más que llenar (condición 5 de Sakti). */
+function diasDeCicloEnVentana(inicios, hoy, ventana, dif) {
+ let n = 0;
+ for (let i = 0; i < ventana; i++) {
+ const f = restarDias(hoy, i);
+ if (inicios.some(ini => ini <= f && dif(ini, f) < 5)) n++;
+ }
+ return n;
+}
+
+const sumarDias = (iso, n) => restarDias(iso, -n);
+
 const restarDias = (iso, n) => {
  const [Y, M, D] = iso.split('-').map(Number);
  const d = new Date(Y, M - 1, D); d.setDate(d.getDate() - n);
  const p = x => String(x).padStart(2, '0');
  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 };
-function semanaMesociclo(log) {
- const n = Object.values(log).filter(e => e && e.hecho && e.carga).length;
- return ((Math.floor(n / 3)) % 4) + 1;
+/* La descarga puede adelantarse para caer donde el cuerpo ya está pidiendo
+ la semana suave. Cuando eso pasa queda una marca, y el contador arranca
+ de nuevo desde ahí en vez de seguir un módulo ciego. */
+function semanaMesociclo(log, ciclo) {
+ const desde = (ciclo && ciclo.descargas || []).sort().reverse()[0] || null;
+ const n = Object.entries(log)
+ .filter(([f, e]) => e && e.hecho && e.carga && (!desde || f > desde))
+ .length;
+ return desde ? Math.min(4, Math.floor(n / 3) + 1) : ((Math.floor(n / 3)) % 4) + 1;
 }
 
 /* ============================================================
@@ -278,6 +311,9 @@ export function puntaje(c) {
  if (h != null && h < 7) base -= 0.10;
  if (h != null && h < 6) base -= 0.10;
  if (c.rpe_previo > 8.5) base -= 0.05;
+ // El dolor del ciclo baja el día, nunca lo cancela: el ejercicio es de lo
+ // poco con evidencia decente para ese dolor. Prohibirlo sería hacer daño.
+ base -= R.CICLO_PENALIZACION[c.ciclo || 0] ?? 0;
  return Math.max(0, base);
 }
 
@@ -332,7 +368,7 @@ export function vetoGlobal(ctx) {
 }
 
 function vetoPorRPE(ex, ctx) {
- const prev = ultimaDe(ex.id, ctx.log, ctx.hoy);
+ const prev = ultimaDe(ex.id, ctx.log, ctx.hoy, ctx.checkins);
  if (!prev) return false;
  const rpe = prev.rpe == null ? R.RPE_POR_DEFECTO : prev.rpe;
  return rpe >= R.RPE_VETO;
@@ -359,7 +395,7 @@ export function progresar(ex, estado, ctx, vetoDelDia) {
  decision: { id: ex.id, estado: e, cambios: 0, tipo: 'manual' } };
  }
 
- const prev = ultimaDe(ex.id, ctx.log, ctx.hoy);
+ const prev = ultimaDe(ex.id, ctx.log, ctx.hoy, ctx.checkins);
 
  if (prev) {
  const vals = valores(prev.notas);
@@ -392,7 +428,14 @@ export function progresar(ex, estado, ctx, vetoDelDia) {
  } else nota = 'consolida';
  } else if (completas === 0 && vals.length &&
  (peor < e.objetivo * 0.6 || dosFallosSeguidos(ex.id, ctx))) {
+ // Un día con dolor del ciclo no mide fuerza. Bajar el escalón por eso
+ // concluye "perdió fuerza" cuando lo cierto es "ese día no medía".
+ // Es el error más caro que puede cometer este motor. (Ixchel)
+ if (R.cicloVetaRegresion(ctx.checkin) || R.cicloVetaRegresion(prev.checkin)) {
+ nota = 'ciclo_sostiene'; e.confirmaciones = 0;
+ } else {
  e = bajar(e, ex, tope, paso); nota = 'regresion'; cambios = 1;
+ }
  } else { nota = 'mantiene'; e.confirmaciones = 0; }
  }
  }
@@ -425,12 +468,13 @@ export function valores(n) {
  return t.split(/[^0-9]+/).map(Number).filter(v => v > 0);
 }
 
-function ultimaDe(id, log, hoy) {
+function ultimaDe(id, log, hoy, checkins) {
  const f = Object.keys(log).filter(x => x !== hoy && log[x] && log[x].notas &&
  valores(log[x].notas[id]).length).sort().reverse()[0];
  if (!f) return null;
  const e = log[f];
  return { fecha: f, notas: e.notas[id], rpe: (e.rpe || {})[id],
+ checkin: (checkins || {})[f] || null,
  corte: (e.corte_agarre || {})[id] ? 'corte_agarre' : null };
 }
 
@@ -517,12 +561,19 @@ export function regresiones(ctx, props) {
  ============================================================ */
 function cerrar(plan, ctx, contenido) {
  plan.adherencia = { ventana: R.VENTANA_ADHERENCIA_DIAS, hechas: ctx.adherencia,
+ ciclo: ctx.ciclo.diasEnVentana,
  etiqueta: contenido.textos.adherencia.etiqueta };
  plan.tbc_min = Math.round(tbc(plan) / 60);
  plan.minimo_valido_min = plan.minimo_valido_min || 15;
  plan.nivel = ctx.nivel;
  plan.semana_meso = ctx.semanaMeso;
  plan.franja_hoy = ctx.franjaHoy;
+ plan.ciclo = { ...ctx.ciclo,
+ // el motor PROPONE; estado.js dispone. Adelantar la descarga es una
+ // escritura, y el motor no escribe.
+ abrir_descarga: ctx.ciclo.dia === 1 &&
+ ctx.semanaMeso >= R.CICLO_SEMANA_MIN_DESCARGA &&
+ ctx.semanaMeso < 4 };
  plan.taller = { por_semana: ctx.tallerDias, horario: ctx.tallerHorario, hoy: ctx.tallerHoy,
  hasta: ctx.muestraFinal, tope_carga: R.topeCargaSemana(ctx.tallerDias) };
  plan.arbol = estadoArbol(contenido, ctx);

@@ -133,7 +133,7 @@ async function contarCache() {
  CHECK-IN — obligatorio y vinculante (Sakti 4)
  ============================================================ */
 const resp = { energia: null, sueno_calidad: null, sueno_horas: null, piernas: null,
- dolor_lumbar: 0, manos: 'integra', anorrectal: 'no' };
+ dolor_lumbar: 0, manos: 'integra', anorrectal: 'no', ciclo: 0 };
 
 function mostrarCheckin() {
  $('#checkin').hidden = false;
@@ -151,7 +151,8 @@ function mostrarCheckin() {
  $$('.opcion').forEach(g => g.addEventListener('click', e => {
  const b = e.target.closest('button'); if (!b) return;
  $$('button', g).forEach(x => x.setAttribute('aria-pressed', String(x === b)));
- resp[g.dataset.field] = b.dataset.v;
+ const v = b.dataset.v; // "manos" es texto; el resto, números
+ resp[g.dataset.field] = /^-?\d+$/.test(v) ? Number(v) : v;
  }));
 
  $('#ci-horas').addEventListener('change', e => { resp.sueno_horas = Number(e.target.value) || null; });
@@ -161,6 +162,9 @@ function mostrarCheckin() {
  $('#ci-falta').hidden = false; return;
  }
  E.guardarCheckin(HOY, { ...resp });
+ // un "sí" registra el inicio solo si de verdad es uno: registrarInicioCiclo
+ // ignora los días siguientes del mismo ciclo
+ if ((resp.ciclo || 0) > 0) E.registrarInicioCiclo(HOY, R.CICLO_DIAS_MIN);
  mostrarApp();
  });
 }
@@ -189,6 +193,8 @@ function calcular(forzarTipo) {
 
  // el motor propuso; aquí se dispone
  E.aplicar(PLAN.decisiones);
+ if (PLAN.ciclo && PLAN.ciclo.abrir_descarga && E.marcarDescargaDeCiclo(HOY))
+ return calcular(forzarTipo); // se recalcula con la semana ya movida
  for (const b of PLAN.banderas || [])
  E.levantarBandera(b.id, { requiere_accion_manual: !!b.manual, dias: b.dias });
 
@@ -416,7 +422,7 @@ function abrirPanel() {
  sesiones: Object.values(log).filter(e => e && e.hecho).length,
  recordColgada: rec('colgada-activa'), recordHollow: rec('hollow-hold'),
  hoy: HOY, diasCargaCalendario: diasDeCarga(),
- }, CONTENIDO.arbol);
+ }, CONTENIDO.textos);
  $('#panel').hidden = false;
  wirePanel();
 }
@@ -446,6 +452,18 @@ function wirePanel() {
  na.textContent = r.ok ? 'Copiado ✓' : 'No se pudo';
  setTimeout(abrirPanel, 1500);
  });
+ const cf = $('#ciclo-fecha'); if (cf) cf.addEventListener('change', () => {
+ if (!cf.value) return;
+ const r = E.registrarInicioCiclo(cf.value, R.CICLO_DIAS_MIN);
+ if (!r.nuevo) { alert('Esa fecha ya está, o cae dentro de un ciclo ya registrado.'); return; }
+ calcular(); pintar(); abrirPanel();
+ });
+
+ const co = $('#ciclo-olvidar'); if (co) co.addEventListener('click', () => {
+ if (!confirm('Se borran las fechas del ciclo de este teléfono. El resto del registro no se toca. ¿Seguir?')) return;
+ E.olvidarCiclo(); calcular(); pintar(); abrirPanel();
+ });
+
  const nr = $('#nube-restaurar'); if (nr) nr.addEventListener('click', restaurarDesdeNube);
  const no = $('#nube-olvidar'); if (no) no.addEventListener('click', () => {
  if (!confirm('Se borra el token de este teléfono y se deja de copiar. El registro no se toca. ¿Seguir?')) return;
@@ -575,6 +593,9 @@ function validarCalendario(cal) {
 /* ============================================================
  EXPORTAR
  ============================================================ */
+/* El CSV NO lleva el ciclo. Bruja, condición B1: este archivo termina en
+ iCloud y ahí cambia de categoría. El respaldo completo (JSON, al repo
+ privado) sí lo lleva — un respaldo que no restaura no es un respaldo. */
 function exportarCSV() {
  const est = E.cargar(), cks = leerCheckins(), cat = CONTENIDO.ejercicios.ejercicios;
  const filas = [['fecha','tipo','completada','energia','piernas','dolor_lumbar','manos',

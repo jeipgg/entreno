@@ -58,6 +58,8 @@ export function pintarDia(plan, textos, prefs) {
  if (plan.motivo) h += `<div class="motivo ${plan.modo === 'piso1' ? 'stop' : 'warn'}"><p>${md(plan.motivo)}</p></div>`;
  if (plan.nota) h += `<p class="day-note">${plan.nota}</p>`;
  if (plan.descarga) h += `<div class="motivo warn"><p>${md(textos.bloqueo.descarga)}</p></div>`;
+ if ((plan.decisiones || []).some(d => d.nota === 'ciclo_sostiene') && textos.ciclo)
+ h += `<div class="motivo warn"><p>${md(textos.ciclo.sostiene)}</p></div>`;
  if (plan.flex_recortado) h += `<div class="motivo warn"><p>${md(plan.flex_recortado.texto)}</p>
  ${plan.flex_recortado.quitados.length
  ? `<p class="motivo-det">Fuera hoy: ${plan.flex_recortado.quitados.join(' · ')}</p>` : ''}</div>`;
@@ -214,6 +216,7 @@ export function panel(plan, datos, textos) {
  ${arbolHTML(plan.arbol, textos)}
  ${statsHTML(plan, datos)}
  ${puertaHTML(datos.puerta)}
+ ${cicloHTML(plan.ciclo, textos.ciclo, datos.hoy)}
  ${tallerHTML(plan.taller, datos.hoy, datos.diasCargaCalendario)}
  ${historialHTML(datos.log, datos.checkins, datos.catalogo)}
  <button type="button" class="btn-ghost" id="exportar" style="margin-top:1rem">Exportar el registro (CSV)</button>
@@ -226,7 +229,8 @@ export function panel(plan, datos, textos) {
 
 function statsHTML(plan, d) {
  return `<div class="stats">
- <div class="stat"><b>${plan.adherencia.hechas}</b><span>${plan.adherencia.etiqueta}</span></div>
+ <div class="stat"><b>${plan.adherencia.hechas}</b><span>${plan.adherencia.etiqueta}${
+ plan.adherencia.ciclo ? ` · ${plan.adherencia.ciclo} de periodo` : ''}</span></div>
  <div class="stat"><b>${d.recordColgada || '—'}<small>${d.recordColgada ? 's' : ''}</small></b><span>récord de colgada</span></div>
  <div class="stat"><b>${d.recordHollow || '—'}<small>${d.recordHollow ? 's' : ''}</small></b><span>récord de hollow</span></div>
  <div class="stat"><b>${plan.semana_meso}<small>/4</small></b><span>semana del ciclo</span></div>
@@ -324,6 +328,35 @@ function tallerHTML(t, hoy, diasCalendario) {
  <p class="taller-nota">Son <strong>${bloques.length}</strong> ${
  bloques.length === 1 ? 'día' : 'días'} de demanda por semana${
  diasCalendario != null ? `, más ${diasCalendario} de carga en tu calendario` : ''}.</p>
+ </div>`;
+}
+
+
+/* El ciclo. No prescribe por fase: la evidencia para eso es débil y la
+ variación entre mujeres supera a la de entre fases. Hace dos cosas
+ concretas y las dice. (Ixchel + Sakti) */
+function cicloHTML(c, T, hoy) {
+ if (!c || !T) return '';
+ const n = (c.inicios || []).length;
+ const ultimo = (c.inicios || []).slice(-1)[0];
+
+ return `<div class="ciclo">
+ <h3>${T.titulo}</h3>
+ <p class="ciclo-nota">${T.para_que}</p>
+ ${n === 0 ? `<p class="ciclo-nota">${T.sin_datos}</p>` : `
+ <p class="ciclo-dato">Último registrado: <b>${fechaConAno(ultimo)}</b>${
+ c.dia != null ? ` · día <b>${c.dia}</b>` : ''}</p>
+ ${c.proximo ? `<p class="ciclo-nota">Hacia el <b>${fechaConAno(c.proximo.fecha)}</b>,
+ si se repite el largo de ${c.proximo.largo} días. ${T.estimacion}</p>` : ''}
+ <details class="ciclo-mas"><summary>Los ${n} ${n === 1 ? 'registro' : 'registros'}</summary>
+ <ul>${(c.inicios || []).slice().reverse().map(f =>
+ `<li>${fechaConAno(f)}</li>`).join('')}</ul>
+ <button type="button" class="btn-ghost" id="ciclo-olvidar">Borrar solo el ciclo</button>
+ </details>`}
+ <div class="pm-campos">
+ <label>Anotar un inicio<input type="date" id="ciclo-fecha" max="${attr(hoy || '')}"></label>
+ </div>
+ <p class="ciclo-pie">${T.privacidad}</p>
  </div>`;
 }
 

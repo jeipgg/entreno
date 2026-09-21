@@ -24,6 +24,7 @@ export const K = {
  respaldo: 'pole.respaldo.v0',
  exportado: 'pole.ultimo_respaldo',
  nube: 'pole.nube', // {token, repo, ultimo, ultimo_error}
+ ciclo: 'pole.ciclo', // etiqueta neutra a propósito (Bruja B3)
 };
 
 /** Lo que asume la app cuando todavía no hay preferencias guardadas. */
@@ -132,10 +133,48 @@ export function cargar() {
  arbol: read(K.arbol, {}),
  banderas: read(K.banderas, {}),
  puerta_medica: read(K.puerta, null),
+ ciclo: read(K.ciclo, { inicios: [], descargas: [] }),
+ checkins: read(K.checkin, {}),
  prefs: read(K.prefs, PREFS_DEFECTO),
  nivel_actual: read(K.prefs, {}).nivel_actual || 0,
  };
 }
+
+/* ============================================================
+ CICLO — el dato más sensible de la app.
+
+ Vive aquí y en el respaldo privado. NO sale en el CSV (Bruja B1):
+ ese archivo termina en iCloud y con esto cambia de categoría.
+
+ Solo se guarda el día de inicio. Ni flujo, ni humor, ni nada más:
+ cada campo de más es una cosa que llenar y un dato que exponer.
+ ============================================================ */
+export function ciclo() { return read(K.ciclo, { inicios: [], descargas: [] }); }
+
+/** Registra un inicio si de verdad lo es. Idempotente. */
+export function registrarInicioCiclo(fecha, diasMin = 18) {
+ const c = ciclo();
+ const inicios = c.inicios || [];
+ if (inicios.includes(fecha)) return { nuevo: false, ciclo: c };
+ const dif = (a, b) => Math.round((Date.parse(b + 'T00:00Z') - Date.parse(a + 'T00:00Z')) / 864e5);
+ // un "sí" tres días seguidos no son tres ciclos
+ if (inicios.some(i => Math.abs(dif(i, fecha)) < diasMin)) return { nuevo: false, ciclo: c };
+ const actualizado = { ...c, inicios: [...inicios, fecha].sort() };
+ write(K.ciclo, actualizado);
+ return { nuevo: true, ciclo: actualizado };
+}
+
+/** Marca que aquí arrancó una semana de descarga adelantada. */
+export function marcarDescargaDeCiclo(fecha) {
+ const c = ciclo();
+ const ds = c.descargas || [];
+ if (ds.includes(fecha)) return false;
+ write(K.ciclo, { ...c, descargas: [...ds, fecha].sort() });
+ return true;
+}
+
+/** Borra el ciclo sin tocar nada más del registro (Bruja B5). */
+export function olvidarCiclo() { return write(K.ciclo, { inicios: [], descargas: [] }); }
 
 export function checkinDe(fecha) { return read(K.checkin, {})[fecha] || null; }
 

@@ -689,6 +689,19 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
   padding:.5rem .7rem;margin-bottom:.3rem
 }
 .cal-fila span{font-size:.875rem;font-weight:600;display:flex;flex-direction:column;gap:.1rem}
+.ciclo{
+  margin-top:.9rem;background:var(--surface);border:1px solid var(--line);
+  border-radius:9px;padding:.85rem
+}
+.ciclo h3{font-family:var(--f-display);font-size:.938rem;margin-bottom:.35rem}
+.ciclo-nota{margin:0 0 .6rem;font-size:.844rem;color:var(--ink-2);line-height:1.45}
+.ciclo-dato{margin:0 0 .6rem;font-size:.875rem;color:var(--ink)}
+.ciclo-pie{margin:.6rem 0 0;font-size:.75rem;color:var(--muted);line-height:1.4}
+.ciclo-mas{margin:0 0 .6rem}
+.ciclo-mas summary{font-size:.813rem;color:var(--steel);cursor:pointer}
+.ciclo-mas ul{margin:.5rem 0 .6rem 1.1rem;padding:0;font-size:.813rem;color:var(--ink-2)}
+.ciclo-mas li{margin-bottom:.2rem}
+.ci-pie-q{margin:.4rem 0 0;font-size:.75rem;color:var(--muted);line-height:1.4}
 .motivo-det{
   margin:.4rem 0 0;font-size:.781rem;color:var(--muted);
   font-family:var(--f-mono);overflow-wrap:anywhere
