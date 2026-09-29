@@ -617,13 +617,18 @@ function cerrar(plan, ctx, contenido) {
  abrir_descarga: ctx.ciclo.dia === 1 &&
  ctx.semanaMeso >= R.CICLO_SEMANA_MIN_DESCARGA &&
  ctx.semanaMeso < 4 };
- plan.prefatiga = ctx.estructurasHoy.length
- ? { estructuras: ctx.estructurasHoy,
+ // El aviso solo tiene sentido si algo de HOY usa ese tejido. Un día de
+ // movilidad después de nadar no vuelve sobre nada: avisarlo sería ruido,
+ // y el ruido enseña a ignorar los avisos que sí importan.
+ const chocan = [...(plan.ejercicios || []),
+ ...(plan.bloques || []).flatMap(b => b.items || [])]
+ .filter(e => R.preFatigado(e, ctx.estructurasHoy));
+ plan.prefatiga = chocan.length
+ ? { estructuras: [...new Set(chocan.flatMap(e => R.preFatigado(e, ctx.estructurasHoy)))],
  actividades: [...new Set((ctx.bloquesHoy || [])
  .filter(b => (b.estructuras || []).length && R.aMinutos(b.hasta) <= ctx.minutos)
  .map(b => b.actividad))],
- choca: (plan.ejercicios || []).filter(e => R.preFatigado(e, ctx.estructurasHoy))
- .map(e => e.nombre) }
+ choca: [...new Set(chocan.map(e => e.nombre))] }
  : null;
  plan.actividades = { lista: ctx.actividades, hoy: ctx.bloquesHoy,
  demanda_alta: ctx.demandaAlta, ocupados: ctx.diasOcupados,

@@ -336,6 +336,17 @@ export function sembrarPrefs() {
  falta = true;
  }
 
+ // El reparto de la semana cambió al volver la natación. Si ella no lo
+ // había tocado, se adopta el nuevo; si lo había personalizado, se
+ // respeta y se le avisa desde el panel.
+ if (p.calendario && !p.calendario_revisado_29sep) {
+ const viejo = { '0':'F3','1':'L','2':'F1','3':'C1','4':'F2','5':'POLE','6':'S' };
+ const igual = Object.keys(viejo).every(k => p.calendario[k] === viejo[k]);
+ if (igual) delete p.calendario; // vuelve a mandar el de fábrica
+ p.calendario_revisado_29sep = true;
+ falta = true;
+ }
+
  // claves muertas: el conteo de días ya no se guarda, se deriva del horario
  for (const k of ['teatros_hasta', 'teatros_semana', 'taller_dias_semana',
  'taller_horario', 'taller_muestra_final'])
