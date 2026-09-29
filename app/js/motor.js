@@ -88,7 +88,7 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  const diasCarga7 = fechasCarga.filter(f => diffDias(f, hoy) < 7).length;
  const horasDesdeCarga = fechasCarga.length ? diffDias(fechasCarga[0], hoy) * 24 : null;
 
- const horasPorEstructura = horasDesdeCargaPorEstructura(log, hoy, contenido);
+ const horasPorEstructura = horasDesdeCargaPorEstructura(log, hoy, contenido, estado.prefs);
 
  const ciclo = estado.ciclo || {};
  const inicios = ciclo.inicios || [];
@@ -114,11 +114,11 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  horasPorEstructura,
  sesionesAgarre,
  adherencia,
- tallerDias: R.tallerVigente(estado.prefs, hoy),
- muestraFinal: (estado.prefs && estado.prefs.taller_muestra_final) || null,
- tallerHoy: R.tallerDeHoy(estado.prefs, String(ahora.diaSemana), hoy),
- tallerHorario: (estado.prefs && estado.prefs.taller_horario) || [],
- ventanaFin: R.ventanaFin(estado.prefs, String(ahora.diaSemana), hoy),
+ demandaAlta: R.diasDemandaAlta(estado.prefs, hoy),
+ diasOcupados: R.diasOcupados(estado.prefs, hoy),
+ actividades: R.actividades(estado.prefs, hoy),
+ bloquesHoy: R.bloquesDeHoy(estado.prefs, String(ahora.diaSemana), hoy),
+ ventanaLibre: R.ventanaLibre(estado.prefs, String(ahora.diaSemana), hoy),
  franjaHoy: ((estado.prefs && estado.prefs.franja_entreno) || {})[String(ahora.diaSemana)] || '',
  manos: (checkin && checkin.manos) || 'integra',
  puertaMedica: estado.puerta_medica || null,
@@ -140,7 +140,7 @@ export function contexto({ contenido, estado, ahora, checkin }) {
 /** Cuántas horas van desde la última sesión que cargó cada estructura.
  Las estructuras de una sesión salen de las ramas de sus ejercicios:
  así no hay una tabla paralela que se pueda quedar vieja. */
-function horasDesdeCargaPorEstructura(log, hoy, contenido) {
+function horasDesdeCargaPorEstructura(log, hoy, contenido, prefs, dif) {
  const tipos = (contenido && contenido.sesiones && contenido.sesiones.tipos) || {};
  const cat = (contenido && contenido.ejercicios && contenido.ejercicios.ejercicios) || {};
  const out = {};
@@ -154,6 +154,21 @@ function horasDesdeCargaPorEstructura(log, hoy, contenido) {
  const rama = (cat[id] || {}).rama;
  for (const est of R.ESTRUCTURAS_POR_RAMA[rama] || [])
  if (out[est] == null || horas < out[est]) out[est] = horas;
+ }
+ }
+
+ // Lo de fuera del plan también carga tejido. Nadar es tracción de hombro
+ // y espalda: si no cuenta, las 48 h por estructura mienten.
+ const diaDe = iso => new Date(iso + 'T12:00:00').getDay();
+ for (const a of R.actividades(prefs, hoy)) {
+ if (!(a.estructuras || []).length) continue;
+ for (let atras = 1; atras <= 7; atras++) {
+ const f = restarDias(hoy, atras);
+ if (a.hasta && f > a.hasta) continue;
+ const toca = (a.horario || []).some(b => b && b.desde && Number(b.dia) === diaDe(f));
+ if (!toca) continue;
+ for (const est of a.estructuras)
+ if (out[est] == null || atras * 24 < out[est]) out[est] = atras * 24;
  }
  }
  return out;
@@ -263,18 +278,16 @@ export function puertasDuras(plan, ctx, contenido) {
 
  if (!plan.carga) return recortarFlexCargado(plan, ctx, contenido);
 
- const v = R.ventana(ctx.minutos, ctx.ventanaFin);
+ const v = R.ventana(ctx.minutos, ctx.ventanaLibre);
  if (v === 'solo_piso1')
- return piso1(ctx.minutos < R.VENTANA_INICIO_MIN ? T.ventana_temprano
- : ctx.tallerHoy ? T.ventana_taller.replace('{desde}', ctx.tallerHoy.desde)
- : T.ventana_tarde);
+ return piso1(motivoVentana(ctx, T));
 
  if (ctx.checkin === null)
  return { ...plan, modo: 'minimo', carga: false, motivo: T.sin_checkin, progresion: false };
 
- if (ctx.diasCarga7 >= R.topeCargaSemana(ctx.tallerDias))
+ if (ctx.diasCarga7 >= R.topeCargaSemana(ctx.demandaAlta))
  return piso1(T.cupo_carga.replace('{n}', ctx.diasCarga7)
- .replace('{max}', R.topeCargaSemana(ctx.tallerDias)));
+ .replace('{max}', R.topeCargaSemana(ctx.demandaAlta)));
 
  if (ctx.horasDesdeCarga !== null && ctx.horasDesdeCarga < R.HORAS_ENTRE_CARGA)
  return piso1(T['48h']);
@@ -292,10 +305,10 @@ export function puertasDuras(plan, ctx, contenido) {
  ejercicios: plan.ejercicios.slice(0, 3).map(e => ({ ...e, series: 2 })) };
 
  // fuera de la ventana de inicio: la sesión completa no cabe antes de las 20:00
- if (ctx.minutos > R.ultimaHoraFuerza(ctx.ventanaFin))
+ if (ctx.minutos > R.ultimaHoraFuerza(ctx.ventanaLibre.fin))
  return { ...plan, modo: 'reducido', progresion: false, semaforo: 'verde',
- motivo: ctx.tallerHoy
- ? `Hoy hay taller a las ${ctx.tallerHoy.desde}: la sesión completa no cabe antes. Esta sí.`
+ motivo: cierraAntes(ctx)
+ ? `Hoy tienes ${cierraAntes(ctx).actividad.toLowerCase()} a las ${cierraAntes(ctx).desde}: la sesión completa no cabe antes. Esta sí.`
  : 'Es tarde para la sesión completa: esta versión cierra antes de las 20:00.',
  ejercicios: plan.ejercicios.slice(0, 3).map(e => ({ ...e, series: 2 })) };
 
@@ -315,6 +328,28 @@ export function puntaje(c) {
  // poco con evidencia decente para ese dolor. Prohibirlo sería hacer daño.
  base -= R.CICLO_PENALIZACION[c.ciclo || 0] ?? 0;
  return Math.max(0, base);
+}
+
+/** La actividad que cierra la ventana hoy (la que empieza después de que
+ ella podría entrenar), si es que hay alguna. */
+function cierraAntes(ctx) {
+ return (ctx.bloquesHoy || []).find(b => R.aMinutos(b.desde) >= ctx.ventanaLibre.fin) || null;
+}
+
+/** Por qué hoy solo cabe el Piso 1: temprano, tarde, o una actividad. */
+function motivoVentana(ctx, T) {
+ const abre = (ctx.bloquesHoy || []).find(b =>
+ (R.aMinutos(b.hasta) ?? 0) === ctx.ventanaLibre.inicio);
+ if (ctx.minutos < ctx.ventanaLibre.inicio)
+ return abre ? T.ventana_actividad_antes
+ .replace('{actividad}', abre.actividad.toLowerCase())
+ .replace('{hasta}', abre.hasta)
+ : T.ventana_temprano;
+ const cierra = cierraAntes(ctx);
+ return cierra ? T.ventana_actividad
+ .replace('{actividad}', cierra.actividad.toLowerCase())
+ .replace('{desde}', cierra.desde)
+ : T.ventana_tarde;
 }
 
 /* ============================================================
@@ -574,8 +609,10 @@ function cerrar(plan, ctx, contenido) {
  abrir_descarga: ctx.ciclo.dia === 1 &&
  ctx.semanaMeso >= R.CICLO_SEMANA_MIN_DESCARGA &&
  ctx.semanaMeso < 4 };
- plan.taller = { por_semana: ctx.tallerDias, horario: ctx.tallerHorario, hoy: ctx.tallerHoy,
- hasta: ctx.muestraFinal, tope_carga: R.topeCargaSemana(ctx.tallerDias) };
+ plan.actividades = { lista: ctx.actividades, hoy: ctx.bloquesHoy,
+ demanda_alta: ctx.demandaAlta, ocupados: ctx.diasOcupados,
+ ventana: ctx.ventanaLibre,
+ tope_carga: R.topeCargaSemana(ctx.demandaAlta) };
  plan.arbol = estadoArbol(contenido, ctx);
  return plan;
 }

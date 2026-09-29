@@ -9,8 +9,7 @@
 'use strict';
 
 import { hoyISO, haceDias } from './tiempo.js';
-import { MUESTRA_FINAL_POR_DEFECTO, HORARIO_TALLER_POR_DEFECTO,
- FRANJA_ENTRENO_POR_DEFECTO } from './reglas.js';
+import { ACTIVIDADES_POR_DEFECTO, FRANJA_ENTRENO_POR_DEFECTO } from './reglas.js';
 
 export const K = {
  esquema: 'pole.esquema',
@@ -29,8 +28,7 @@ export const K = {
 
 /** Lo que asume la app cuando todavía no hay preferencias guardadas. */
 const PREFS_DEFECTO = {
- taller_muestra_final: MUESTRA_FINAL_POR_DEFECTO,
- taller_horario: HORARIO_TALLER_POR_DEFECTO,
+ actividades: ACTIVIDADES_POR_DEFECTO,
  franja_entreno: FRANJA_ENTRENO_POR_DEFECTO,
 };
 
@@ -328,8 +326,19 @@ export function sembrarPrefs() {
  const p = read(K.prefs, {});
  let falta = false;
 
+ // El taller y la natación son la misma cosa: una actividad con días y
+ // horas. Lo que había suelto se convierte en la primera de la lista.
+ if (!Array.isArray(p.actividades) && Array.isArray(p.taller_horario)) {
+ p.actividades = [{ ...ACTIVIDADES_POR_DEFECTO[0],
+ hasta: p.taller_muestra_final ?? ACTIVIDADES_POR_DEFECTO[0].hasta,
+ horario: p.taller_horario.filter(b => b && b.desde) },
+ JSON.parse(JSON.stringify(ACTIVIDADES_POR_DEFECTO[1]))];
+ falta = true;
+ }
+
  // claves muertas: el conteo de días ya no se guarda, se deriva del horario
- for (const k of ['teatros_hasta', 'teatros_semana', 'taller_dias_semana'])
+ for (const k of ['teatros_hasta', 'teatros_semana', 'taller_dias_semana',
+ 'taller_horario', 'taller_muestra_final'])
  if (p[k] !== undefined) { delete p[k]; falta = true; }
 
  for (const [k, v] of Object.entries(PREFS_DEFECTO))

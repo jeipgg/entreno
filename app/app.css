@@ -658,28 +658,43 @@ ul.rc li.rc-igual{border-left-color:var(--line-2)}
   padding:.42rem .5rem;font-family:var(--f-mono);font-size:.813rem;color:var(--ink)
 }
 
-/* temporada del taller — misma caja que la puerta médica, otro acento */
-.taller{
+/* actividades fuera del plan */
+.acts-panel{
   margin-top:.9rem;background:var(--chalk-soft);border:1px solid var(--chalk);
   border-radius:9px;padding:.85rem
 }
-.taller.activa{border-left:3px solid var(--chalk)}
-.taller.fin{background:var(--go-soft);border-color:var(--go)}
-.taller h3{font-family:var(--f-display);font-size:.938rem;margin-bottom:.35rem}
-.taller-nota{margin:0 0 .6rem;font-size:.844rem;color:var(--ink-2);line-height:1.45}
-.taller .pm-campos{margin-bottom:.6rem}
-.taller-horario{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.6rem}
-.taller-fila{display:flex;gap:.4rem;align-items:center}
-.taller-fila select,.taller-fila input{
-  flex:1;min-width:0;background:var(--surface);border:1px solid var(--line);
+.acts-panel h3{font-family:var(--f-display);font-size:.938rem;margin-bottom:.35rem}
+.acts-nota{margin:0 0 .6rem;font-size:.844rem;color:var(--ink-2);line-height:1.45}
+.acts-hoy{
+  margin:0 0 .7rem;padding:.5rem .6rem;border-radius:7px;
+  background:var(--steel-soft);color:var(--ink-2);font-size:.813rem;line-height:1.4
+}
+.act{
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:.6rem .7rem;margin-bottom:.5rem
+}
+.act.off{opacity:.62}
+.act-cab{display:flex;align-items:center;gap:.55rem;margin-bottom:.5rem}
+.act-nombre{
+  flex:1;min-width:0;background:transparent;border:none;border-bottom:1px dashed var(--line-2);
+  padding:.15rem 0;font-family:var(--f-display);font-size:.938rem;font-weight:600;color:var(--ink)
+}
+.act-nombre:focus{outline:none;border-bottom-color:var(--steel)}
+.act .pm-campos{margin-bottom:.55rem}
+.act-horario{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.55rem}
+/* El día ocupa su propia línea y las horas se reparten la siguiente.
+   En una sola fila, un campo de hora en formato 12 h se come el AM/PM
+   y las 18:30 se leen "06:30". */
+.act-fila{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;align-items:center}
+.act-fila select[data-campo="dia"]{grid-column:1 / -1}
+.act-fila select,.act-fila input{
+  width:100%;min-width:0;background:var(--ground);border:1px solid var(--line);
   border-radius:7px;padding:.42rem .5rem;font-size:.813rem;color:var(--ink)
 }
-.taller-fila input{font-family:var(--f-mono)}
-.taller-hoy{
-  margin:0 0 .6rem;padding:.5rem .6rem;border-radius:7px;
-  background:var(--steel-soft);color:var(--ink-2);
-  font-size:.813rem;line-height:1.4
-}
+.act-fila input{font-family:var(--f-mono)}
+.act-fila + .act-fila{border-top:1px solid var(--line);padding-top:.55rem}
+.act-est{margin:0 0 .5rem;font-size:.75rem;color:var(--muted);line-height:1.4}
+.act-borrar{font-size:.75rem;color:var(--alarm)}
 
 /* editor de calendario */
 .cal-nota{font-size:.844rem;color:var(--ink-2);margin:0 0 .8rem;line-height:1.45}

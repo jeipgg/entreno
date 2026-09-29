@@ -1,6 +1,6 @@
 /* GENERADO por herramientas/generar-sw.mjs — no editar a mano.
    El nombre de caché es el hash del contenido: cambia solo cuando cambia algo. */
-const CACHE = 'pole-552a4ed808';
+const CACHE = 'pole-ea735457e0';
 const ASSETS = [
   "./",
   "./README.md",

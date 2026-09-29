@@ -31,8 +31,9 @@
     "ventana_tarde": "Pasadas las 20:30 solo queda el Piso 1. Lo que ganes entrenando ahora lo pierdes durmiendo peor.",
     "descarga": "Semana de descarga: mitad de series, mismo escalón. No es opcional y no se salta.",
     "sin_checkin": "Sin saber cómo llegas, la app no puede decidir si hoy toca la sesión completa.",
-    "ventana_taller": "Hoy hay taller a las {desde} y ya no cabe la sesión completa antes. Entrenar encima del taller es cómo se acumula el cansancio que no se ve. Te dejo el Piso 1.",
-    "invariante": "El plan de hoy rompía una regla del sistema ({reglas}), así que te dejo el Piso 1. Si vuelve a pasar, está para arreglarse."
+    "invariante": "El plan de hoy rompía una regla del sistema ({reglas}), así que te dejo el Piso 1. Si vuelve a pasar, está para arreglarse.",
+    "ventana_actividad": "Hoy tienes {actividad} a las {desde} y ya no cabe la sesión antes. Entrenar encima es cómo se acumula el cansancio que no se ve. Te dejo el Piso 1.",
+    "ventana_actividad_antes": "Hoy tienes {actividad} hasta las {hasta}. La sesión va después, no antes: llegar a nadar ya cansada no le sirve a ninguna de las dos."
   },
   "adherencia": {
     "etiqueta": "sesiones en 14 días",

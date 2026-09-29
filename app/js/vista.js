@@ -44,14 +44,14 @@ export function pintarDia(plan, textos, prefs) {
 
  const franja = plan.franja_hoy === 'am' ? 'en la mañana'
  : plan.franja_hoy === 'pm' ? 'en la tarde' : '';
- const taller = plan.taller && plan.taller.hoy;
+ const hoyActs = (plan.actividades && plan.actividades.hoy) || [];
 
  h += `<div class="day-head">
  <div class="letra">${plan.tipo} · ${fechaLarga()}</div>
  <h2>${plan.nombre}</h2>
- ${franja || taller ? `<p class="day-franja">${
+ ${franja || hoyActs.length ? `<p class="day-franja">${
  [franja && `Hoy entrenas ${franja}`,
- taller && `taller de ${taller.desde} a ${taller.hasta}`]
+ ...hoyActs.map(b => `${b.actividad.toLowerCase()} ${b.desde}–${b.hasta}`)]
  .filter(Boolean).join(' · ')}</p>` : ''}
  </div>`;
 
@@ -217,7 +217,7 @@ export function panel(plan, datos, textos) {
  ${statsHTML(plan, datos)}
  ${puertaHTML(datos.puerta)}
  ${cicloHTML(plan.ciclo, textos.ciclo, datos.hoy)}
- ${tallerHTML(plan.taller, datos.hoy, datos.diasCargaCalendario)}
+ ${actividadesHTML(plan.actividades, datos.hoy, datos.diasCargaCalendario)}
  ${historialHTML(datos.log, datos.checkins, datos.catalogo)}
  <button type="button" class="btn-ghost" id="exportar" style="margin-top:1rem">Exportar el registro (CSV)</button>
  <p class="aviso-csv">El archivo sale sin cifrar. Si lo guardas en iCloud se sincroniza con tus otros dispositivos.</p>
@@ -277,61 +277,6 @@ function puertaHTML(p) {
  </div>`;
 }
 
-/* El taller va hasta la muestra final, y esa fecha se puede correr.
- Se muestra siempre —en curso o terminado— porque cuando la fecha pasa
- se mueve una regla, y una regla no puede moverse en silencio.
-
- El horario no es decoración: de él sale el conteo de días de demanda
- Y la hora a la que se cierra la ventana de entreno ese día. */
-const DIAS_SEMANA = [['1','lunes'],['2','martes'],['3','miércoles'],['4','jueves'],
- ['5','viernes'],['6','sábado'],['0','domingo']];
-
-function tallerHTML(t, hoy, diasCalendario) {
- if (!t) return '';
- const bloques = (t.horario || []).filter(b => b && b.desde);
- const enCurso = t.por_semana > 0;
- const fecha = t.hasta ? fechaConAno(t.hasta) : null;
- const terminado = !!(t.hasta && hoy && hoy > t.hasta);
-
- const texto = terminado
- ? `La muestra final fue el ${fecha}. El tope volvió a ${t.tope_carga} días de carga
- por semana. Si el taller se extendió, cambia la fecha y el tope vuelve a bajar.`
- : enCurso
- ? `Hasta la muestra final${fecha ? `, el ${fecha}` : ''}. Mientras dure, el tope es
- ${t.tope_carga} días de carga por semana en vez de 4: los días de taller también
- son días de demanda alta y el cuerpo no distingue de dónde viene el cansancio.`
- : `Sin taller en el calendario. El tope es ${t.tope_carga} días de carga por semana.`;
-
- const filas = [...bloques, { dia: '', desde: '', hasta: '' }].map((b, i) => `
- <div class="taller-fila" data-fila="${i}">
- <select data-campo="dia" aria-label="Día">
- <option value=""${b.dia ? '' : ' selected'}>—</option>
- ${DIAS_SEMANA.map(([v, n]) =>
- `<option value="${v}"${String(b.dia) === v ? ' selected' : ''}>${n}</option>`).join('')}
- </select>
- <input type="time" data-campo="desde" value="${attr(b.desde || '')}" aria-label="Desde">
- <input type="time" data-campo="hasta" value="${attr(b.hasta || '')}" aria-label="Hasta">
- </div>`).join('');
-
- return `<div class="taller ${terminado ? 'fin' : enCurso ? 'activa' : ''}">
- <h3>El taller</h3>
- <p class="taller-nota">${texto}</p>
- <div class="pm-campos">
- <label>Muestra final
- <input type="date" id="taller-fecha" value="${attr(t.hasta || '')}">
- </label>
- </div>
- <p class="taller-nota">Horario. Deja el día en «—» para quitar una franja.</p>
- <div class="taller-horario" id="taller-horario">${filas}</div>
- ${t.hoy ? `<p class="taller-hoy">Hoy hay taller de ${t.hoy.desde} a ${t.hoy.hasta}:
- la ventana de entreno se cierra a las ${t.hoy.desde}.</p>` : ''}
- <p class="taller-nota">Son <strong>${bloques.length}</strong> ${
- bloques.length === 1 ? 'día' : 'días'} de demanda por semana${
- diasCalendario != null ? `, más ${diasCalendario} de carga en tu calendario` : ''}.</p>
- </div>`;
-}
-
-
 /* El ciclo. No prescribe por fase: la evidencia para eso es débil y la
  variación entre mujeres supera a la de entre fases. Hace dos cosas
  concretas y las dice. (Ixchel + Sakti) */
@@ -357,6 +302,79 @@ function cicloHTML(c, T, hoy) {
  <label>Anotar un inicio<input type="date" id="ciclo-fecha" max="${attr(hoy || '')}"></label>
  </div>
  <p class="ciclo-pie">${T.privacidad}</p>
+ </div>`;
+}
+
+/* Las actividades: todo lo que ocupa su semana sin ser una sesión del plan.
+ El taller, la natación, lo que venga. Se muestran siempre —activas o no—
+ porque de aquí salen el tope de días de carga y la ventana de cada día,
+ y esas dos cosas no pueden moverse en silencio. */
+const DIAS_SEMANA = [['1','lunes'],['2','martes'],['3','miércoles'],['4','jueves'],
+ ['5','viernes'],['6','sábado'],['0','domingo']];
+
+function actividadesHTML(a, hoy, diasCarga) {
+ if (!a) return '';
+ const lista = a.lista || [];
+ const hoyTxt = (a.hoy || []).map(b =>
+ `${b.actividad.toLowerCase()} de ${b.desde} a ${b.hasta}`).join(' · ');
+
+ return `<div class="acts-panel">
+ <h3>Tu semana fuera del plan</h3>
+ <p class="acts-nota">${
+ a.demanda_alta >= 2
+ ? `Con ${a.demanda_alta} días de demanda alta fuera del plan, el tope es
+ <b>${a.tope_carga}</b> días de carga por semana en vez de 4: el cuerpo no distingue
+ de dónde viene el cansancio.`
+ : `El tope es <b>${a.tope_carga}</b> días de carga por semana.`}${
+ diasCarga != null ? ` Tu calendario tiene ${diasCarga}.` : ''}</p>
+ ${hoyTxt ? `<p class="acts-hoy">Hoy: ${hoyTxt}. La ventana de entreno va de
+ <b>${hhmm(a.ventana.inicio)}</b> a <b>${hhmm(a.ventana.fin)}</b>.</p>` : ''}
+ ${lista.map(tarjetaActividad).join('')}
+ <button type="button" class="btn-ghost" id="act-nueva">Añadir otra actividad</button>
+ </div>`;
+}
+
+const hhmm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+
+function tarjetaActividad(a, i) {
+ const filas = [...(a.horario || []).filter(b => b && b.desde), { dia: '', desde: '', hasta: '' }];
+ const activa = a.activa !== false;
+
+ return `<div class="act ${activa ? 'on' : 'off'}" data-act="${attr(a.id)}">
+ <label class="act-cab">
+ <input type="checkbox" class="chk chk-sm" data-campo="activa" ${activa ? 'checked' : ''}>
+ <input type="text" class="act-nombre" data-campo="nombre" value="${attr(a.nombre || '')}"
+ placeholder="Nombre" aria-label="Nombre de la actividad">
+ </label>
+ <div class="act-cuerpo" ${activa ? '' : 'hidden'}>
+ <div class="pm-campos">
+ <label>Demanda
+ <select data-campo="demanda">
+ ${['alta','media','baja'].map(d =>
+ `<option value="${d}"${(a.demanda || 'media') === d ? ' selected' : ''}>${d}</option>`).join('')}
+ </select>
+ </label>
+ <label>${attr(a.etiqueta_fecha || 'Hasta (opcional)')}
+ <input type="date" data-campo="hasta" value="${attr(a.hasta || '')}">
+ </label>
+ </div>
+ <div class="act-horario">
+ ${filas.map(b => `
+ <div class="act-fila">
+ <select data-campo="dia" aria-label="Día">
+ <option value=""${b.dia ? '' : ' selected'}>—</option>
+ ${DIAS_SEMANA.map(([v, n]) =>
+ `<option value="${v}"${String(b.dia) === v ? ' selected' : ''}>${n}</option>`).join('')}
+ </select>
+ <input type="time" data-campo="desde" value="${attr(b.desde || '')}" aria-label="Desde">
+ <input type="time" data-campo="hasta" value="${attr(b.hasta || '')}" aria-label="Hasta">
+ </div>`).join('')}
+ </div>
+ ${(a.estructuras || []).length
+ ? `<p class="act-est">Carga ${a.estructuras.join(' y ')}: cuenta para las 48 horas
+ de esas zonas, igual que una sesión del plan.</p>` : ''}
+ <button type="button" class="linkbtn act-borrar">quitar esta actividad</button>
+ </div>
  </div>`;
 }
 
@@ -481,18 +499,19 @@ function historialHTML(log, checkins, catalogo) {
 /* ============================================================
  PANTALLA DE CALENDARIO
  ============================================================ */
-export function editorCalendario(cal, tipos, franjas = {}, horario = []) {
+export function editorCalendario(cal, tipos, franjas = {}, porDia = {}) {
  const L = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
  const orden = [1,2,3,4,5,6,0];
- const tallerDe = d => horario.find(b => b && b.desde && String(b.dia) === String(d));
+ const actsDe = d => (porDia[d] || porDia[String(d)] || []);
  return `<div class="cal-editor">
  <p class="cal-nota">Mueve las sesiones al día que te sirva. No se pierde ningún escalón ni nada del historial: el día de la semana es solo dónde aparece. La franja es a qué hora entrenas ese día.</p>
  ${orden.map(d => {
- const t = tallerDe(d);
+ const acts = actsDe(d);
  const f = franjas[String(d)] || '';
  return `
  <div class="cal-fila">
- <span>${L[d]}${t ? `<em class="cal-taller">taller ${t.desde}–${t.hasta}</em>` : ''}</span>
+ <span>${L[d]}${acts.length ? `<em class="cal-taller">${acts.map(b =>
+ `${b.actividad.toLowerCase()} ${b.desde}–${b.hasta}`).join(' · ')}</em>` : ''}</span>
  <div class="cal-controles">
  <select data-dia="${d}" aria-label="Sesión del ${L[d]}">
  ${Object.entries(tipos).map(([id, x]) =>

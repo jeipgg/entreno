@@ -12,13 +12,24 @@
 /* ---------- constantes duras ---------- */
 export const MAX_DIAS_CARGA_SEMANA = 4; // techo absoluto, nunca meta
 export const MAX_DIAS_CARGA_CON_TALLER = 3;
-export const MAX_DEMANDA_ALTA_SEMANA = 5; // Sakti 12: el taller cuenta
+export const MAX_DEMANDA_ALTA_SEMANA = 5; // Sakti 12: lo de fuera del plan cuenta
 export const MUESTRA_FINAL_POR_DEFECTO = '2026-11-30'; // se puede correr: se edita en el panel
 
 /** El horario real del taller. 0 = domingo. Editable desde el panel. */
-export const HORARIO_TALLER_POR_DEFECTO = [
- { dia: '1', desde: '18:30', hasta: '20:30' },
- { dia: '6', desde: '14:00', hasta: '18:00' },
+/** Lo que ocupa su semana fuera del plan. Todo editable desde el panel. */
+export const ACTIVIDADES_POR_DEFECTO = [
+ { id: 'taller', nombre: 'Taller', activa: true, demanda: 'alta',
+ hasta: MUESTRA_FINAL_POR_DEFECTO, etiqueta_fecha: 'Muestra final',
+ estructuras: [],
+ horario: [{ dia: '1', desde: '18:30', hasta: '20:30' },
+ { dia: '6', desde: '14:00', hasta: '18:00' }] },
+ // Nadar carga hombro y espalda: entra en el cálculo de las 48 h por
+ // estructura igual que una sesión de tracción.
+ { id: 'natacion', nombre: 'Natación', activa: true, demanda: 'media',
+ hasta: null, etiqueta_fecha: 'Hasta (opcional)',
+ estructuras: ['hombro', 'espalda'],
+ horario: [{ dia: '2', desde: '07:00', hasta: '08:30' },
+ { dia: '4', desde: '07:00', hasta: '08:30' }] },
 ];
 
 /** El lunes se entrena en la mañana, antes del taller. */
@@ -153,7 +164,7 @@ export const PROHIBICIONES = [
  copy: 'Fuera de la ventana de 7:00 a 20:30 no hay carga.' },
  { id: 'max-dias-carga', n: 8,
  contenido: () => true,
- plan: (plan, ctx) => !plan.carga || ctx.diasCarga7 < topeCargaSemana(ctx.tallerDias),
+ plan: (plan, ctx) => !plan.carga || ctx.diasCarga7 < topeCargaSemana(ctx.demandaAlta),
  copy: 'Se superó el tope de días de carga de la semana.' },
  { id: 'consecutivos', n: 9,
  contenido: () => true,
@@ -203,8 +214,8 @@ export const CONDICIONES_SAKTI = [
  !('meta' in plan.adherencia)),
  copy: 'La adherencia es ventana móvil de 14 días, sin meta.' },
  { id: 'tope-carga', n: 3,
- plan: (plan, ctx) => !plan.carga || ctx.diasCarga7 < topeCargaSemana(ctx.tallerDias),
- copy: 'Máximo 4 días de carga por semana; 3 mientras el taller esté en curso.' },
+ plan: (plan, ctx) => !plan.carga || ctx.diasCarga7 < topeCargaSemana(ctx.demandaAlta),
+ copy: 'Máximo 4 días de carga por semana; 3 si hay dos días de demanda alta fuera del plan.' },
  { id: 'checkin-vinculante', n: 4,
  plan: (plan, ctx) => ctx.checkin !== null || !plan.carga,
  copy: 'Sin check-in no hay sesión de carga.' },
@@ -232,28 +243,65 @@ export const CONDICIONES_SAKTI = [
  copy: 'Al volver a trabajar, el sistema baja solo a mantenimiento.' },
  { id: 'demanda-alta', n: 12,
  plan: (plan, ctx) => !plan.carga ||
- (ctx.diasCarga7 + (ctx.tallerDias || 0)) < MAX_DEMANDA_ALTA_SEMANA + 1,
- copy: 'Máximo 5 días de demanda alta por semana, contando el taller.' },
+ (ctx.diasCarga7 + (ctx.demandaAlta || 0)) < MAX_DEMANDA_ALTA_SEMANA + 1,
+ copy: 'Máximo 5 días de demanda alta por semana, contando lo de fuera del plan.' },
 ];
 
 /* ---------- funciones que las reglas usan ---------- */
 
-/* ---------- el taller ----------
- El taller no es una condición permanente: va hasta la muestra final.
- Mientras dure, sus días cuentan como demanda alta y bajan el tope de
- días de carga; pasada la muestra, el tope vuelve solo.
+/* ---------- actividades ----------
+ Todo lo que ocupa horas de su semana sin ser una sesión del plan: el
+ taller, la natación, lo que venga. Son la misma cosa y se modelan una
+ sola vez — llevaban camino de ser tres copias del mismo código.
 
- La fecha vive en prefs y se edita desde el panel, porque la muestra
- se puede correr. Una fecha quemada en el código es exactamente la
- que nadie corrige cuando cambia. */
-export function tallerVigente(prefs, hoyISO) {
- const p = prefs || {};
- const fin = p.taller_muestra_final;
+ Cada una: si está activa, hasta cuándo, qué días y horas, cuánta
+ demanda y qué estructuras carga. Todo editable desde el panel, porque
+ estas cosas cambian: la natación ya se cayó una vez por presupuesto
+ y el taller termina en la muestra final.
+
+ Una actividad ocupa ventana SIEMPRE que esté activa. Solo la de
+ demanda alta cuenta para el tope de días de carga. */
+export const DEMANDAS = { alta: 'alta', media: 'media', baja: 'baja' };
+
+/** ¿Está vigente hoy? Inactiva o pasada su fecha final, no cuenta. */
+export function actividadVigente(a, hoyISO) {
+ if (!a || a.activa === false) return false;
  // las fechas ISO se comparan como texto: 2026-12-01 > 2026-11-30
- if (fin && hoyISO && hoyISO > fin) return 0;
- // el conteo se DERIVA del horario: un número aparte se desincroniza solo
- if (Array.isArray(p.taller_horario)) return p.taller_horario.filter(b => b && b.desde).length;
- return p.taller_dias_semana ?? 0;
+ if (a.hasta && hoyISO && hoyISO > a.hasta) return false;
+ return (a.horario || []).some(b => b && b.desde);
+}
+
+export function actividades(prefs, hoyISO) {
+ return ((prefs || {}).actividades || []).filter(a => actividadVigente(a, hoyISO));
+}
+
+/** Los bloques que hoy ocupan tiempo, con la actividad de la que salen. */
+export function bloquesDeHoy(prefs, diaSemana, hoyISO) {
+ const out = [];
+ for (const a of actividades(prefs, hoyISO))
+ for (const b of a.horario || [])
+ if (b && b.desde && String(b.dia) === String(diaSemana))
+ out.push({ ...b, actividad: a.nombre, demanda: a.demanda || 'media',
+ estructuras: a.estructuras || [] });
+ return out.sort((x, y) => (aMinutos(x.desde) || 0) - (aMinutos(y.desde) || 0));
+}
+
+/** Días de demanda ALTA a la semana. Solo esos aprietan el tope de carga. */
+export function diasDemandaAlta(prefs, hoyISO) {
+ const dias = new Set();
+ for (const a of actividades(prefs, hoyISO)) {
+ if ((a.demanda || 'media') !== 'alta') continue;
+ for (const b of a.horario || []) if (b && b.desde) dias.add(String(b.dia));
+ }
+ return dias.size;
+}
+
+/** Todos los días ocupados por alguna actividad, sea cual sea su demanda. */
+export function diasOcupados(prefs, hoyISO) {
+ const dias = new Set();
+ for (const a of actividades(prefs, hoyISO))
+ for (const b of a.horario || []) if (b && b.desde) dias.add(String(b.dia));
+ return dias.size;
 }
 
 /* ---------- qué cuenta como flexibilidad cargada ----------
@@ -307,14 +355,18 @@ export function franjaDe(minutosDelDia) {
  return minutosDelDia < 12 * 60 ? 'am' : 'pm';
 }
 
-/** ¿La franja de entreno de ese día se pisa con el taller de ese día? */
-export function chocaConTaller(franja, bloque) {
- if (!franja || !bloque || !bloque.desde) return false;
- const ini = aMinutos(bloque.desde), fin = aMinutos(bloque.hasta);
- if (ini == null) return false;
- // el taller toca la mañana si empieza antes del mediodía;
+/** ¿La franja de entreno de ese día se pisa con alguna actividad? */
+export function chocaConActividad(franja, bloques) {
+ if (!franja) return null;
+ for (const b of bloques || []) {
+ const ini = aMinutos(b.desde), fin = aMinutos(b.hasta);
+ if (ini == null) continue;
+ // toca la mañana si empieza antes del mediodía;
  // toca la tarde si termina (o sigue) después
- return franja === 'am' ? ini < 12 * 60 : (fin == null ? true : fin > 12 * 60);
+ const toca = franja === 'am' ? ini < 12 * 60 : (fin == null ? true : fin > 12 * 60);
+ if (toca) return b;
+ }
+ return null;
 }
 
 /** "18:30" → 1110. Devuelve null si no es una hora. */
@@ -326,20 +378,31 @@ export function aMinutos(hhmm) {
  return h * 60 + min;
 }
 
-/** El bloque de taller de hoy, si lo hay. */
-export function tallerDeHoy(prefs, diaSemana, hoyISO) {
- const p = prefs || {};
- if (!tallerVigente(p, hoyISO)) return null;
- const h = Array.isArray(p.taller_horario) ? p.taller_horario : [];
- return h.find(b => b && b.desde && String(b.dia) === String(diaSemana)) || null;
-}
+/** El hueco más grande que dejan hoy las actividades dentro de la ventana.
 
-/** La ventana de entreno se cierra ANTES si hoy hay taller: no se entrena
- encima de él, y después ya no cabe nada. */
-export function ventanaFin(prefs, diaSemana, hoyISO) {
- const t = tallerDeHoy(prefs, diaSemana, hoyISO);
- const inicio = t ? aMinutos(t.desde) : null;
- return inicio == null ? VENTANA_FIN_MIN : Math.min(VENTANA_FIN_MIN, inicio);
+ Antes esto solo sabía cerrar la ventana antes (el taller es de tarde).
+ La natación es de 7:00 a 8:30 y lo que hace es abrirla MÁS TARDE, no
+ cerrarla antes: por eso se calcula el hueco en vez de mover un borde. */
+export function ventanaLibre(prefs, diaSemana, hoyISO) {
+ const bloques = bloquesDeHoy(prefs, diaSemana, hoyISO)
+ .map(b => [aMinutos(b.desde), aMinutos(b.hasta) ?? VENTANA_FIN_MIN])
+ .filter(([i]) => i != null)
+ .sort((a, b) => a[0] - b[0]);
+
+ let mejor = { inicio: VENTANA_INICIO_MIN, fin: VENTANA_FIN_MIN };
+ if (!bloques.length) return mejor;
+
+ const huecos = [];
+ let cursor = VENTANA_INICIO_MIN;
+ for (const [ini, fin] of bloques) {
+ if (ini > cursor) huecos.push({ inicio: cursor, fin: Math.min(ini, VENTANA_FIN_MIN) });
+ cursor = Math.max(cursor, fin);
+ }
+ if (cursor < VENTANA_FIN_MIN) huecos.push({ inicio: cursor, fin: VENTANA_FIN_MIN });
+ if (!huecos.length) return { inicio: VENTANA_FIN_MIN, fin: VENTANA_FIN_MIN };
+
+ mejor = huecos.reduce((a, b) => (b.fin - b.inicio > a.fin - a.inicio ? b : a));
+ return mejor;
 }
 
 /** La última hora a la que una sesión completa todavía cabe entera. */
@@ -347,8 +410,8 @@ export function ultimaHoraFuerza(fin = VENTANA_FIN_MIN) {
  return Math.min(ULTIMA_HORA_INICIO_FUERZA, fin - DURACION_SESION_COMPLETA_MIN);
 }
 
-export function topeCargaSemana(diasTaller = 0) {
- return diasTaller >= 2 ? MAX_DIAS_CARGA_CON_TALLER : MAX_DIAS_CARGA_SEMANA;
+export function topeCargaSemana(diasDemandaAlta = 0) {
+ return diasDemandaAlta >= 2 ? MAX_DIAS_CARGA_CON_TALLER : MAX_DIAS_CARGA_SEMANA;
 }
 
 export function calentamientoMinimoMin(minutosDelDia) {
@@ -378,8 +441,9 @@ export function bandaFlex(marca) {
 export function flexCargadoMaxMin(nivel) { return FLEX_CARGADO_MAX_MIN[nivel] ?? 4; }
 
 /** Ventana horaria: qué se permite a esta hora. */
-export function ventana(minutos, fin = VENTANA_FIN_MIN) {
- if (minutos < VENTANA_INICIO_MIN) return 'solo_piso1';
+export function ventana(minutos, libre) {
+ const { inicio = VENTANA_INICIO_MIN, fin = VENTANA_FIN_MIN } = libre || {};
+ if (minutos < inicio) return 'solo_piso1';
  if (minutos > fin) return 'solo_piso1';
  return 'normal';
 }

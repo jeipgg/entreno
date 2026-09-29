@@ -469,18 +469,55 @@ function wirePanel() {
  if (!confirm('Se borra el token de este teléfono y se deja de copiar. El registro no se toca. ¿Seguir?')) return;
  E.olvidarNube(); abrirPanel();
  });
- const guardarTaller = () => {
- const horario = $$('.taller-fila', $('#panel-body')).map(f => ({
+ const guardarActividades = () => {
+ const lista = $$('[data-act]', $('#panel-body')).map(el => {
+ const c = n => $(`[data-campo="${n}"]`, el);
+ const previa = (E.prefs().actividades || []).find(a => a.id === el.dataset.act) || {};
+ return {
+ ...previa,
+ id: el.dataset.act,
+ nombre: c('nombre').value.trim() || 'Sin nombre',
+ activa: c('activa').checked,
+ demanda: c('demanda') ? c('demanda').value : previa.demanda,
+ hasta: (c('hasta') && c('hasta').value) || null,
+ horario: $$('.act-fila', el).map(f => ({
  dia: $('[data-campo="dia"]', f).value,
  desde: $('[data-campo="desde"]', f).value,
  hasta: $('[data-campo="hasta"]', f).value,
- })).filter(b => b.dia && b.desde); // una franja sin día o sin hora no existe
- E.guardarPrefs({ taller_horario: horario,
- taller_muestra_final: $('#taller-fecha').value || null });
+ })).filter(b => b.dia && b.desde), // una franja sin día o sin hora no existe
+ };
+ });
+ E.guardarPrefs({ actividades: lista });
  calcular(); pintar(); abrirPanel();
  };
- const tf = $('#taller-fecha'); if (tf) tf.addEventListener('change', guardarTaller);
- const th = $('#taller-horario'); if (th) th.addEventListener('change', guardarTaller);
+
+ const ap = $('.acts-panel');
+ if (ap) {
+ ap.addEventListener('change', e => {
+ // desmarcar la casilla pliega la tarjeta sin perder el horario
+ if (e.target.dataset.campo === 'activa') {
+ const cuerpo = $('.act-cuerpo', e.target.closest('[data-act]'));
+ if (cuerpo) cuerpo.hidden = !e.target.checked;
+ }
+ guardarActividades();
+ });
+ ap.addEventListener('click', e => {
+ if (e.target.classList.contains('act-borrar')) {
+ const el = e.target.closest('[data-act]');
+ if (!confirm(`¿Quitar "${$('[data-campo="nombre"]', el).value}"? El horario se pierde.`)) return;
+ E.guardarPrefs({ actividades: (E.prefs().actividades || [])
+ .filter(a => a.id !== el.dataset.act) });
+ calcular(); pintar(); abrirPanel();
+ }
+ if (e.target.id === 'act-nueva') {
+ const id = 'act-' + Date.now().toString(36);
+ E.guardarPrefs({ actividades: [...(E.prefs().actividades || []),
+ { id, nombre: '', activa: true, demanda: 'media', hasta: null,
+ estructuras: [], horario: [] }] });
+ abrirPanel();
+ }
+ });
+ }
 
  ['pm1','pm2'].forEach(id => { const i = $('#' + id); if (i) i.addEventListener('change', () => {
  E.guardarPuertaMedica({ control_1: $('#pm1').value, control_2: $('#pm2').value });
@@ -540,7 +577,8 @@ function abrirCalendario() {
  const pr = E.prefs();
  const cal = pr.calendario || CONTENIDO.calendario.por_defecto;
  $('#panel-body').innerHTML = V.editorCalendario(
- cal, CONTENIDO.sesiones.tipos, pr.franja_entreno || {}, pr.taller_horario || []);
+ cal, CONTENIDO.sesiones.tipos, pr.franja_entreno || {},
+ Object.fromEntries([0,1,2,3,4,5,6].map(d => [d, R.bloquesDeHoy(pr, String(d), HOY)])));
  $('#cal-guardar').addEventListener('click', () => {
  const nuevo = {}, franjas = {};
  $$('[data-dia]', $('#panel-body')).forEach(s => { nuevo[s.dataset.dia] = s.value; });
@@ -554,15 +592,15 @@ function abrirCalendario() {
  });
 }
 
-/** Una franja que se pisa con el taller de ese día no se guarda. */
+/** Una franja que se pisa con una actividad de ese día no se guarda. */
 function validarFranjas(franjas, cal) {
  const L = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
- const horario = E.prefs().taller_horario || [];
  for (const [d, f] of Object.entries(franjas)) {
- const bloque = horario.find(b => b && b.desde && String(b.dia) === String(d));
- if (R.chocaConTaller(f, bloque))
- return `El ${L[Number(d)]} tienes taller de ${bloque.desde} a ${bloque.hasta}: ` +
- `no puedes entrenar en la ${f === 'am' ? 'mañana' : 'tarde'} ese día.`;
+ const choca = R.chocaConActividad(f, R.bloquesDeHoy(E.prefs(), d, HOY));
+ if (choca)
+ return `El ${L[Number(d)]} tienes ${choca.actividad.toLowerCase()} de ${choca.desde} ` +
+ `a ${choca.hasta}: no puedes entrenar en la ` +
+ `${f === 'am' ? 'mañana' : 'tarde'} ese día.`;
  }
  return null;
 }
@@ -578,10 +616,10 @@ function diasDeCarga() {
 function validarCalendario(cal) {
  const tipos = CONTENIDO.sesiones.tipos;
  const carga = Object.values(cal).filter(t => tipos[t] && tipos[t].carga);
- const taller = R.tallerVigente(E.prefs(), HOY);
- const tope = R.topeCargaSemana(taller);
+ const alta = R.diasDemandaAlta(E.prefs(), HOY);
+ const tope = R.topeCargaSemana(alta);
  if (carga.length > tope)
- return `Quedan ${carga.length} días de carga y el tope es ${tope}${taller >= 2 ? ' (los días de taller también cuentan como demanda)' : ''}.`;
+ return `Quedan ${carga.length} días de carga y el tope es ${tope}${alta >= 2 ? ' (lo de fuera del plan también cuenta como demanda)' : ''}.`;
  for (let d = 0; d < 7; d++) {
  const a = tipos[cal[String((d + 6) % 7)]], b = tipos[cal[String(d)]];
  if (a && b && a.carga && b.carga)
