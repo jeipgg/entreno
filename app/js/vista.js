@@ -58,6 +58,13 @@ export function pintarDia(plan, textos, prefs) {
  if (plan.motivo) h += `<div class="motivo ${plan.modo === 'piso1' ? 'stop' : 'warn'}"><p>${md(plan.motivo)}</p></div>`;
  if (plan.nota) h += `<p class="day-note">${plan.nota}</p>`;
  if (plan.descarga) h += `<div class="motivo warn"><p>${md(textos.bloqueo.descarga)}</p></div>`;
+ if (plan.prefatiga && textos.prefatiga)
+ h += `<div class="motivo warn"><p>${md(textos.prefatiga
+ .replace('{estructuras}', plan.prefatiga.estructuras.join(' y '))
+ .replace('{actividad}', plan.prefatiga.actividades.join(' y ').toLowerCase()))}</p>
+ ${plan.prefatiga.choca.length
+ ? `<p class="motivo-det">Afecta a: ${plan.prefatiga.choca.join(' · ')}</p>` : ''}</div>`;
+
  if ((plan.decisiones || []).some(d => d.nota === 'ciclo_sostiene') && textos.ciclo)
  h += `<div class="motivo warn"><p>${md(textos.ciclo.sostiene)}</p></div>`;
  if (plan.flex_recortado) h += `<div class="motivo warn"><p>${md(plan.flex_recortado.texto)}</p>

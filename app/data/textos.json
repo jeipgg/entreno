@@ -11,7 +11,8 @@
     "veto_rpe": "La última vez terminaste muy al límite. Hoy no subimos aunque los números den.",
     "cupo": "Listo para subir — te toca en la próxima sesión.",
     "corte_piel": "Cortaste por el agarre. Eso no cuenta como fallo: la piel manda.",
-    "ciclo_sostiene": "Sostiene el escalón: hoy el número no dice lo que parece."
+    "ciclo_sostiene": "Sostiene el escalón: hoy el número no dice lo que parece.",
+    "prefatiga_sostiene": "Sostiene el escalón: hoy llegaste con ese músculo ya trabajado."
   },
   "celebracion": {
     "escalon": "Subiste de escalón.",
@@ -60,5 +61,6 @@
     "para_que": "Sirve para dos cosas concretas: que un día con dolor no te baje de escalón, y que la semana de descarga caiga donde ya la estás necesitando. No prescribe nada por fase.",
     "estimacion": "Con dos ciclos esto es una referencia, no una fecha.",
     "privacidad": "Esto se queda en el teléfono y en tu respaldo privado. No sale en el CSV."
-  }
+  },
+  "prefatiga": "Hoy ya trabajaste {estructuras} en {actividad}, y esta sesión vuelve sobre lo mismo. Los números van a salir más bajos y eso no significa nada: no te bajo de escalón por hoy. Si algo se siente forzado, córtalo — la sesión sigue contando."
 }

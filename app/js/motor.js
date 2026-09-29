@@ -119,6 +119,8 @@ export function contexto({ contenido, estado, ahora, checkin }) {
  actividades: R.actividades(estado.prefs, hoy),
  bloquesHoy: R.bloquesDeHoy(estado.prefs, String(ahora.diaSemana), hoy),
  ventanaLibre: R.ventanaLibre(estado.prefs, String(ahora.diaSemana), hoy),
+ estructurasHoy: R.estructurasYaCargadasHoy(
+ estado.prefs, String(ahora.diaSemana), hoy, ahora.minutos),
  franjaHoy: ((estado.prefs && estado.prefs.franja_entreno) || {})[String(ahora.diaSemana)] || '',
  manos: (checkin && checkin.manos) || 'integra',
  puertaMedica: estado.puerta_medica || null,
@@ -466,8 +468,14 @@ export function progresar(ex, estado, ctx, vetoDelDia) {
  // Un día con dolor del ciclo no mide fuerza. Bajar el escalón por eso
  // concluye "perdió fuerza" cuando lo cierto es "ese día no medía".
  // Es el error más caro que puede cometer este motor. (Ixchel)
+ const pre = R.preFatigado(ex, ctx.estructurasHoy);
  if (R.cicloVetaRegresion(ctx.checkin) || R.cicloVetaRegresion(prev.checkin)) {
  nota = 'ciclo_sostiene'; e.confirmaciones = 0;
+ } else if (pre) {
+ // Nadó esta mañana y esto usa el mismo tejido. El número de hoy
+ // mide el cansancio acumulado, no la fuerza. Mismo error que el
+ // del ciclo, misma respuesta: sostener.
+ nota = 'prefatiga_sostiene'; e.confirmaciones = 0;
  } else {
  e = bajar(e, ex, tope, paso); nota = 'regresion'; cambios = 1;
  }
@@ -609,6 +617,14 @@ function cerrar(plan, ctx, contenido) {
  abrir_descarga: ctx.ciclo.dia === 1 &&
  ctx.semanaMeso >= R.CICLO_SEMANA_MIN_DESCARGA &&
  ctx.semanaMeso < 4 };
+ plan.prefatiga = ctx.estructurasHoy.length
+ ? { estructuras: ctx.estructurasHoy,
+ actividades: [...new Set((ctx.bloquesHoy || [])
+ .filter(b => (b.estructuras || []).length && R.aMinutos(b.hasta) <= ctx.minutos)
+ .map(b => b.actividad))],
+ choca: (plan.ejercicios || []).filter(e => R.preFatigado(e, ctx.estructurasHoy))
+ .map(e => e.nombre) }
+ : null;
  plan.actividades = { lista: ctx.actividades, hoy: ctx.bloquesHoy,
  demanda_alta: ctx.demandaAlta, ocupados: ctx.diasOcupados,
  ventana: ctx.ventanaLibre,

@@ -286,6 +286,27 @@ export function bloquesDeHoy(prefs, diaSemana, hoyISO) {
  return out.sort((x, y) => (aMinutos(x.desde) || 0) - (aMinutos(y.desde) || 0));
 }
 
+/** Las estructuras que una actividad de HOY ya dejó cansadas.
+ Solo cuentan las que ya terminaron: si la natación es a las 19:00 y
+ ella entrena a las 9:00, llega fresca. */
+export function estructurasYaCargadasHoy(prefs, diaSemana, hoyISO, minutos) {
+ const out = new Set();
+ for (const b of bloquesDeHoy(prefs, diaSemana, hoyISO)) {
+ const fin = aMinutos(b.hasta);
+ if (fin == null || minutos < fin) continue;
+ for (const e of b.estructuras || []) out.add(e);
+ }
+ return [...out];
+}
+
+/** ¿Este ejercicio usa tejido que hoy ya se cargó fuera del plan? */
+export function preFatigado(ex, estructurasHoy) {
+ if (!estructurasHoy || !estructurasHoy.length) return null;
+ const propias = ESTRUCTURAS_POR_RAMA[ex && ex.rama] || [];
+ const choca = propias.filter(e => estructurasHoy.includes(e));
+ return choca.length ? choca : null;
+}
+
 /** Días de demanda ALTA a la semana. Solo esos aprietan el tope de carga. */
 export function diasDemandaAlta(prefs, hoyISO) {
  const dias = new Set();
